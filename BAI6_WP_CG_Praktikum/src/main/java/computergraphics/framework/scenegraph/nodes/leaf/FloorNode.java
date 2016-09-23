@@ -20,7 +20,6 @@ public class FloorNode extends LeafNode {
 		_width = width;
 		_length = length;
 		
-
 		Vector p0 = new Vector(-_width, -_length, 0);
 		Vector p1 = new Vector( _width, -_length, 0);
 		Vector p2 = new Vector( _width,  _length, 0);

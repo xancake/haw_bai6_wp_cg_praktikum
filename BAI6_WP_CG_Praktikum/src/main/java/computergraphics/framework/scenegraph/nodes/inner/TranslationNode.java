@@ -17,22 +17,17 @@ import computergraphics.framework.math.Vector;
  * @author Philipp Jenke
  */
 public class TranslationNode extends InnerNode {
+	private final Matrix translation;
 
-  /**
-   * Translation matrix (model matrix)
-   */
-  private final Matrix translation;
+	public TranslationNode(Vector translation) {
+		this.translation = Matrix.createTranslationGl(translation);
+	}
 
-  public TranslationNode(Vector translation) {
-    this.translation = Matrix.createTranslationGl(translation);
-  }
+	public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {
+		super.traverse(gl, mode, translation.multiply(modelMatrix));
+	}
 
-  public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {
-    super.traverse(gl, mode, translation.multiply(modelMatrix));
-  }
-
-  public void timerTick(int counter) {
-    super.timerTick(counter);
-  }
-
+	public void timerTick(int counter) {
+		super.timerTick(counter);
+	}
 }

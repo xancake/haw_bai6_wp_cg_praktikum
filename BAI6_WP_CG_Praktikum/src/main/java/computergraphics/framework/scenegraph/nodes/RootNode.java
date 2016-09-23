@@ -15,77 +15,77 @@ import computergraphics.framework.scenegraph.nodes.inner.InnerNode;
  *
  */
 public class RootNode extends InnerNode {
-  /**
-   * Currently used shader
-   */
-  private Shader shader;
+	/**
+	 * Currently used shader
+	 */
+	private Shader shader;
 
-  /**
-   * Scene camera
-   */
-  private Camera camera;
+	/**
+	 * Scene camera
+	 */
+	private Camera camera;
 
-  /**
-   * This flags indicates that the scene should be animated
-   */
-  private boolean animated;
+	/**
+	 * This flags indicates that the scene should be animated
+	 */
+	private boolean animated;
 
-  /**
-   * Position of the light source
-   */
-  private Vector lightPosition;
-  
-  /**
-   * Background color
-   */
-  private Vector backGroundColor;
+	/**
+	 * Position of the light source
+	 */
+	private Vector lightPosition;
 
-  public RootNode(Shader shader, Camera camera) {
-    this.shader = shader;
-    this.camera = camera;
-    lightPosition = new Vector(1, 1, 0);
-    backGroundColor = new Vector(0.25, 0.25, 0.25);
-    animated = true;
-  }
+	/**
+	 * Background color
+	 */
+	private Vector backGroundColor;
 
-  @Override
-  public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {
-    super.traverse(gl, mode, modelMatrix);
-  }
+	public RootNode(Shader shader, Camera camera) {
+		this.shader = shader;
+		this.camera = camera;
+		lightPosition = new Vector(1, 1, 0);
+		backGroundColor = new Vector(0.25, 0.25, 0.25);
+		animated = true;
+	}
 
-//  @Override
-//  public void timerTick(int counter) {
-//  }
+	@Override
+	public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {
+		super.traverse(gl, mode, modelMatrix);
+	}
 
-  public RootNode getRootNode() {
-    return this;
-  }
+	// @Override
+	// public void timerTick(int counter) {
+	// }
 
-  public Shader getShader() {
-    return shader;
-  }
+	public RootNode getRootNode() {
+		return this;
+	}
 
-  public Camera getCamera() {
-    return camera;
-  }
+	public Shader getShader() {
+		return shader;
+	}
 
-  public boolean isAnimated() {
-    return animated;
-  }
+	public Camera getCamera() {
+		return camera;
+	}
 
-  public void setAnimated(boolean animated) {
-    this.animated = animated;
-  }
+	public boolean isAnimated() {
+		return animated;
+	}
 
-  public Vector getLightPosition() {
-    return lightPosition;
-  }
-  
-  public Vector getBackgroundColor() {
-    return backGroundColor;
-  }
+	public void setAnimated(boolean animated) {
+		this.animated = animated;
+	}
 
-  public void setLightPosition(Vector lightPosition) {
-    this.lightPosition = lightPosition;
-  }
+	public Vector getLightPosition() {
+		return lightPosition;
+	}
+
+	public Vector getBackgroundColor() {
+		return backGroundColor;
+	}
+
+	public void setLightPosition(Vector lightPosition) {
+		this.lightPosition = lightPosition;
+	}
 }

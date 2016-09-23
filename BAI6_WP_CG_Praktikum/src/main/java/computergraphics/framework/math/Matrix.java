@@ -336,15 +336,15 @@ public class Matrix {
         t * axis.get(2) * axis.get(2) + c);
   }
   
-  public static Matrix getRotationMatrix4(Vector axis, double angle) {
-	Matrix m = getRotationMatrix3(axis, angle);
-	return new Matrix(
+	public static Matrix getRotationMatrix4(Vector axis, double angle) {
+		Matrix m = getRotationMatrix3(axis, angle);
+		return new Matrix(
 			m.get(0, 0), m.get(0, 1), m.get(0, 2), 0,
 			m.get(1, 0), m.get(1, 1), m.get(1, 2), 0,
 			m.get(2, 0), m.get(2, 1), m.get(2, 2), 0,
 			          0,           0,           0, 1
-	);
-  }
+		);
+	}
 
   /**
    * Create 4x4 scaling matrix.

@@ -7,15 +7,15 @@ package computergraphics.framework;
  *
  */
 public class AssetPath {
-  /**
-   * Current implementation: working-dir = project directory
-   */
-  private static String assetPath = "assets/";
+	/**
+	 * Current implementation: working-dir = project directory
+	 */
+	private static String assetPath = "assets/";
 
-  /**
-   * Returns the relative path to the asset filename.
-   */
-  public static String getPathToAsset(String assetFilename) {
-    return assetPath + assetFilename;
-  }
+	/**
+	 * Returns the relative path to the asset filename.
+	 */
+	public static String getPathToAsset(String assetFilename) {
+		return assetPath + assetFilename;
+	}
 }
