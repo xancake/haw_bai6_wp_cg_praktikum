@@ -17,10 +17,10 @@ import com.jogamp.opengl.glu.GLU;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.rendering.Shader.ShaderMode;
+import computergraphics.framework.scenegraph.nodes.Camera;
+import computergraphics.framework.scenegraph.nodes.RootNode;
+import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.rendering.ShaderAttributes;
-import computergraphics.framework.scenegraph.INode.RenderMode;
-import computergraphics.framework.scenegraph.Camera;
-import computergraphics.framework.scenegraph.RootNode;
 
 import javax.swing.JFrame;
 

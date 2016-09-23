@@ -1,9 +1,11 @@
-package computergraphics.framework.scenegraph;
+package computergraphics.framework.scenegraph.nodes.inner;
 
 import com.jogamp.opengl.GL2;
 
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.scenegraph.nodes.INode;
+import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 
 public class RotationNode extends InnerNode {
 

@@ -4,7 +4,7 @@
  * 
  * Base framework for "WP Computergrafik".
  */
-package computergraphics.framework.scenegraph;
+package computergraphics.framework.scenegraph.nodes.leaf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,8 @@ import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.RenderVertex;
 import computergraphics.framework.rendering.VertexBufferObject;
+import computergraphics.framework.scenegraph.nodes.INode;
+import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 
 /**
  * Representation of a cuboid with different dimensions in x-, y- and
