@@ -15,6 +15,7 @@ import computergraphics.framework.scenegraph.INode;
 import computergraphics.framework.scenegraph.SphereNode;
 import computergraphics.framework.scenegraph.TranslationNode;
 import computergraphics.framework.scenegraph.INode.RenderMode;
+import computergraphics.framework.scenegraph.RotationNode;
 
 /**
  * Application for the first exercise.
@@ -32,22 +33,21 @@ public class Exercise1 extends Scene {
     getRoot().setAnimated(true);
 
     // Sphere geometry
-    TranslationNode sphereTranslation =
-        new TranslationNode(new Vector(1, -0.5, 0));
+    TranslationNode sphereTranslation = new TranslationNode(new Vector(1, -0.5, 0));
     SphereNode sphereNode = new SphereNode(0.5, 20);
     sphereTranslation.addChild(sphereNode);
     getRoot().addChild(sphereTranslation);
 
     // Cube geometry
-    TranslationNode cubeTranslation =
-        new TranslationNode(new Vector(-1, 0.5, 0));
+    RotationNode cubeRotation = new RotationNode(new Vector(1, 0, 0), 45);
+    TranslationNode cubeTranslation = new TranslationNode(new Vector(-1, 0.5, 0));
     CubeNode cubeNode = new CubeNode(0.5);
     cubeTranslation.addChild(cubeNode);
-    getRoot().addChild(cubeTranslation);
+    cubeRotation.addChild(cubeTranslation);
+    getRoot().addChild(cubeRotation);
 
     // Light geometry
-    TranslationNode lightTranslation =
-        new TranslationNode(getRoot().getLightPosition());
+    TranslationNode lightTranslation = new TranslationNode(getRoot().getLightPosition());
     INode lightSphereNode = new SphereNode(0.1f, 10);
     lightTranslation.addChild(lightSphereNode);
     getRoot().addChild(lightTranslation);
