@@ -53,9 +53,9 @@ public class RootNode extends InnerNode {
     super.traverse(gl, mode, modelMatrix);
   }
 
-  @Override
-  public void timerTick(int counter) {
-  }
+//  @Override
+//  public void timerTick(int counter) {
+//  }
 
   public RootNode getRootNode() {
     return this;
