@@ -24,23 +24,16 @@ import computergraphics.framework.scenegraph.nodes.LeafNode;
  * @author Philipp Jenke
  */
 public class CubeNode extends LeafNode {
-
-	/**
-	 * Cube side length
-	 */
 	private double sideLength;
-
-	/**
-	 * VBO.
-	 */
-	private VertexBufferObject vbo = new VertexBufferObject();
+	
+	private VertexBufferObject vbo;
 
 	public CubeNode(double sideLength) {
 		this.sideLength = sideLength;
-		createVbo();
+		vbo = createVbo();
 	}
 
-	private void createVbo() {
+	private VertexBufferObject createVbo() {
 		List<RenderVertex> renderVertices = new ArrayList<RenderVertex>();
 
 		Vector p0 = new Vector(-sideLength, -sideLength, -sideLength);
@@ -66,14 +59,18 @@ public class CubeNode extends LeafNode {
 		AddSideVertices(renderVertices, p2, p6, p7, p3, n4, color);
 		AddSideVertices(renderVertices, p5, p1, p0, p4, n5, color);
 
-		vbo.Setup(renderVertices, GL2.GL_QUADS);
+		return new VertexBufferObject(GL2.GL_QUADS, renderVertices);
 	}
 
 	/**
 	 * Add 4 vertices to the array
 	 */
-	private void AddSideVertices(List<RenderVertex> renderVertices, Vector p0,
-			Vector p1, Vector p2, Vector p3, Vector normal, Vector color) {
+	private void AddSideVertices(
+			List<RenderVertex> renderVertices,
+			Vector p0, Vector p1, Vector p2, Vector p3,
+			Vector normal,
+			Vector color
+	) {
 		renderVertices.add(new RenderVertex(p3, normal, color));
 		renderVertices.add(new RenderVertex(p2, normal, color));
 		renderVertices.add(new RenderVertex(p1, normal, color));

@@ -8,26 +8,24 @@ import computergraphics.framework.math.Vector;
  * @author Philipp Jenke
  */
 public class RenderVertex {
+	public RenderVertex(Vector position, Vector normal, Vector color) {
+		this.position = position;
+		this.normal = normal;
+		this.color = color;
+	}
 
-  public RenderVertex(Vector position, Vector normal, Vector color) {
-    this.position = position;
-    this.normal = normal;
-    this.color = color;
-  }
+	/**
+	 * 3D position.
+	 */
+	public Vector position;
 
-  /**
-   * 3D position.
-   */
-  public Vector position;
+	/**
+	 * 3D normal.
+	 */
+	public Vector normal;
 
-  /**
-   * 3D normal.
-   */
-  public Vector normal;
-
-  /**
-   * 4D color.
-   */
-  public Vector color;
-
+	/**
+	 * 4D color.
+	 */
+	public Vector color;
 }

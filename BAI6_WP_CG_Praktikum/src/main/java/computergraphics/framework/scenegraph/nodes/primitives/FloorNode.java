@@ -30,10 +30,9 @@ public class FloorNode extends LeafNode {
 		Vector color = new Vector(0, 0.5, 0, 1);
 		
 		List<RenderVertex> renderVertices = new ArrayList<RenderVertex>();
-		addSideVertices(renderVertices, p0, p1, p2, p3, n0, color);
+		addSideVertices(renderVertices, p3, p2, p1, p0, n0, color);
 		
-		_vbo = new VertexBufferObject();
-		_vbo.Setup(renderVertices, GL2.GL_QUADS);
+		_vbo = new VertexBufferObject(GL2.GL_QUADS, renderVertices);
 	}
 	
 	/**
@@ -45,10 +44,10 @@ public class FloorNode extends LeafNode {
 			Vector normal,
 			Vector color
 	) {
-		renderVertices.add(new RenderVertex(p0, normal, color));
-		renderVertices.add(new RenderVertex(p1, normal, color));
-		renderVertices.add(new RenderVertex(p2, normal, color));
 		renderVertices.add(new RenderVertex(p3, normal, color));
+		renderVertices.add(new RenderVertex(p2, normal, color));
+		renderVertices.add(new RenderVertex(p1, normal, color));
+		renderVertices.add(new RenderVertex(p0, normal, color));
 	}
 	
 	@Override

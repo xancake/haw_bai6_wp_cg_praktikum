@@ -51,9 +51,7 @@ public class RectangleNode extends LeafNode {
 		addSideVertices(renderVertices, p2, p6, p7, p3, n4, color);
 		addSideVertices(renderVertices, p5, p1, p0, p4, n5, color);
 		
-		VertexBufferObject vbo = new VertexBufferObject();
-		vbo.Setup(renderVertices, GL2.GL_QUADS);
-		return vbo;
+		return new VertexBufferObject(GL2.GL_QUADS, renderVertices);
 	}
 	
 	/**

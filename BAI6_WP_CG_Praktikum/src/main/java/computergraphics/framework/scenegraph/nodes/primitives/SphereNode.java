@@ -25,16 +25,16 @@ import computergraphics.framework.scenegraph.nodes.LeafNode;
 public class SphereNode extends LeafNode {
 	private double radius;
 	private int resolution;
+	
 	private VertexBufferObject vbo;
 
 	public SphereNode(double radius, int resolution) {
 		this.radius = radius;
 		this.resolution = resolution;
-		vbo = new VertexBufferObject();
-		createVbo();
+		vbo = createVbo();
 	}
 
-	private void createVbo() {
+	private VertexBufferObject createVbo() {
 		List<RenderVertex> renderVertices = new ArrayList<RenderVertex>();
 
 		Vector color = new Vector(0.25, 0.75, 0.25, 1);
@@ -44,8 +44,7 @@ public class SphereNode extends LeafNode {
 			for (int j = 0; j < resolution; j++) {
 				Vector p0 = evaluateSpherePoint(i * dTheta, j * dPhi);
 				Vector p1 = evaluateSpherePoint(i * dTheta, (j + 1) * dPhi);
-				Vector p2 = evaluateSpherePoint((i + 1) * dTheta, (j + 1)
-						* dPhi);
+				Vector p2 = evaluateSpherePoint((i + 1) * dTheta, (j + 1) * dPhi);
 				Vector p3 = evaluateSpherePoint((i + 1) * dTheta, j * dPhi);
 
 				Vector u = p3.subtract(p0);
@@ -61,7 +60,7 @@ public class SphereNode extends LeafNode {
 				AddSideVertices(renderVertices, p0, p1, p2, p3, normal, color);
 			}
 		}
-		vbo.Setup(renderVertices, GL2.GL_QUADS);
+		return new VertexBufferObject(GL2.GL_QUADS, renderVertices);
 	}
 
 	@Override
@@ -84,8 +83,7 @@ public class SphereNode extends LeafNode {
 	/**
 	 * Add 4 vertices to the array
 	 */
-	private void AddSideVertices(List<RenderVertex> renderVertices, Vector p0,
-			Vector p1, Vector p2, Vector p3, Vector normal, Vector color) {
+	private void AddSideVertices(List<RenderVertex> renderVertices, Vector p0, Vector p1, Vector p2, Vector p3, Vector normal, Vector color) {
 		renderVertices.add(new RenderVertex(p3, normal, color));
 		renderVertices.add(new RenderVertex(p2, normal, color));
 		renderVertices.add(new RenderVertex(p1, normal, color));
