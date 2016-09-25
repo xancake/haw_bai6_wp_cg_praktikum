@@ -5,7 +5,6 @@ import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Shader;
-import computergraphics.framework.scenegraph.nodes.inner.InnerNode;
 
 /**
  * The root node exists only once and is used as the scene graph root. It

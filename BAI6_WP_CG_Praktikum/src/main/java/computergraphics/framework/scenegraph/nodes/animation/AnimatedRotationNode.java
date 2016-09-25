@@ -1,10 +1,11 @@
-package computergraphics.framework.scenegraph.nodes.inner;
+package computergraphics.framework.scenegraph.nodes.animation;
 
 import com.jogamp.opengl.GL2;
 
 import computergraphics.framework.math.MathHelpers;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.scenegraph.nodes.InnerNode;
 
 public class AnimatedRotationNode extends InnerNode {
 	private final Vector _axis;

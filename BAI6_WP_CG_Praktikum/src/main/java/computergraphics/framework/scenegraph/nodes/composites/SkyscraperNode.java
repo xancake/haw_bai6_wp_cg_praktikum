@@ -1,7 +1,9 @@
-package computergraphics.framework.scenegraph.nodes.inner;
+package computergraphics.framework.scenegraph.nodes.composites;
 
 import computergraphics.framework.math.Vector;
-import computergraphics.framework.scenegraph.nodes.leaf.RectangleNode;
+import computergraphics.framework.scenegraph.nodes.InnerNode;
+import computergraphics.framework.scenegraph.nodes.primitives.RectangleNode;
+import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
 public class SkyscraperNode extends InnerNode {
 	private static final double WINDOW_SIZE = 0.1;
@@ -21,7 +23,7 @@ public class SkyscraperNode extends InnerNode {
 			throw new IllegalArgumentException("Das Hochhaus muss mindestens ein Fenster in der Breite pro Etage haben!");
 		}
 		if(fensterInDerLaenge <= 0) {
-			throw new IllegalArgumentException("Das Hochhaus muss mindestens ein Fenster in der Länge pro Etage haben!");
+			throw new IllegalArgumentException("Das Hochhaus muss mindestens ein Fenster in der Lï¿½nge pro Etage haben!");
 		}
 		_etagen = etagen;
 		_fensterInDerBreite = fensterInDerBreite;

@@ -1,13 +1,13 @@
-package computergraphics.exercises;
+package computergraphics.exercises.exercise1;
 
 import computergraphics.framework.Scene;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
-import computergraphics.framework.scenegraph.nodes.inner.AnimatedTranslationNode;
-import computergraphics.framework.scenegraph.nodes.inner.CarNode;
-import computergraphics.framework.scenegraph.nodes.inner.SkyscraperDistributorNode;
-import computergraphics.framework.scenegraph.nodes.leaf.FloorNode;
+import computergraphics.framework.scenegraph.nodes.animation.AnimatedTranslationNode;
+import computergraphics.framework.scenegraph.nodes.composites.CarNode;
+import computergraphics.framework.scenegraph.nodes.composites.SkyscraperDistributorNode;
+import computergraphics.framework.scenegraph.nodes.primitives.FloorNode;
 
 @SuppressWarnings("serial")
 public class Excercise_1_2 extends Scene {

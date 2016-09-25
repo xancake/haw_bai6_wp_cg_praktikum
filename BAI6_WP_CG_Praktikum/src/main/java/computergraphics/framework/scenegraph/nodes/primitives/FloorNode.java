@@ -1,4 +1,4 @@
-package computergraphics.framework.scenegraph.nodes.leaf;
+package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,7 @@ import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.RenderVertex;
 import computergraphics.framework.rendering.VertexBufferObject;
+import computergraphics.framework.scenegraph.nodes.LeafNode;
 
 public class FloorNode extends LeafNode {
 	private double _width;

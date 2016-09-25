@@ -1,8 +1,10 @@
-package computergraphics.framework.scenegraph.nodes.inner;
+package computergraphics.framework.scenegraph.nodes.composites;
 
 import computergraphics.framework.math.Vector;
-import computergraphics.framework.scenegraph.nodes.leaf.RectangleNode;
-import computergraphics.framework.scenegraph.nodes.leaf.SphereNode;
+import computergraphics.framework.scenegraph.nodes.InnerNode;
+import computergraphics.framework.scenegraph.nodes.primitives.RectangleNode;
+import computergraphics.framework.scenegraph.nodes.primitives.SphereNode;
+import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
 public class CarNode extends InnerNode {
 	private static final double SIZE = 0.1;

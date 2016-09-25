@@ -4,12 +4,13 @@
  * 
  * Base framework for "WP Computergrafik".
  */
-package computergraphics.framework.scenegraph.nodes.inner;
+package computergraphics.framework.scenegraph.nodes.transformation;
 
 import com.jogamp.opengl.GL2;
 
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.scenegraph.nodes.InnerNode;
 
 /**
  * Translate all child nodes.

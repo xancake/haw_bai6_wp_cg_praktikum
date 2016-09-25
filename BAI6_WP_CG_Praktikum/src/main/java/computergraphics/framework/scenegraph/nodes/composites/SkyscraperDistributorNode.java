@@ -1,9 +1,11 @@
-package computergraphics.framework.scenegraph.nodes.inner;
+package computergraphics.framework.scenegraph.nodes.composites;
 
 import java.util.Random;
 import java.util.stream.DoubleStream;
 
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.scenegraph.nodes.InnerNode;
+import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
 public class SkyscraperDistributorNode extends InnerNode{
 	

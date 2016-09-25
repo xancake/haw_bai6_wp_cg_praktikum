@@ -1,11 +1,11 @@
-package computergraphics.framework.scenegraph.nodes.inner;
+package computergraphics.framework.scenegraph.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.jogamp.opengl.GL2;
+
 import computergraphics.framework.math.Matrix;
-import computergraphics.framework.scenegraph.nodes.INode;
 
 public class InnerNode extends INode {
 	private List<INode> children = new ArrayList<INode>();

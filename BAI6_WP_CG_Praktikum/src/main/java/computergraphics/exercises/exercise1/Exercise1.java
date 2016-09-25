@@ -5,17 +5,17 @@
  * Base framework for "WP Computergrafik".
  */
 
-package computergraphics.exercises;
+package computergraphics.exercises.exercise1;
 
 import computergraphics.framework.Scene;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.nodes.INode;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
-import computergraphics.framework.scenegraph.nodes.inner.RotationNode;
-import computergraphics.framework.scenegraph.nodes.inner.TranslationNode;
-import computergraphics.framework.scenegraph.nodes.leaf.CubeNode;
-import computergraphics.framework.scenegraph.nodes.leaf.SphereNode;
+import computergraphics.framework.scenegraph.nodes.primitives.CubeNode;
+import computergraphics.framework.scenegraph.nodes.primitives.SphereNode;
+import computergraphics.framework.scenegraph.nodes.transformation.RotationNode;
+import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
 /**
  * Application for the first exercise.
