@@ -7,8 +7,7 @@ import computergraphics.framework.math.Vector;
 import computergraphics.framework.scenegraph.nodes.InnerNode;
 import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
-public class SkyscraperDistributorNode extends InnerNode{
-	
+public class SkyscraperDistributorNode extends InnerNode {
 	private double _area;
 	private int _numberOfObjects;
 	
@@ -19,7 +18,6 @@ public class SkyscraperDistributorNode extends InnerNode{
 	}
 	
 	private void distributeSkyscrapers() {
-		
 		DoubleStream stream = new Random().doubles(_numberOfObjects * 2, -_area, _area);
 		double[] d = stream.toArray();
 		for (int i = 0; i < _numberOfObjects; i++) {

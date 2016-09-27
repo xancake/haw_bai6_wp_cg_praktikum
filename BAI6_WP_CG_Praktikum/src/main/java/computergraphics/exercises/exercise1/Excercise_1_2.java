@@ -4,8 +4,11 @@ import computergraphics.framework.Scene;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
+import computergraphics.framework.scenegraph.nodes.animation.AnimatedRotationNode;
 import computergraphics.framework.scenegraph.nodes.animation.AnimatedTranslationNode;
 import computergraphics.framework.scenegraph.nodes.composites.CarNode;
+import computergraphics.framework.scenegraph.nodes.composites.MenschDistributorNode;
+import computergraphics.framework.scenegraph.nodes.composites.MenschNode;
 import computergraphics.framework.scenegraph.nodes.composites.SkyscraperDistributorNode;
 import computergraphics.framework.scenegraph.nodes.primitives.FloorNode;
 
@@ -26,10 +29,18 @@ public class Excercise_1_2 extends Scene {
 		SkyscraperDistributorNode skyscrapers = new SkyscraperDistributorNode(FLOOR_SIZE * 0.9, 10);
 		getRoot().addChild(skyscrapers);
 		
+		MenschDistributorNode menschen = new MenschDistributorNode(FLOOR_SIZE * 0.9, 20);
+		AnimatedRotationNode menschenAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 5);
+		menschenAnimation.addChild(menschen);
+		getRoot().addChild(menschenAnimation);
+		
 		CarNode car = new CarNode();
 		AnimatedTranslationNode animation = new AnimatedTranslationNode(FLOOR_SIZE, new Vector(0, 0, 0));
 		animation.addChild(car);
 		getRoot().addChild(animation);
+		
+		MenschNode mensch = new MenschNode();
+		getRoot().addChild(mensch);
 		
 		FloorNode floor = new FloorNode(FLOOR_SIZE, FLOOR_SIZE);
 		getRoot().addChild(floor);

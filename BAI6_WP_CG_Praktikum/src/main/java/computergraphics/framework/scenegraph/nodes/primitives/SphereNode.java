@@ -8,7 +8,7 @@ package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 import com.jogamp.opengl.GL2;
 
 import computergraphics.framework.math.Matrix;
@@ -25,19 +25,24 @@ import computergraphics.framework.scenegraph.nodes.LeafNode;
 public class SphereNode extends LeafNode {
 	private double radius;
 	private int resolution;
+	private Vector _color;
 	
 	private VertexBufferObject vbo;
 
 	public SphereNode(double radius, int resolution) {
+		this(radius, resolution, new Vector(0.25, 0.75, 0.25, 1));
+	}
+	
+	public SphereNode(double radius, int resolution, Vector color) {
 		this.radius = radius;
 		this.resolution = resolution;
+		_color = Objects.requireNonNull(color);
 		vbo = createVbo();
 	}
 
 	private VertexBufferObject createVbo() {
 		List<RenderVertex> renderVertices = new ArrayList<RenderVertex>();
 
-		Vector color = new Vector(0.25, 0.75, 0.25, 1);
 		float dTheta = (float) (Math.PI / resolution);
 		float dPhi = (float) (Math.PI * 2.0 / resolution);
 		for (int i = 0; i < resolution; i++) {
@@ -57,7 +62,7 @@ public class SphereNode extends LeafNode {
 					normal = u.cross(t1).getNormalized();
 				}
 
-				AddSideVertices(renderVertices, p0, p1, p2, p3, normal, color);
+				AddSideVertices(renderVertices, p0, p1, p2, p3, normal, _color);
 			}
 		}
 		return new VertexBufferObject(GL2.GL_QUADS, renderVertices);
@@ -88,5 +93,20 @@ public class SphereNode extends LeafNode {
 		renderVertices.add(new RenderVertex(p2, normal, color));
 		renderVertices.add(new RenderVertex(p1, normal, color));
 		renderVertices.add(new RenderVertex(p0, normal, color));
+	}
+	
+	public Vector getColor() {
+		return _color;
+	}
+	
+	public void setColor(Vector color) {
+		if(color == null) {
+			throw new NullPointerException();
+		}
+		if(color.getDimension() != 4) {
+			throw new IllegalArgumentException("Der Farbvektor muss vierdimensional sein!");
+		}
+		_color = color;
+		vbo.setColor(_color);
 	}
 }
