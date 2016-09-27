@@ -9,8 +9,9 @@ import computergraphics.framework.scenegraph.nodes.animation.AnimatedTranslation
 import computergraphics.framework.scenegraph.nodes.composites.CarNode;
 import computergraphics.framework.scenegraph.nodes.composites.MenschDistributorNode;
 import computergraphics.framework.scenegraph.nodes.composites.MenschNode;
-import computergraphics.framework.scenegraph.nodes.composites.SkyscraperDistributorNode;
 import computergraphics.framework.scenegraph.nodes.primitives.FloorNode;
+import computergraphics.framework.scenegraph.nodes.primitives.SphereNode;
+import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
 @SuppressWarnings("serial")
 public class Excercise_1_2 extends Scene {
@@ -26,24 +27,41 @@ public class Excercise_1_2 extends Scene {
 		getRoot().getCamera().setRef(new Vector(0, 0, 0));
 		
 		
-		SkyscraperDistributorNode skyscrapers = new SkyscraperDistributorNode(FLOOR_SIZE * 0.9, 10);
-		getRoot().addChild(skyscrapers);
+		// Nur einkommentieren, wenn Sie Hochhäuser haben wollen, die wie auf den Boden gefallenes Eis am Stiel aussehen.
+//		SkyscraperDistributorNode skyscrapers = new SkyscraperDistributorNode(FLOOR_SIZE * 0.9, 10);
+//		getRoot().addChild(skyscrapers);
 		
-		MenschDistributorNode menschen = new MenschDistributorNode(FLOOR_SIZE * 0.9, 20);
-		AnimatedRotationNode menschenAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 5);
-		menschenAnimation.addChild(menschen);
-		getRoot().addChild(menschenAnimation);
+		MenschDistributorNode tanzendeMenschen = new MenschDistributorNode(FLOOR_SIZE * 0.9, 20);
+		AnimatedRotationNode tanzAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 5);
+		tanzAnimation.addChild(tanzendeMenschen);
+		getRoot().addChild(tanzAnimation);
+		
+		MenschDistributorNode springendeMenschen = new MenschDistributorNode(FLOOR_SIZE * 0.9, 20);
+		TranslationNode springendeMenschenTranslation = new TranslationNode(new Vector(0, 0, 0.05));
+		AnimatedTranslationNode springAnimation = new AnimatedTranslationNode(new Vector(0, 0, 0.05), new Vector(0, 0, 0.05));
+		springendeMenschenTranslation.addChild(springendeMenschen);
+		springAnimation.addChild(springendeMenschenTranslation);
+		getRoot().addChild(springAnimation);
 		
 		CarNode car = new CarNode();
-		AnimatedTranslationNode animation = new AnimatedTranslationNode(FLOOR_SIZE, new Vector(0, 0, 0));
-		animation.addChild(car);
-		getRoot().addChild(animation);
+		AnimatedTranslationNode carAnimation = new AnimatedTranslationNode(new Vector(0, 0.01, 0), new Vector(0, FLOOR_SIZE, 0));
+		carAnimation.addChild(car);
+		getRoot().addChild(carAnimation);
 		
 		MenschNode mensch = new MenschNode();
 		getRoot().addChild(mensch);
 		
-		FloorNode floor = new FloorNode(FLOOR_SIZE, FLOOR_SIZE);
-		getRoot().addChild(floor);
+		SphereNode discoBall = new SphereNode(0.3, 100);
+		discoBall.setColor(new Vector(0.9, 0.9, 0.9, 1));
+		TranslationNode discoBallTranslation = new TranslationNode(new Vector(0, 0, 2));
+		AnimatedRotationNode discoBallAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 5);
+		discoBallAnimation.addChild(discoBall);
+		discoBallTranslation.addChild(discoBallAnimation);
+		getRoot().addChild(discoBallTranslation);
+		
+		
+		FloorNode discoFloor = new FloorNode(FLOOR_SIZE, FLOOR_SIZE);
+		getRoot().addChild(discoFloor);
 	}
 
 	@Override

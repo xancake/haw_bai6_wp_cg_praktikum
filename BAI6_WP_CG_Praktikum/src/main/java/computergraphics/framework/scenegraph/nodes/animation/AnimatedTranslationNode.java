@@ -7,14 +7,15 @@ import computergraphics.framework.math.Vector;
 import computergraphics.framework.scenegraph.nodes.InnerNode;
 
 public class AnimatedTranslationNode extends InnerNode {
-	private final double _area;
-	private boolean _direction;
 	private Vector _location;
+	private Vector _direction;
+	private Vector _bounds;
+	private boolean _changeDirection;
 	
-	public AnimatedTranslationNode(double area, Vector location) {
-		_area = area;
-		_direction = true;
-		_location = location;
+	public AnimatedTranslationNode(Vector direction, Vector bounds) {
+		_location = new Vector(0, 0, 0);
+		_direction = direction;
+		_bounds = bounds;
 	}
 	
 	public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {
@@ -26,15 +27,19 @@ public class AnimatedTranslationNode extends InnerNode {
 	public void timerTick(int counter) {
 		super.timerTick(counter);
 		
-		if(_direction) {
-			_location = _location.subtract(new Vector(0, 0.01, 0));
-			if(_location.y() < -_area) {
-				_direction = !_direction;
+		if(_changeDirection) {
+			_location = _location.subtract(_direction);
+			if(_location.x() < -_bounds.x()
+					|| _location.y() < -_bounds.y()
+					|| _location.z() < -_bounds.z()) {
+				_changeDirection = !_changeDirection;
 			}
 		} else {
-			_location = _location.add(new Vector(0, 0.01, 0));
-			if(_location.y() > _area) {
-				_direction = !_direction;
+			_location = _location.add(_direction);
+			if(_location.x() > _bounds.x()
+					|| _location.y() > _bounds.y()
+					|| _location.z() > _bounds.z()) {
+				_changeDirection = !_changeDirection;
 			}
 		}
 	}
