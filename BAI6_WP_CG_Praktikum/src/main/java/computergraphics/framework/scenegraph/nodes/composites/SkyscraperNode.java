@@ -30,8 +30,6 @@ public class SkyscraperNode extends InnerNode {
 		_fensterInDerLaenge = fensterInDerLaenge;
 		_schornstein = schornstein;
 		
-		
-		
 		double skyscraperWidth  = _fensterInDerBreite*WINDOW_SIZE + (_fensterInDerBreite+1)*WINDOW_SPACING;
 		double skyscraperLength = _fensterInDerLaenge*WINDOW_SIZE + (_fensterInDerLaenge+1)*WINDOW_SPACING;
 		double skyscraperHeight = _etagen*WINDOW_SIZE + (_etagen+1)*WINDOW_SPACING;
@@ -41,7 +39,7 @@ public class SkyscraperNode extends InnerNode {
 		
 		if(_schornstein) {
 			double chimneyHeight = CHIMNEY_SIZE*2;
-			RectangleNode chimney = new RectangleNode(CHIMNEY_SIZE, CHIMNEY_SIZE, chimneyHeight);
+			RectangleNode chimney = new RectangleNode(CHIMNEY_SIZE, CHIMNEY_SIZE, chimneyHeight, new Vector(0.1, 0.1, 0.1, 1));
 			TranslationNode chimneyTranslation = new TranslationNode(new Vector(0, 0, chimneyHeight + skyscraperHeight));
 			chimneyTranslation.addChild(chimney);
 			translation.addChild(chimneyTranslation);

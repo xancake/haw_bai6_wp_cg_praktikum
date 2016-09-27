@@ -2,7 +2,7 @@ package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Objects;
 import com.jogamp.opengl.GL2;
 
 import computergraphics.framework.math.Matrix;
@@ -16,13 +16,19 @@ public class RectangleNode extends LeafNode {
 	private double _width;
 	private double _length;
 	private double _height;
+	private Vector _color;
 	
 	private VertexBufferObject _vbo;
 	
 	public RectangleNode(double width, double length, double height) {
+		this(width, length, height, new Vector(1, 0.35, 0.20, 1));
+	}
+	
+	public RectangleNode(double width, double length, double height, Vector color) {
 		_width = width;
 		_length = length;
 		_height = height;
+		_color = Objects.requireNonNull(color);
 		_vbo = createVBO();
 	}
 	
@@ -41,15 +47,14 @@ public class RectangleNode extends LeafNode {
 		Vector n3 = new Vector(-1, 0, 0);
 		Vector n4 = new Vector(0, 1, 0);
 		Vector n5 = new Vector(0, -1, 0);
-		Vector color = new Vector(1, 0.35, 0.20, 1);
 
 		List<RenderVertex> renderVertices = new ArrayList<RenderVertex>();
-		addSideVertices(renderVertices, p0, p1, p2, p3, n0, color);
-		addSideVertices(renderVertices, p1, p5, p6, p2, n1, color);
-		addSideVertices(renderVertices, p4, p7, p6, p5, n2, color);
-		addSideVertices(renderVertices, p0, p3, p7, p4, n3, color);
-		addSideVertices(renderVertices, p2, p6, p7, p3, n4, color);
-		addSideVertices(renderVertices, p5, p1, p0, p4, n5, color);
+		addSideVertices(renderVertices, p0, p1, p2, p3, n0, _color);
+		addSideVertices(renderVertices, p1, p5, p6, p2, n1, _color);
+		addSideVertices(renderVertices, p4, p7, p6, p5, n2, _color);
+		addSideVertices(renderVertices, p0, p3, p7, p4, n3, _color);
+		addSideVertices(renderVertices, p2, p6, p7, p3, n4, _color);
+		addSideVertices(renderVertices, p5, p1, p0, p4, n5, _color);
 		
 		return new VertexBufferObject(GL2.GL_QUADS, renderVertices);
 	}
@@ -74,5 +79,20 @@ public class RectangleNode extends LeafNode {
 		if (mode == RenderMode.REGULAR) {
 			_vbo.draw(gl);
 		}
+	}
+	
+	public Vector getColor() {
+		return _color;
+	}
+	
+	public void setColor(Vector color) {
+		if(color == null) {
+			throw new NullPointerException();
+		}
+		if(color.getDimension() != 4) {
+			throw new IllegalArgumentException("Der Farbvektor muss vierdimensional sein!");
+		}
+		_color = color;
+		_vbo.setColor(_color);
 	}
 }

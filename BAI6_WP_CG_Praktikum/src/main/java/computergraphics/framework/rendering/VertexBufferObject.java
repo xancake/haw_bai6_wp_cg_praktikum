@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.jogamp.opengl.GL2;
+import computergraphics.framework.math.Vector;
 
 /**
  * Rendering vie vertex buffer objects (VBO).
@@ -34,6 +35,14 @@ public class VertexBufferObject {
 	private FloatBuffer colorBuffer = null;
 	private IntBuffer indexBuffer = null;
 
+	public VertexBufferObject(RenderVertex... renderVertices) {
+		this(GL2.GL_TRIANGLES, renderVertices);
+	}
+	
+	public VertexBufferObject(List<RenderVertex> renderVertices) {
+		this(GL2.GL_TRIANGLES, renderVertices);
+	}
+	
 	public VertexBufferObject(int primitiveType, RenderVertex... renderVertices) {
 		this(primitiveType, Arrays.asList(renderVertices));
 	}
@@ -42,8 +51,7 @@ public class VertexBufferObject {
 	 * Set the data for the Buffer. The format is described together with the
 	 * vertices, normals and colors attributes.
 	 */
-	public VertexBufferObject(int primitiveType,
-			List<RenderVertex> renderVertices) {
+	public VertexBufferObject(int primitiveType, List<RenderVertex> renderVertices) {
 		this.renderVertices = Objects.requireNonNull(renderVertices);
 		this.primitiveType = primitiveType;
 	}
@@ -167,5 +175,12 @@ public class VertexBufferObject {
 		colorBuffer = null;
 
 		System.out.println("TODO: Free allocated mem.");
+	}
+	
+	public void setColor(Vector color) {
+		for(RenderVertex vertex : renderVertices) {
+			vertex.color = color;
+		}
+		invalidate();
 	}
 }
