@@ -52,11 +52,9 @@ public class ShaderAttributes {
     locationVertex = gl.glGetAttribLocation(shaderProgram, "inVertex");
     locationNormal = gl.glGetAttribLocation(shaderProgram, "inNormal");
     locationColor = gl.glGetAttribLocation(shaderProgram, "inColor");
-    locationCameraPosition =
-        gl.glGetUniformLocation(shaderProgram, "camera_position");
+    locationCameraPosition = gl.glGetUniformLocation(shaderProgram, "camera_position");
     locationShaderMode = gl.glGetUniformLocation(shaderProgram, "shaderMode");
-    locationLightPosition =
-        gl.glGetUniformLocation(shaderProgram, "lightPosition");
+    locationLightPosition = gl.glGetUniformLocation(shaderProgram, "lightPosition");
     locationModelMatrix = gl.glGetUniformLocation(shaderProgram, "modelMatrix");
     locationViewMatrix = gl.glGetUniformLocation(shaderProgram, "viewMatrix");
 
@@ -77,24 +75,21 @@ public class ShaderAttributes {
 
   public void setCameraEyeParameter(GL2 gl, Vector eye) {
     if (locationCameraPosition >= 0) {
-      gl.glUniform3f(locationCameraPosition, (float) eye.x(), (float) eye.y(),
-          (float) eye.z());
+      gl.glUniform3f(locationCameraPosition, (float)eye.x(), (float)eye.y(), (float)eye.z());
       Shader.checkGlError(gl);
     }
   }
 
   public void setLightPositionParameter(GL2 gl, Vector lightPosition) {
     if (locationLightPosition >= 0) {
-      gl.glUniform3f(locationLightPosition, (float) lightPosition.x(),
-          (float) lightPosition.y(), (float) lightPosition.z());
+      gl.glUniform3f(locationLightPosition, (float)lightPosition.x(), (float)lightPosition.y(), (float)lightPosition.z());
       Shader.checkGlError(gl);
     }
   }
 
   public void setModelMatrixParameter(GL2 gl, Matrix modelMatrix) {
     if (locationModelMatrix >= 0) {
-      gl.glUniformMatrix4fv(locationModelMatrix, 1, false,
-          modelMatrix.floatData(), 0);
+      gl.glUniformMatrix4fv(locationModelMatrix, 1, false, modelMatrix.floatData(), 0);
       // System.out.println("model matrix " + modelMatrix);
       Shader.checkGlError(gl);
     }
@@ -102,8 +97,7 @@ public class ShaderAttributes {
 
   public void setViewMatrixParameter(GL2 gl, Matrix viewMatrix) {
     if (locationViewMatrix >= 0) {
-      gl.glUniformMatrix4fv(locationViewMatrix, 1, false,
-          viewMatrix.floatData(), 0);
+      gl.glUniformMatrix4fv(locationViewMatrix, 1, false, viewMatrix.floatData(), 0);
       // System.out.println("view matrix " + viewMatrix);
       Shader.checkGlError(gl);
     }

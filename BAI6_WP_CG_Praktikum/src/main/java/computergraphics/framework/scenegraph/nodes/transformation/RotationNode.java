@@ -11,7 +11,7 @@ public class RotationNode extends InnerNode {
 	private final Matrix _rotation;
 	
 	public RotationNode(Vector axis, double angle) {
-		_rotation = Matrix.getRotationMatrix4(axis, MathHelpers.degree2radiens(angle));
+		_rotation = Matrix.createRotationMatrix4(axis, MathHelpers.degree2radiens(angle));
 	}
 	
 	public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {

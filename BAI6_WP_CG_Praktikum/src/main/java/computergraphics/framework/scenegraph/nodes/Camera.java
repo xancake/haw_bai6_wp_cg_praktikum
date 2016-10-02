@@ -87,12 +87,12 @@ public class Camera {
 	public void updateExtrinsicCameraParams(float alpha, float beta) {
 		Vector dir = eye.subtract(ref);
 		// Rotate around up-vector
-		eye = Matrix.getRotationMatrix3(up, alpha).multiply(dir).add(ref);
+		eye = Matrix.createRotationMatrix3(up, alpha).multiply(dir).add(ref);
 		// Rotate around side-vector
 		dir = eye.subtract(ref);
 		Vector side = dir.cross(up);
 		side.normalize();
-		eye = Matrix.getRotationMatrix3(side, -beta).multiply(dir).add(ref);
+		eye = Matrix.createRotationMatrix3(side, -beta).multiply(dir).add(ref);
 		// Fix up-vector
 		dir = ref.subtract(eye);
 		side = dir.cross(up);

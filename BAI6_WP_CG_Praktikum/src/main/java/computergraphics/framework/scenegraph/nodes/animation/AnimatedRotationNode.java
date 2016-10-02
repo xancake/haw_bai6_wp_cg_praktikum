@@ -22,7 +22,7 @@ public class AnimatedRotationNode extends InnerNode {
 	}
 	
 	public void traverse(GL2 gl, RenderMode mode, Matrix modelMatrix) {
-		Matrix rotation = Matrix.getRotationMatrix4(_axis, MathHelpers.degree2radiens(_currentAngle));
+		Matrix rotation = Matrix.createRotationMatrix4(_axis, MathHelpers.degree2radiens(_currentAngle));
 		super.traverse(gl, mode, rotation.multiply(modelMatrix));
 	}
 	

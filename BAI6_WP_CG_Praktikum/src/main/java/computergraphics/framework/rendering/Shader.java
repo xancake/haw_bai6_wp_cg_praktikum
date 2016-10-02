@@ -64,12 +64,10 @@ public class Shader {
   private ShaderMode mode = ShaderMode.PHONG;
 
   public Shader(ShaderMode mode) {
-    this("assets/shader/vertex_shader.glsl",
-        "assets/shader/fragment_shader.glsl", mode);
+    this("assets/shader/vertex_shader.glsl", "assets/shader/fragment_shader.glsl", mode);
   }
 
-  public Shader(String vertexShaderFilename, String fragmentShaderFilename,
-      ShaderMode mode) {
+  public Shader(String vertexShaderFilename, String fragmentShaderFilename, ShaderMode mode) {
     this.mode = mode;
     this.vertexShaderFilename = vertexShaderFilename;
     this.fragmentShaderFilename = fragmentShaderFilename;
@@ -84,10 +82,8 @@ public class Shader {
     checkGlError(gl);
 
     // Compile
-    int v = compileShader(gl, getGlShaderType(Shader.ShaderType.VERTEX),
-        vertexShaderFilename);
-    int f = compileShader(gl, getGlShaderType(Shader.ShaderType.FRAGMENT),
-        fragmentShaderFilename);
+    int v = compileShader(gl, getGlShaderType(Shader.ShaderType.VERTEX), vertexShaderFilename);
+    int f = compileShader(gl, getGlShaderType(Shader.ShaderType.FRAGMENT), fragmentShaderFilename);
     if (v < 0 || f < 0) {
       System.out.println("Shader not created.");
       return;
@@ -102,10 +98,7 @@ public class Shader {
       return;
     }
 
-    System.out
-        .println("Successfully created shader from vertex shader filename "
-            + vertexShaderFilename + " and fragment shader fileame "
-            + fragmentShaderFilename);
+    System.out.println("Successfully created shader from vertex shader filename " + vertexShaderFilename + " and fragment shader fileame " + fragmentShaderFilename);
   }
 
   /**
@@ -134,8 +127,7 @@ public class Shader {
     String absoluteShaderFilename = shaderFilename;
     String shaderSource = "";
     if (absoluteShaderFilename == null) {
-      System.out.println("Shader source " + shaderFilename
-          + " not found - cannot read shader.");
+      System.out.println("Shader source " + shaderFilename + " not found - cannot read shader.");
       return shaderSource;
     }
 
@@ -152,12 +144,10 @@ public class Shader {
       br.close();
       shaderSource = sb.toString();
     } catch (FileNotFoundException e) {
-      System.out
-          .println("Failed to read shader source " + absoluteShaderFilename);
+      System.out.println("Failed to read shader source " + absoluteShaderFilename);
       e.printStackTrace();
     } catch (IOException e) {
-      System.out
-          .println("Failed to read shader source " + absoluteShaderFilename);
+      System.out.println("Failed to read shader source " + absoluteShaderFilename);
       e.printStackTrace();
     }
     return shaderSource;
@@ -205,8 +195,7 @@ public class Shader {
   /**
    * Compile the specified shader from the filename and return the OpenGL id.
    */
-  private int compileShaderFromSource(GL2 gl, int shaderType,
-      String shaderSource) {
+  private int compileShaderFromSource(GL2 gl, int shaderType, String shaderSource) {
     int id = gl.glCreateShader(shaderType);
     gl.glShaderSource(id, 1, new String[] { shaderSource }, (int[]) null, 0);
     gl.glCompileShader(id);
@@ -252,8 +241,7 @@ public class Shader {
     glErrorMap.put(GL2.GL_INVALID_VALUE, "GL_INVALID_VALUE");
     glErrorMap.put(GL2.GL_INVALID_OPERATION, "GL_INVALID_OPERATION");
     glErrorMap.put(GL2.GL_OUT_OF_MEMORY, "GL_OUT_OF_MEMORY");
-    glErrorMap.put(GL2.GL_INVALID_FRAMEBUFFER_OPERATION,
-        "GL_INVALID_FRAMEBUFFER_OPERATION");
+    glErrorMap.put(GL2.GL_INVALID_FRAMEBUFFER_OPERATION, "GL_INVALID_FRAMEBUFFER_OPERATION");
     glErrorMap.put(GL2.GL_TABLE_TOO_LARGE, "GL_TABLE_TOO_LARGE");
     int err = GL.GL_NO_ERROR;
     do {
