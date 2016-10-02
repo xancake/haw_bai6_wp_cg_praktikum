@@ -221,7 +221,7 @@ public class Vector implements Serializable {
 			System.out.println("Cannot normalize zero-vector!");
 			return this;
 		}
-		return this.multiply(1.0 / d);
+		return multiply(1.0 / d);
 	}
 	
 	/**

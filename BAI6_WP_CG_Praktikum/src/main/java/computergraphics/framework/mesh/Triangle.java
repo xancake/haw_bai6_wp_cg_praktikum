@@ -61,7 +61,7 @@ public class Triangle {
 		);
 	}
 
-	public void setNormal(Vector normal) {
+	void setNormal(Vector normal) {
 		this.normal.copy(normal);
 	}
 
