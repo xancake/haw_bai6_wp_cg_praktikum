@@ -390,4 +390,27 @@ public class Vector implements Serializable {
 	public Vector xyz() {
 		return new Vector(x(), y(), z());
 	}
+	
+	/**
+	 * Berechnet den Schwerpunkt der durch die übergebenen Vektoren beschriebenen Eckpunkte.
+	 * <p>Diese Methode erwartet, dass alle übergebenen Vektoren dieselbe {@link #getDimension() Dimension} haben.
+	 * @param vertices Die Eckpunkte
+	 * @return Der Schwerpunkt der übergebenen Eckpunkte
+	 * @throws NullPointerException, wenn {@code vertices==null} oder irgendein {@code vertices[x]==null}
+	 * @throws IllegalArgumentException, wenn {@code vertices.length==0} oder die Dimensionen der Eckpunkte unterschiedlich sind
+	 */
+	public static Vector calculateSchwerpunkt(Vector... vertices) {
+		if(vertices.length == 0) {
+			throw new IllegalArgumentException("Es kann kein Schwerpunkt ohne Eckpunkt(e) berechnet werden!");
+		}
+		int dimension = vertices[0].getDimension();
+		Vector result = new Vector(dimension);
+		for(Vector v : vertices) {
+			if(dimension != v.getDimension()) {
+				throw new IllegalArgumentException("Einer oder mehrere der übergebenen Eckpunkte haben eine andere Dimension!");
+			}
+			result = result.add(v);
+		}
+		return result.multiply(1.0 / vertices.length); // Durch Anzahl der Eckpunkte teilen
+	}
 }
