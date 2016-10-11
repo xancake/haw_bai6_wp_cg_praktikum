@@ -59,16 +59,12 @@ public class VertexBufferObject {
 	}
 	
 	public VertexBufferObject(ITriangleMesh mesh, Vector color) {
-		this(GL2.GL_TRIANGLES, mesh, color);
-	}
-	
-	public VertexBufferObject(int primitiveType, ITriangleMesh mesh, Vector color) {
 		Objects.requireNonNull(mesh);
 		if(Objects.requireNonNull(color).getDimension() != 4) {
 			throw new IllegalArgumentException("Die Farbe muss vierdimensional sein (R,G,B,A)");
 		}
 		
-		this.primitiveType = primitiveType;
+		this.primitiveType = GL2.GL_TRIANGLES;
 		this.renderVertices = new ArrayList<RenderVertex>();
 		
 		for(int t=0; t<mesh.getNumberOfTriangles(); t++) {

@@ -30,22 +30,22 @@ public class CowScene extends Scene {
 		double normalDrawLength = 0;
 		switch(key) {
 			case 'N':
-    			_cowNode.setDrawTriangleNormals(!_cowNode.isDrawTriangleNormals());
+    			_cowNode.setDrawFacetteNormals(!_cowNode.isDrawFacetteNormals());
     			break;
 			case '+':
-				normalDrawLength = _cowNode.getTriangleNormalDrawLength();
+				normalDrawLength = _cowNode.getFacetteNormalDrawLength();
 				if(normalDrawLength>NORMAL_DRAW_LENGTH_STEP) {
-					_cowNode.setTriangleNormalDrawLength(normalDrawLength+NORMAL_DRAW_LENGTH_STEP);
+					_cowNode.setFacetteNormalDrawLength(normalDrawLength+NORMAL_DRAW_LENGTH_STEP);
 				} else {
-					_cowNode.setTriangleNormalDrawLength(normalDrawLength*2);
+					_cowNode.setFacetteNormalDrawLength(normalDrawLength*2);
 				}
 				break;
 			case '-':
-				normalDrawLength = _cowNode.getTriangleNormalDrawLength();
+				normalDrawLength = _cowNode.getFacetteNormalDrawLength();
 				if(normalDrawLength>NORMAL_DRAW_LENGTH_STEP) {
-					_cowNode.setTriangleNormalDrawLength(normalDrawLength-NORMAL_DRAW_LENGTH_STEP);
+					_cowNode.setFacetteNormalDrawLength(normalDrawLength-NORMAL_DRAW_LENGTH_STEP);
 				} else {
-					_cowNode.setTriangleNormalDrawLength(normalDrawLength/2);
+					_cowNode.setFacetteNormalDrawLength(normalDrawLength/2);
 				}
 				break;
 		}
