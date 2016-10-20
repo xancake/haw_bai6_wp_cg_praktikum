@@ -107,7 +107,7 @@ public class TriangleMesh implements ITriangleMesh {
 	
 	@Override
 	public void createShadowPolygons(Vector lightPosition, float extend, ITriangleMesh shadowPolygonMesh) {
-		// TODO Auto-generated method stub
-		
+		// TODO implement when necessary
+		throw new IllegalArgumentException("Not yet implemented");
 	}
 }
