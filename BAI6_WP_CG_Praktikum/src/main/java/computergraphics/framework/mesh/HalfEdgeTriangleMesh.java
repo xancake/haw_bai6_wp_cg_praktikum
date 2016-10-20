@@ -46,15 +46,13 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
-	public Vertex getVertex(int index) { //TODO check if this behaviour is correct
-		throw new IllegalArgumentException("Invalid operation for half edge datastructure");
-		//return _vertices.get(index);
+	public Vertex getVertex(int index) {
+		return _halfEdgeVertices.get(index);
 	}
 	
 	@Override
-	public Triangle getTriangle(int index) { //TODO check if this behaviour is correct
-		throw new IllegalArgumentException("Invalid operation for half edge datastructure");
-		//return _triangles.get(index);
+	public Triangle getTriangle(int index) {
+		return _halfEdgeTriangles.get(index);
 	}
 	
 	public HalfEdgeVertex getHalfEdgeVertex(int index) {
@@ -84,14 +82,8 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	
 	@Override
 	public void addTriangle(int vertexIndex1, int vertexIndex2, int vertexIndex3) {
-		HalfEdgeTriangle halfEdgeTriangle = new HalfEdgeTriangle();
-		HalfEdge edge3 = initHalfEdge(halfEdgeTriangle, vertexIndex3, vertexIndex1);
-		HalfEdge edge2 = initHalfEdge(halfEdgeTriangle, edge3, vertexIndex1, vertexIndex2);
-		HalfEdge edge1 = initHalfEdge(halfEdgeTriangle, edge2, vertexIndex2, vertexIndex3);
-		edge3.setNext(edge1);
-		
-		halfEdgeTriangle.setHalfEdge(edge1);
-		_halfEdgeTriangles.add(halfEdgeTriangle);
+		HalfEdgeTriangle halfEdgeTriangle = new HalfEdgeTriangle(vertexIndex1, vertexIndex2, vertexIndex3);
+		generateHalfEdges(vertexIndex1, vertexIndex2, vertexIndex3, halfEdgeTriangle);
 	}
 	
 	@Override
@@ -101,15 +93,22 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			int vertexIndex3,
 			int texCoordIndex1,
 			int texCoordIndex2,
-			int texCoordIndex3) { //TODO add triangle and 3 halfedges and texture Coords
-		throw new IllegalArgumentException("Not yet implemented.");
-	}
-	
-	private HalfEdge initHalfEdge(HalfEdgeTriangle facet, HalfEdge nextHalfEdge, int startVertexIndex, int endVertexIndex) {
+			int texCoordIndex3) {
 		
-		HalfEdge newHalfEdge = initHalfEdge(facet, startVertexIndex, endVertexIndex);
-		newHalfEdge.setNext(nextHalfEdge);
-		return newHalfEdge;
+		HalfEdgeTriangle halfEdgeTriangle = new HalfEdgeTriangle(vertexIndex1, vertexIndex2, vertexIndex3, 
+			texCoordIndex1, texCoordIndex2, texCoordIndex3);
+		generateHalfEdges(vertexIndex1, vertexIndex2, vertexIndex3, halfEdgeTriangle);
+	}
+
+	private void generateHalfEdges(int vertexIndex1, int vertexIndex2, int vertexIndex3,
+			HalfEdgeTriangle halfEdgeTriangle) {
+		HalfEdge edge3 = initHalfEdge(halfEdgeTriangle, vertexIndex3, vertexIndex1);
+		HalfEdge edge2 = initHalfEdge(halfEdgeTriangle, edge3, vertexIndex1, vertexIndex2);
+		HalfEdge edge1 = initHalfEdge(halfEdgeTriangle, edge2, vertexIndex2, vertexIndex3);
+		edge3.setNext(edge1);
+		
+		halfEdgeTriangle.setHalfEdge(edge1);
+		_halfEdgeTriangles.add(halfEdgeTriangle);
 	}
 	
 	private HalfEdge initHalfEdge(HalfEdgeTriangle facet, int startVertexIndex, int endVertexIndex) {
@@ -129,11 +128,17 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			_oppositeHalfEdges.put(key, newHalfEdge);
 		}
 		
-		if(startVertex.getHalfEdge() == null) {
+		if(startVertex.getHalfEdge() == null)
 			startVertex.setHalfEgde(newHalfEdge);
-		}
 		
 		_halfEdges.add(newHalfEdge);
+		return newHalfEdge;
+	}
+	
+	private HalfEdge initHalfEdge(HalfEdgeTriangle facet, HalfEdge nextHalfEdge, int startVertexIndex, int endVertexIndex) {
+		
+		HalfEdge newHalfEdge = initHalfEdge(facet, startVertexIndex, endVertexIndex);
+		newHalfEdge.setNext(nextHalfEdge);
 		return newHalfEdge;
 	}
 	
@@ -165,7 +170,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	
 	@Override
 	public void createShadowPolygons(Vector lightPosition, float extend, ITriangleMesh shadowPolygonMesh) {
-		// TODO Auto-generated method stub
-		
+		// TODO implement when necessary
+		throw new IllegalArgumentException("Not yet implemented");
 	}
 }

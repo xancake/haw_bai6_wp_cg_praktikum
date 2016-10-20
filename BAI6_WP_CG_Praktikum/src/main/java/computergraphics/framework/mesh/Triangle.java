@@ -18,17 +18,17 @@ public class Triangle {
 	/**
 	 * Indices of the vertices.
 	 */
-	private int[] vertexIndices = { -1, -1, -1 };
+	protected int[] vertexIndices = { -1, -1, -1 };
 
 	/**
 	 * Indices of the texture coordinates.
 	 */
-	private int[] texCoordIndices = { -1, -1, -1 };
+	protected int[] texCoordIndices = { -1, -1, -1 };
 
 	/**
 	 * Normal of the triangle, initialized with a default direction.
 	 */
-	private Vector normal;
+	protected Vector normal;
 
 	public Triangle(int a, int b, int c) {
 		this(a, b, c, -1, -1, -1, new Vector(1, 0, 0));
@@ -61,7 +61,7 @@ public class Triangle {
 		);
 	}
 
-	void setNormal(Vector normal) {
+	public void setNormal(Vector normal) {
 		this.normal.copy(normal);
 	}
 

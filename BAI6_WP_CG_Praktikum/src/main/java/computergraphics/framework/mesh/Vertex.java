@@ -8,15 +8,16 @@ import computergraphics.framework.math.Vector;
  * @author Philipp Jenke
  */
 public class Vertex {
+	
 	/**
-	 * Vertex position in 3-space.
+	 * 3D position of the vertex.
 	 */
-	private Vector position = new Vector(0, 0, 0);
-
+	protected final Vector position = new Vector(0, 0, 0);
+	
 	/**
-	 * Vertex normal in 3-space.
+	 * (Normalized) normal direction of the vertex.
 	 */
-	private Vector normal = new Vector(0, 1, 0);
+	protected Vector normal = new Vector(1, 0, 0);
 
 	public Vertex(Vector position) {
 		this(position, new Vector(0, 1, 0));
@@ -26,6 +27,10 @@ public class Vertex {
 		this.position.copy(position);
 		this.normal.copy(normal);
 	}
+	
+	public void setNormal(Vector normal) {
+		this.normal.copy(normal);
+	}
 
 	public Vector getPosition() {
 		return position;
@@ -33,5 +38,10 @@ public class Vertex {
 
 	public Vector getNormal() {
 		return normal;
+	}
+	
+	@Override
+	public String toString() {
+		return "Vertex(" + position.toString() + ")";
 	}
 }

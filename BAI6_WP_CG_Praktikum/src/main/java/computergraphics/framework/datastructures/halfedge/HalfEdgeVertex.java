@@ -7,22 +7,14 @@
 package computergraphics.framework.datastructures.halfedge;
 
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.mesh.Vertex;
 
 /**
  * Representation of a vertex.
  * 
  * @author Philipp Jenke
  */
-public class HalfEdgeVertex {
-	/**
-	 * 3D position of the vertex.
-	 */
-	private final Vector position = new Vector(0, 0, 0);
-	
-	/**
-	 * (Normalized) normal direction of the vertex.
-	 */
-	private Vector normal = new Vector(1, 0, 0);
+public class HalfEdgeVertex extends Vertex{
 	
 	/**
 	 * Color value at the vertex
@@ -39,7 +31,7 @@ public class HalfEdgeVertex {
 	 * @param position Initial value for position.
 	 */
 	public HalfEdgeVertex(Vector position) {
-		this.position.copy(position);
+		super(position);
 	}
 	
 	/**
@@ -48,8 +40,7 @@ public class HalfEdgeVertex {
 	 * @param normal Initial value for normal.
 	 */
 	public HalfEdgeVertex(Vector position, Vector normal) {
-		this.position.copy(position);
-		this.normal.copy(normal);
+		super(position, normal);
 	}
 	
 	/**
@@ -58,41 +49,23 @@ public class HalfEdgeVertex {
 	 * @param normal Initial value for normal.
 	 */
 	public HalfEdgeVertex(Vector position, Vector normal, Vector color) {
-		this.position.copy(position);
-		this.normal.copy(normal);
+		super(position, normal);
 		this.color.copy(color);
-	}
-	
-	public Vector getPosition() {
-		return position;
-	}
-	
-	public Vector getNormal() {
-		return normal;
-	}
-	
-	public Vector getColor() {
-		return color;
-	}
-	
-	public void setNormal(Vector normal) {
-		this.normal.copy(normal);
 	}
 	
 	public void setColor(Vector color) {
 		this.color.copy(color);
 	}
 	
-	public HalfEdge getHalfEdge() {
-		return halfEgde;
+	public Vector getColor() {
+		return color;
 	}
 	
 	public void setHalfEgde(HalfEdge halfEgde) {
 		this.halfEgde = halfEgde;
 	}
 	
-	@Override
-	public String toString() {
-		return "Vertex";
+	public HalfEdge getHalfEdge() {
+		return halfEgde;
 	}
 }

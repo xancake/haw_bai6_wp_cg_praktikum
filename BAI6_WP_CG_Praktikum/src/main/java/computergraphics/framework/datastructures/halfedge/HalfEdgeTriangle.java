@@ -1,6 +1,7 @@
 package computergraphics.framework.datastructures.halfedge;
 
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.mesh.Triangle;
 
 /**
  * A facet has a reference to one of its half edges. This datastructure
@@ -9,16 +10,25 @@ import computergraphics.framework.math.Vector;
  * 
  * @author Philipp Jenke
  */
-public class HalfEdgeTriangle {
+public class HalfEdgeTriangle extends Triangle{
+	
 	/**
 	 * One of the half edges around the facet.
 	 */
 	private HalfEdge halfEdge;
 	
-	/**
-	 * Facet normal
-	 */
-	private Vector normal;
+
+	public HalfEdgeTriangle(int a, int b, int c) {
+		super(a,b,c);
+	}
+
+	public HalfEdgeTriangle(int a, int b, int c, int tA, int tB, int tC) {
+		super(a, b, c, tA, tB, tC);
+	}
+
+	public HalfEdgeTriangle(int a, int b, int c, int tA, int tB, int tC, Vector normal) {
+		super(a, b, c ,tA, tB, tC, normal);
+	}
 	
 	public HalfEdge getHalfEdge() {
 		return halfEdge;
@@ -30,10 +40,6 @@ public class HalfEdgeTriangle {
 	
 	public Vector getNormal() {
 		return normal;
-	}
-	
-	public void setNormal(Vector normal) {
-		this.normal = normal;
 	}
 	
 	/**
@@ -59,11 +65,22 @@ public class HalfEdgeTriangle {
 	}
 	
 	public int getVertexIndex(int i) {
-		throw new IllegalArgumentException("Invalid operation for half edge datastructure");
+		return vertexIndices[i];
+	}
+	
+	public HalfEdgeVertex getVertex(int vertexIndex) {
+		if(vertexIndex < 0 || vertexIndex > 2) {
+			throw new IndexOutOfBoundsException("Index can only be within 0-2");
+		}
+		HalfEdge aktuelleKante = halfEdge;
+		for(int i = 0; i < vertexIndex; i++) {
+			aktuelleKante = aktuelleKante.getNext();
+		}
+		return aktuelleKante.getStartVertex();
 	}
 	
 	public int getTexCoordIndex(int i) {
-		throw new IllegalArgumentException("Not implemented yet.");
+		return texCoordIndices[i];
 	}
 	
 	@Override
