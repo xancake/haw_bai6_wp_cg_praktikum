@@ -105,6 +105,23 @@ public class VertexBufferObjectFactory {
 		return new VertexBufferObject(GL2.GL_LINES, normalVertices);
 	}
 	
+	public VertexBufferObject createWireframeVBO(ITriangleMesh mesh, Vector color) {
+		List<Pair<Vertex, Vertex>> wireframeVertexPairs = mesh.getWireframeVertices();
+		if(wireframeVertexPairs == null) {
+			return null;
+		}
+		
+		List<RenderVertex> wireframeVertices = new ArrayList<>();
+		for (Pair<Vertex, Vertex> vertexPair : wireframeVertexPairs) {
+			Vertex startVertex = vertexPair.getKey();
+			Vertex endVertex = vertexPair.getValue();
+			
+			wireframeVertices.add(new RenderVertex(startVertex.getPosition(), startVertex.getNormal(), color));
+			wireframeVertices.add(new RenderVertex(endVertex.getPosition(), endVertex.getNormal(), color));
+		}
+		return new VertexBufferObject(GL2.GL_LINES, wireframeVertices);
+	}
+	
 	public VertexBufferObject createBorderVBO(ITriangleMesh mesh, Vector borderColor) {
 		if(!mesh.hasBorder()) {
 			return null;

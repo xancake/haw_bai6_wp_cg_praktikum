@@ -18,9 +18,7 @@ import computergraphics.framework.rendering.Texture;
 import computergraphics.util.MultiKey;
 
 public class HalfEdgeTriangleMesh implements ITriangleMesh {
-
 	private Map<MultiKey, HalfEdge> _oppositeHalfEdges;
-
 	private List<HalfEdge> _halfEdges;
 	private List<HalfEdgeVertex> _halfEdgeVertices;
 	private List<HalfEdgeTriangle> _halfEdgeTriangles;
@@ -77,6 +75,29 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	@Override
 	public Texture getTexture() {
 		return _texture;
+	}
+	
+	@Override
+	public List<Pair<Vertex, Vertex>> getWireframeVertices() {
+		List<Pair<Vertex, Vertex>> wireframe = new ArrayList<>();
+		for(HalfEdge edge : _halfEdges) {
+			wireframe.add(new Pair<Vertex, Vertex>(edge.getStartVertex(), edge.getNext().getStartVertex()));
+		}
+		return wireframe;
+	}
+	
+	@Override
+	public boolean hasBorder() {
+		return !_oppositeHalfEdges.isEmpty();
+	}
+	
+	@Override
+	public List<Pair<Vertex, Vertex>> getBorderVertices() {
+		List<Pair<Vertex, Vertex>> border = new ArrayList<>();
+		for(HalfEdge edge : _oppositeHalfEdges.values()) {
+			border.add(new Pair<Vertex, Vertex>(edge.getStartVertex(), edge.getNext().getStartVertex()));
+		}
+		return border;
 	}
 	
 	@Override
@@ -199,20 +220,6 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			vertexNormal = vertexNormal.getNormalized();
 			halfEdgeVertex.setNormal(vertexNormal);
 		}
-	}
-	
-	@Override
-	public boolean hasBorder() {
-		return !_oppositeHalfEdges.isEmpty();
-	}
-	
-	@Override
-	public List<Pair<Vertex, Vertex>> getBorderVertices() {
-		List<Pair<Vertex, Vertex>> border = new ArrayList<>();
-		for(HalfEdge edge : _oppositeHalfEdges.values()) {
-			border.add(new Pair<Vertex, Vertex>(edge.getStartVertex(), edge.getNext().getStartVertex()));
-		}
-		return border;
 	}
 	
 	@Override

@@ -59,6 +59,11 @@ public class TriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
+	public List<Pair<Vertex, Vertex>> getWireframeVertices() {
+		return null;
+	}
+	
+	@Override
 	public boolean hasBorder() {
 		return false;
 	}

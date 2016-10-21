@@ -67,6 +67,12 @@ public interface ITriangleMesh {
 	public Texture getTexture();
 	
 	/**
+	 * Gibt eine paarweise Liste aller Vertices zurück, die alle Kanten des Meshes repräsentieren.
+	 * @return Eine Liste der paarweisen Vertices
+	 */
+	List<Pair<Vertex, Vertex>> getWireframeVertices();
+	
+	/**
 	 * Gibt an, ob das Mesh einen Rand (oder mehrere Ränder) hat.
 	 * @return {@code true} wenn das Mesh einen Rand hat, ansonsten {@code false}
 	 */

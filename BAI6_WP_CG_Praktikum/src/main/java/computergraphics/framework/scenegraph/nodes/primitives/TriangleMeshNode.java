@@ -18,6 +18,7 @@ public class TriangleMeshNode extends LeafNode {
 	private Vector _color;
 	private VertexBufferObject _vboWithFacetteNormals;
 	private VertexBufferObject _vboWithVertexNormals;
+	private boolean _drawMesh = true;
 	private boolean _drawMeshVertexNormals;
 	
 	private VertexBufferObject _facetteNormals;
@@ -29,6 +30,10 @@ public class TriangleMeshNode extends LeafNode {
 	private double _vertexNormalDrawLength = 0.02;
 	private Vector _vertexNormalColor = new Vector(0, 1, 0, 1);
 	private boolean _drawVertexNormals;
+	
+	private VertexBufferObject _wireframe;
+	private Vector _wireframeColor = new Vector(0, 0, 0, 1);
+	private boolean _drawWireframe;
 	
 	private VertexBufferObject _border;
 	private Vector _borderColor = new Vector(0, 0, 0, 1);
@@ -45,6 +50,7 @@ public class TriangleMeshNode extends LeafNode {
 		_vboWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _color);
 		_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
 		_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+		_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
 		_border = _factory.createBorderVBO(_mesh, _borderColor);
 	}
 	
@@ -52,10 +58,13 @@ public class TriangleMeshNode extends LeafNode {
 	public void drawGL(GL2 gl, RenderMode mode, Matrix modelMatrix) {
 		if (mode == RenderMode.REGULAR) {
 			
-			if(_drawMeshVertexNormals) {
-				_vboWithVertexNormals.draw(gl);
-			} else {
-				_vboWithFacetteNormals.draw(gl);
+			// Mesh
+			if(isDrawMesh()) {
+				if(isDrawMeshVertexNormals()) {
+					_vboWithVertexNormals.draw(gl);
+				} else {
+					_vboWithFacetteNormals.draw(gl);
+				}
 			}
 			
 			// Normalen
@@ -65,12 +74,33 @@ public class TriangleMeshNode extends LeafNode {
 			if(isDrawVertexNormals()) {
 				_vertexNormals.draw(gl);
 			}
-
+			
+			// Wireframe
+			if(_wireframe!=null && isDrawWireframe()) {
+				_wireframe.draw(gl);
+			}
+			
 			// Rand
 			if(_border!=null && isDrawBorder()) {
 				_border.draw(gl);
 			}
 		}
+	}
+	
+	/**
+	 * Gibt zurück, ob das Mesh gezeichnet wird.
+	 * @return {@code true} wenn das Mesh gezeichnet wird, ansonsten {@code false}
+	 */
+	public boolean isDrawMesh() {
+		return _drawMesh;
+	}
+	
+	/**
+	 * Legt fest, ob das Mesh gezeichnet werden soll oder nicht.
+	 * @param draw {@code true} wenn das Mesh gezeichnet werden soll, ansonsten {@code false}
+	 */
+	public void setDrawMesh(boolean draw) {
+		_drawMesh = draw;
 	}
 	
 	/**
@@ -176,8 +206,24 @@ public class TriangleMeshNode extends LeafNode {
 	}
 	
 	/**
-	 * Gibt zurück, ob der Rand gezeichnet werden.
-	 * @return {@code true}, wenn der Rand gezeichnet wird, ansonsten {@code false}
+	 * Gibt zurück, ob das Wireframe des Meshes gezeichnet wird.
+	 * @return {@code true} wenn das Wireframe gezeichnet wird, ansonsten {@code false}
+	 */
+	public boolean isDrawWireframe() {
+		return _drawWireframe;
+	}
+	
+	/**
+	 * Legt fest, ob das Wireframe gezeichnet werden soll oder nicht.
+	 * @param draw {@code true} wenn das Wireframe gezeichnet werden soll, ansonsten {@code false}
+	 */
+	public void setDrawWireframe(boolean draw) {
+		_drawWireframe = draw;
+	}
+	
+	/**
+	 * Gibt zurück, ob der Rand gezeichnet wird.
+	 * @return {@code true} wenn der Rand gezeichnet wird, ansonsten {@code false}
 	 */
 	public boolean isDrawBorder() {
 		return _drawBorder;
@@ -185,7 +231,7 @@ public class TriangleMeshNode extends LeafNode {
 	
 	/**
 	 * Legt fest, ob der Rand gezeichnet werden soll oder nicht.
-	 * @param draw {@code true}, wenn der Rand gezeichnet werden soll, ansonsten {@code false}
+	 * @param draw {@code true} wenn der Rand gezeichnet werden soll, ansonsten {@code false}
 	 */
 	public void setDrawBorder(boolean draw) {
 		_drawBorder = draw;

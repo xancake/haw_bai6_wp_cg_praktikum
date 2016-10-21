@@ -29,6 +29,12 @@ public class TriangleMeshShowcaseScene extends Scene {
 		int key = Character.toUpperCase(keyCode);
 		double normalDrawLength = 0;
 		switch (key) {
+		case 'M':
+			_meshNode.setDrawMesh(!_meshNode.isDrawMesh());
+			break;
+		case 'W':
+			_meshNode.setDrawWireframe(!_meshNode.isDrawWireframe());
+			break;
 		case 'B':
 			_meshNode.setDrawBorder(!_meshNode.isDrawBorder());
 			break;
