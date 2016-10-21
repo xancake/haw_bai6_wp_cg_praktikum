@@ -1,14 +1,15 @@
 package computergraphics.util;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MultiKey {
 
-	private List<Object> _keys;
+	private Set<Object> _keys;
 
 	public MultiKey(Object... keys) {
-		_keys = Arrays.asList(keys);
+		_keys = new HashSet<>(Arrays.asList(keys));
 	}
 
 	@Override
