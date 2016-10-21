@@ -67,7 +67,7 @@ public class TriangleMeshNode extends LeafNode {
 			}
 
 			// Rand
-			if(isDrawBorder()) {
+			if(_border!=null && isDrawBorder()) {
 				_border.draw(gl);
 			}
 		}

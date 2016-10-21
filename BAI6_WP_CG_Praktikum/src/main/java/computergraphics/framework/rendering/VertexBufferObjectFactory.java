@@ -106,6 +106,10 @@ public class VertexBufferObjectFactory {
 	}
 	
 	public VertexBufferObject createBorderVBO(ITriangleMesh mesh, Vector borderColor) {
+		if(!mesh.hasBorder()) {
+			return null;
+		}
+		
 		List<RenderVertex> borderVertices = new ArrayList<>();
 		for (Pair<Vertex, Vertex> vertexPair : mesh.getBorderVertices()) {
 			Vertex startVertex = vertexPair.getKey();

@@ -67,6 +67,12 @@ public interface ITriangleMesh {
 	public Texture getTexture();
 	
 	/**
+	 * Gibt an, ob das Mesh einen Rand (oder mehrere Ränder) hat.
+	 * @return {@code true} wenn das Mesh einen Rand hat, ansonsten {@code false}
+	 */
+	boolean hasBorder();
+	
+	/**
 	 * Gibt eine paarweise Liste aller Vertices zurück, die sich an einem Rand befinden.
 	 * Jedes Paar beschreibt somit eine Kante.
 	 * @return Eine Liste der paarweisen Vertices

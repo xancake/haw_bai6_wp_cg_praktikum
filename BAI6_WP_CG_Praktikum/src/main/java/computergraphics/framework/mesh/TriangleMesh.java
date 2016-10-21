@@ -59,6 +59,11 @@ public class TriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
+	public boolean hasBorder() {
+		return false;
+	}
+	
+	@Override
 	public List<Pair<Vertex, Vertex>> getBorderVertices() {
 		// TODO: Falls man irgendwie mal lernt, wie man hier Kanten erkennen kann, dann machen wir das
 		throw new UnsupportedOperationException("Not yet implemented!");
