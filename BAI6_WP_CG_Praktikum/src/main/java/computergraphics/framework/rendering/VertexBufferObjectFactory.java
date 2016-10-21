@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.jogamp.opengl.GL2;
 
+import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.mesh.Triangle;
@@ -97,9 +98,22 @@ public class VertexBufferObjectFactory {
 			Vertex currentVertex = mesh.getVertex(i);
 			Vector position = currentVertex.getPosition();
 			Vector normal = currentVertex.getNormal();
+			
 			normalVertices.add(new RenderVertex(position, normal, vertexNormalColor));
 			normalVertices.add(new RenderVertex(position.add(normal.multiply(vertexNormalDrawLength)), normal, vertexNormalColor));
 		}
 		return new VertexBufferObject(GL2.GL_LINES, normalVertices);
+	}
+	
+	public VertexBufferObject createBorderVBO(ITriangleMesh mesh, Vector borderColor) {
+		List<RenderVertex> borderVertices = new ArrayList<>();
+		for (Pair<Vertex, Vertex> vertexPair : mesh.getBorderVertices()) {
+			Vertex startVertex = vertexPair.getKey();
+			Vertex endVertex = vertexPair.getValue();
+			
+			borderVertices.add(new RenderVertex(startVertex.getPosition(), startVertex.getNormal(), borderColor));
+			borderVertices.add(new RenderVertex(endVertex.getPosition(), endVertex.getNormal(), borderColor));
+		}
+		return new VertexBufferObject(GL2.GL_LINES, borderVertices);
 	}
 }

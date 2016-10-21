@@ -1,12 +1,16 @@
 package computergraphics.framework.mesh;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
+import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.datastructures.halfedge.HalfEdge;
 import computergraphics.framework.datastructures.halfedge.HalfEdgeTriangle;
 import computergraphics.framework.datastructures.halfedge.HalfEdgeVertex;
@@ -18,6 +22,7 @@ import computergraphics.util.MultiKey;
 public class HalfEdgeTriangleMesh implements ITriangleMesh {
 
 	private Map<MultiKey, HalfEdge> _oppositeHalfEdges;
+
 	private List<HalfEdge> _halfEdges;
 	private List<HalfEdgeVertex> _halfEdgeVertices;
 	private List<HalfEdgeTriangle> _halfEdgeTriangles;
@@ -30,7 +35,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		_halfEdgeTriangles = new LinkedList<>();
 		_textureCoordinates = new LinkedList<>();
 		_oppositeHalfEdges = new HashMap<>();
-		}
+	}
 	
 	public HalfEdgeTriangleMesh(String filename) throws IOException {
 		this();
@@ -196,6 +201,23 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			vertexNormal = vertexNormal.getNormalized();
 			halfEdgeVertex.setNormal(vertexNormal);
 		}
+	}
+
+	@Override
+	public List<Pair<Vertex, Vertex>> getBorderVertices() {
+		List<Pair<Vertex, Vertex>> border = new ArrayList<>();
+		for(HalfEdge edge : _oppositeHalfEdges.values()) {
+			border.add(new Pair<Vertex, Vertex>(edge.getStartVertex(), edge.getNext().getStartVertex()));
+		}
+		return border;
+	}
+	
+	/**
+	 * Gibt alle Halbkanten zurück die den Rand des Modells darstellen.
+	 * @return Menge der Halbkanten aus denen sich der Rand zusammenbaut.
+	 */
+	public Set<HalfEdge> getBorderHalfEdges() {
+		return new HashSet<>(_oppositeHalfEdges.values());
 	}
 	
 	@Override

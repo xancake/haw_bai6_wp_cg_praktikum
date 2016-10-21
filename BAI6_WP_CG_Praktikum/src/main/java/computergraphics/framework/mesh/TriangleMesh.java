@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
+import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.math.Triangles;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Texture;
@@ -54,6 +56,12 @@ public class TriangleMesh implements ITriangleMesh {
 	@Override
 	public Texture getTexture() {
 		return _texture;
+	}
+	
+	@Override
+	public List<Pair<Vertex, Vertex>> getBorderVertices() {
+		// TODO: Falls man irgendwie mal lernt, wie man hier Kanten erkennen kann, dann machen wir das
+		throw new UnsupportedOperationException("Not yet implemented!");
 	}
 	
 	@Override

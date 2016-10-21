@@ -6,6 +6,9 @@
  */
 package computergraphics.framework.mesh;
 
+import java.util.List;
+
+import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Texture;
 
@@ -62,6 +65,13 @@ public interface ITriangleMesh {
 	public Vector getTextureCoordinate(int index);
 
 	public Texture getTexture();
+	
+	/**
+	 * Gibt eine paarweise Liste aller Vertices zurück, die sich an einem Rand befinden.
+	 * Jedes Paar beschreibt somit eine Kante.
+	 * @return Eine Liste der paarweisen Vertices
+	 */
+	List<Pair<Vertex, Vertex>> getBorderVertices();
 
 	/**
 	 * Compute the triangles normals.

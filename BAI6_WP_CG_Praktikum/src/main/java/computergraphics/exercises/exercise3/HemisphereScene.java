@@ -32,6 +32,9 @@ public class HemisphereScene extends Scene{
 		int key = Character.toUpperCase(keyCode);
 		double normalDrawLength = 0;
 		switch (key) {
+		case 'B':
+			_hemiNode.setDrawBorder(!_hemiNode.isDrawBorder());
+			break;
 		case 'L':
 			_hemiNode.setDrawMeshVertexNormals(!_hemiNode.isDrawMeshVertexNormals());
 			break;

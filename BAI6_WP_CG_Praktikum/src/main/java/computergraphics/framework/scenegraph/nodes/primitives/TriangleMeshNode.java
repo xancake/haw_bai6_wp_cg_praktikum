@@ -16,8 +16,8 @@ public class TriangleMeshNode extends LeafNode {
 	
 	private ITriangleMesh _mesh;
 	private Vector _color;
-	private VertexBufferObject _vbo;
-	private VertexBufferObject _vboVertexNormals;
+	private VertexBufferObject _vboWithFacetteNormals;
+	private VertexBufferObject _vboWithVertexNormals;
 	private boolean _drawMeshVertexNormals;
 	
 	private VertexBufferObject _facetteNormals;
@@ -30,6 +30,10 @@ public class TriangleMeshNode extends LeafNode {
 	private Vector _vertexNormalColor = new Vector(0, 1, 0, 1);
 	private boolean _drawVertexNormals;
 	
+	private VertexBufferObject _border;
+	private Vector _borderColor = new Vector(0, 0, 0, 1);
+	private boolean _drawBorder;
+	
 	public TriangleMeshNode(ITriangleMesh mesh, Vector color) {
 		_mesh = Objects.requireNonNull(mesh);
 		if(Objects.requireNonNull(color).getDimension() != 4) {
@@ -37,10 +41,11 @@ public class TriangleMeshNode extends LeafNode {
 		}
 		_color = color;
 		_factory = new VertexBufferObjectFactory();
-		_vbo = _factory.createMeshVBOWithTriangleNormals(_mesh, _color);
-		_vboVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _color);
+		_vboWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _color);
+		_vboWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _color);
 		_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
 		_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+		_border = _factory.createBorderVBO(_mesh, _borderColor);
 	}
 	
 	@Override
@@ -48,9 +53,9 @@ public class TriangleMeshNode extends LeafNode {
 		if (mode == RenderMode.REGULAR) {
 			
 			if(_drawMeshVertexNormals) {
-				_vboVertexNormals.draw(gl);
+				_vboWithVertexNormals.draw(gl);
 			} else {
-				_vbo.draw(gl);
+				_vboWithFacetteNormals.draw(gl);
 			}
 			
 			// Normalen
@@ -59,6 +64,11 @@ public class TriangleMeshNode extends LeafNode {
 			}
 			if(isDrawVertexNormals()) {
 				_vertexNormals.draw(gl);
+			}
+
+			// Rand
+			if(isDrawBorder()) {
+				_border.draw(gl);
 			}
 		}
 	}
@@ -163,5 +173,21 @@ public class TriangleMeshNode extends LeafNode {
 			_vertexNormalDrawLength = length;
 			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
 		}
+	}
+	
+	/**
+	 * Gibt zurück, ob der Rand gezeichnet werden.
+	 * @return {@code true}, wenn der Rand gezeichnet wird, ansonsten {@code false}
+	 */
+	public boolean isDrawBorder() {
+		return _drawBorder;
+	}
+	
+	/**
+	 * Legt fest, ob der Rand gezeichnet werden soll oder nicht.
+	 * @param draw {@code true}, wenn der Rand gezeichnet werden soll, ansonsten {@code false}
+	 */
+	public void setDrawBorder(boolean draw) {
+		_drawBorder = draw;
 	}
 }
