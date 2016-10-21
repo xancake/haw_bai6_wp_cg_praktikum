@@ -66,7 +66,7 @@ public interface ITriangleMesh {
 	/**
 	 * Compute the triangles normals.
 	 */
-	public void computeTriangleNormals();
+	public void computeNormals();
 
 	/**
 	 * Create a mesh of the shadow polygons.

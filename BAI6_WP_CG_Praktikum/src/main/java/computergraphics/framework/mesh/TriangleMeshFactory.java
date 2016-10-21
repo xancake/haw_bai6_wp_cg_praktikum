@@ -47,7 +47,7 @@ public class TriangleMeshFactory {
 					getSphereIndex(resolution-1, (j+1) % resolution, resolution));
 		}
 
-		mesh.computeTriangleNormals();
+		mesh.computeNormals();
 	}
 
 	private static Vector evaluateSpherePoint(float theta, float phi, float radius) {
@@ -69,6 +69,6 @@ public class TriangleMeshFactory {
 		mesh.addVertex(new Vector(-extend, 0,  extend));
 		mesh.addTriangle(0, 2, 1);
 		mesh.addTriangle(0, 3, 2);
-		mesh.computeTriangleNormals();
+		mesh.computeNormals();
 	}
 }

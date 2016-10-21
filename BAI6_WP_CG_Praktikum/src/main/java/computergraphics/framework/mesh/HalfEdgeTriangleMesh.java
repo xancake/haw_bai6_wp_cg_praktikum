@@ -1,5 +1,6 @@
 package computergraphics.framework.mesh;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,8 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		_halfEdgeVertices = new LinkedList<>();
 		_halfEdgeTriangles = new LinkedList<>();
 		_textureCoordinates = new LinkedList<>();
-	}
+		_oppositeHalfEdges = new HashMap<>();
+		}
 	
 	public HalfEdgeTriangleMesh(String filename) {
 		this();
@@ -102,9 +104,13 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 
 	private void generateHalfEdges(int vertexIndex1, int vertexIndex2, int vertexIndex3,
 			HalfEdgeTriangle halfEdgeTriangle) {
+		
+		HalfEdge edge1 = initHalfEdge(halfEdgeTriangle, vertexIndex1, vertexIndex2);
+		HalfEdge edge2 = initHalfEdge(halfEdgeTriangle, vertexIndex2, vertexIndex3);
 		HalfEdge edge3 = initHalfEdge(halfEdgeTriangle, vertexIndex3, vertexIndex1);
-		HalfEdge edge2 = initHalfEdge(halfEdgeTriangle, edge3, vertexIndex1, vertexIndex2);
-		HalfEdge edge1 = initHalfEdge(halfEdgeTriangle, edge2, vertexIndex2, vertexIndex3);
+		
+		edge1.setNext(edge2);
+		edge2.setNext(edge3);
 		edge3.setNext(edge1);
 		
 		halfEdgeTriangle.setHalfEdge(edge1);
@@ -135,13 +141,6 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		return newHalfEdge;
 	}
 	
-	private HalfEdge initHalfEdge(HalfEdgeTriangle facet, HalfEdge nextHalfEdge, int startVertexIndex, int endVertexIndex) {
-		
-		HalfEdge newHalfEdge = initHalfEdge(facet, startVertexIndex, endVertexIndex);
-		newHalfEdge.setNext(nextHalfEdge);
-		return newHalfEdge;
-	}
-	
 	@Override
 	public void addTextureCoordinate(Vector t) {
 		_textureCoordinates.add(t);
@@ -159,12 +158,26 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
-	public void computeTriangleNormals() {
+	public void computeNormals() {
 		for(HalfEdgeTriangle t : _halfEdgeTriangles) {
 			HalfEdgeVertex v0 = getHalfEdgeVertex(t.getVertexIndex(0));
 			HalfEdgeVertex v1 = getHalfEdgeVertex(t.getVertexIndex(1));
 			HalfEdgeVertex v2 = getHalfEdgeVertex(t.getVertexIndex(2));
 			t.setNormal(Triangles.calculateNormal(v0.getPosition(), v1.getPosition(), v2.getPosition()));
+		}
+		
+		for (HalfEdgeVertex halfEdgeVertex : _halfEdgeVertices) {
+			Vector vertexNormal = new Vector(0, 0, 0);
+			HalfEdge currentEdge = halfEdgeVertex.getHalfEdge();
+			
+			do {
+				Triangle currentFacette = currentEdge.getFacet();
+				vertexNormal = vertexNormal.add(currentFacette.getNormal());
+				currentEdge = currentEdge.getOpposite().getNext();
+			} while(!currentEdge.equals(halfEdgeVertex.getHalfEdge()));
+			
+			vertexNormal = vertexNormal.getNormalized();
+			halfEdgeVertex.setNormal(vertexNormal);
 		}
 	}
 	

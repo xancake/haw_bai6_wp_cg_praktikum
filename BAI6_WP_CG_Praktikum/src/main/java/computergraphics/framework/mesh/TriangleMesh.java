@@ -96,7 +96,7 @@ public class TriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
-	public void computeTriangleNormals() {
+	public void computeNormals() {
 		for(Triangle t : _triangles) {
 			Vertex v0 = getVertex(t.getVertexIndex(0));
 			Vertex v1 = getVertex(t.getVertexIndex(1));
