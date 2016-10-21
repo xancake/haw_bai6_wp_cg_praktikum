@@ -37,8 +37,9 @@ public class ObjReader {
   /**
    * Lesen eines Dreiecksnetzes aus einer OBJ-Datei. Die Information wird in das
    * Dreiecksnetz 'mesh' geschrieben.
+   * @throws IOException 
    */
-  public void read(final String filename, ITriangleMesh mesh) {
+  public void read(final String filename, ITriangleMesh mesh) throws IOException {
     // Setup
     if (mesh == null) {
       System.out.println("Invalid triangle mesh - aborting.");
@@ -48,21 +49,17 @@ public class ObjReader {
     directory = new File(AssetPath.getPathToAsset(filename)).getParent() + "/";
 
     String strLine = "";
-    try {
-      InputStream is = new FileInputStream(AssetPath.getPathToAsset(filename));
-      DataInputStream in = new DataInputStream(is);
-      BufferedReader br = new BufferedReader(new InputStreamReader(in));
-      while ((strLine = br.readLine()) != null) {
-        parseLine(strLine, directory, mesh);
-      }
-      in.close();
-      mesh.computeNormals();
-      System.out.println("OBJ file " + filename + " with "
-          + mesh.getNumberOfVertices() + " vertices and "
-          + mesh.getNumberOfTriangles() + " triangles successfully read.");
-    } catch (Exception e) {
-      System.out.println("Error reading from the OBJ file: " + e.getMessage());
+    InputStream is = new FileInputStream(AssetPath.getPathToAsset(filename));
+    DataInputStream in = new DataInputStream(is);
+    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+    while ((strLine = br.readLine()) != null) {
+      parseLine(strLine, directory, mesh);
     }
+    in.close();
+    mesh.computeNormals();
+    System.out.println("OBJ file " + filename + " with "
+        + mesh.getNumberOfVertices() + " vertices and "
+        + mesh.getNumberOfTriangles() + " triangles successfully read.");
   }
 
   /**

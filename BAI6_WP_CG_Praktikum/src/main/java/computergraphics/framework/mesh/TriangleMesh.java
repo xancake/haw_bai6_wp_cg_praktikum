@@ -1,5 +1,6 @@
 package computergraphics.framework.mesh;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class TriangleMesh implements ITriangleMesh {
 		_textureCoordinates = new LinkedList<>();
 	}
 	
-	public TriangleMesh(String filename) {
+	public TriangleMesh(String filename) throws IOException {
 		this();
 		ObjReader reader = new ObjReader();
 		reader.read(filename, this);

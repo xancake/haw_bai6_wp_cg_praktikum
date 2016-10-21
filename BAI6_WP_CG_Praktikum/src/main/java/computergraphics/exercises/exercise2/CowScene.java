@@ -1,5 +1,7 @@
 package computergraphics.exercises.exercise2;
 
+import java.io.IOException;
+
 import computergraphics.framework.Scene;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
@@ -14,7 +16,7 @@ public class CowScene extends Scene {
 	
 	private TriangleMeshNode _cowNode;
 	
-	public CowScene() {
+	public CowScene() throws IOException {
 		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
 
 		getRoot().setLightPosition(new Vector(1, 1, 1));
@@ -51,7 +53,7 @@ public class CowScene extends Scene {
 		}
 	}
 	
-	public static void main(String... args) {
+	public static void main(String... args) throws IOException {
 		new CowScene();
 	}
 }

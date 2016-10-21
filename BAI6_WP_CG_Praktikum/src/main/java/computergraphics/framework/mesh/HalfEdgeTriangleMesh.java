@@ -1,5 +1,6 @@
 package computergraphics.framework.mesh;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		_oppositeHalfEdges = new HashMap<>();
 		}
 	
-	public HalfEdgeTriangleMesh(String filename) {
+	public HalfEdgeTriangleMesh(String filename) throws IOException {
 		this();
 		ObjReader reader = new ObjReader();
 		reader.read(filename, this);
@@ -130,6 +131,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			HalfEdge oppositeHalfEdge = _oppositeHalfEdges.get(key);
 			oppositeHalfEdge.setOpposite(newHalfEdge);
 			newHalfEdge.setOpposite(oppositeHalfEdge);
+			_oppositeHalfEdges.remove(key);
 		} else {
 			_oppositeHalfEdges.put(key, newHalfEdge);
 		}
@@ -173,8 +175,23 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			do {
 				Triangle currentFacette = currentEdge.getFacet();
 				vertexNormal = vertexNormal.add(currentFacette.getNormal());
-				currentEdge = currentEdge.getOpposite().getNext();
-			} while(!currentEdge.equals(halfEdgeVertex.getHalfEdge()));
+				if(currentEdge.getOpposite() == null) {
+					currentEdge = null;
+				} else {
+					currentEdge = currentEdge.getOpposite().getNext();
+				}
+			} while(currentEdge != null && !currentEdge.equals(halfEdgeVertex.getHalfEdge()));
+			
+			//Bei Rand werden die Kanten auch in die andere Richtung durchlaufen
+			if(currentEdge == null) {
+				currentEdge = halfEdgeVertex.getHalfEdge().getNext().getNext().getOpposite();
+				
+				while(currentEdge != null) {
+					Triangle currentFacette = currentEdge.getFacet();
+					vertexNormal = vertexNormal.add(currentFacette.getNormal());
+					currentEdge = currentEdge.getNext().getNext().getOpposite();
+				}
+			}
 			
 			vertexNormal = vertexNormal.getNormalized();
 			halfEdgeVertex.setNormal(vertexNormal);
