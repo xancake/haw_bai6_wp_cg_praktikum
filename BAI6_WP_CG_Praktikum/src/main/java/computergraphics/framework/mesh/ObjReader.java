@@ -56,13 +56,13 @@ public class ObjReader {
         parseLine(strLine, directory, mesh);
       }
       in.close();
+      mesh.computeNormals();
+      System.out.println("OBJ file " + filename + " with "
+          + mesh.getNumberOfVertices() + " vertices and "
+          + mesh.getNumberOfTriangles() + " triangles successfully read.");
     } catch (Exception e) {
-      System.out.println("Error reading from the OBJ file.");
+      System.out.println("Error reading from the OBJ file: " + e.getMessage());
     }
-    mesh.computeTriangleNormals();
-    System.out.println("OBJ file " + filename + " with "
-        + mesh.getNumberOfVertices() + " vertices and "
-        + mesh.getNumberOfTriangles() + " triangles successfully read.");
   }
 
   /**
