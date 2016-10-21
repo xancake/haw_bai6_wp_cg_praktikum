@@ -29,6 +29,9 @@ public class HalfEdgeCowScene extends Scene {
 		int key = Character.toUpperCase(keyCode);
 		double normalDrawLength = 0;
 		switch (key) {
+		case 'L':
+			_cowNode.setDrawMeshVertexNormals(!_cowNode.isDrawMeshVertexNormals());
+			break;
 		case 'N':
 			_cowNode.setDrawFacetteNormals(!_cowNode.isDrawFacetteNormals());
 			break;

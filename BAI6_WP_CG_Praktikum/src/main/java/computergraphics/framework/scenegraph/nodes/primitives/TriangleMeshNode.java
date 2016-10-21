@@ -1,7 +1,5 @@
 package computergraphics.framework.scenegraph.nodes.primitives;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import com.jogamp.opengl.GL2;
@@ -9,16 +7,18 @@ import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
-import computergraphics.framework.mesh.Triangle;
-import computergraphics.framework.mesh.Vertex;
-import computergraphics.framework.rendering.RenderVertex;
 import computergraphics.framework.rendering.VertexBufferObject;
+import computergraphics.framework.rendering.VertexBufferObjectFactory;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
 public class TriangleMeshNode extends LeafNode {
+	private VertexBufferObjectFactory _factory;
+	
 	private ITriangleMesh _mesh;
 	private Vector _color;
 	private VertexBufferObject _vbo;
+	private VertexBufferObject _vboVertexNormals;
+	private boolean _drawMeshVertexNormals;
 	
 	private VertexBufferObject _facetteNormals;
 	private double _facetteNormalDrawLength = 0.02;
@@ -36,43 +36,24 @@ public class TriangleMeshNode extends LeafNode {
 			throw new IllegalArgumentException("Die Farbe muss vierdimensional sein (R,G,B,A)");
 		}
 		_color = color;
-		_vbo = new VertexBufferObject(_mesh, _color);
-		_facetteNormals = createFacettNormalsVBO();
-		_vertexNormals = createVertexNormalsVBO();
-	}
-	
-	private VertexBufferObject createFacettNormalsVBO() {
-		List<RenderVertex> normalVertices = new ArrayList<>();
-		for(int t=0; t<_mesh.getNumberOfTriangles(); t++) {
-			Triangle triangle = _mesh.getTriangle(t);
-			Vector v0 = _mesh.getVertex(triangle.getVertexIndex(0)).getPosition();
-			Vector v1 = _mesh.getVertex(triangle.getVertexIndex(1)).getPosition();
-			Vector v2 = _mesh.getVertex(triangle.getVertexIndex(2)).getPosition();
-			Vector schwerpunkt = Vector.calculateSchwerpunkt(v0, v1, v2);
-			Vector normal = triangle.getNormal();
-			
-			normalVertices.add(new RenderVertex(schwerpunkt, normal, _facetteNormalColor));
-			normalVertices.add(new RenderVertex(schwerpunkt.add(normal.multiply(_facetteNormalDrawLength)), normal, _facetteNormalColor));
-		}
-		return new VertexBufferObject(GL2.GL_LINES, normalVertices);
-	}
-	
-	private VertexBufferObject createVertexNormalsVBO() {
-		List<RenderVertex> normalVertices = new ArrayList<>();
-		for (int i = 0; i < _mesh.getNumberOfVertices(); i++) {
-			Vertex currentVertex = _mesh.getVertex(i);
-			Vector position = currentVertex.getPosition();
-			Vector normal = currentVertex.getNormal();
-			normalVertices.add(new RenderVertex(position, normal, _vertexNormalColor));
-			normalVertices.add(new RenderVertex(position.add(normal.multiply(_vertexNormalDrawLength)), normal, _vertexNormalColor));
-		}
-		return new VertexBufferObject(GL2.GL_LINES, normalVertices);
+		_factory = new VertexBufferObjectFactory();
+		_vbo = _factory.createMeshVBOWithTriangleNormals(_mesh, _color);
+		_vboVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _color);
+		_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
+		_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
 	}
 	
 	@Override
 	public void drawGL(GL2 gl, RenderMode mode, Matrix modelMatrix) {
 		if (mode == RenderMode.REGULAR) {
-			_vbo.draw(gl);
+			
+			if(_drawMeshVertexNormals) {
+				_vboVertexNormals.draw(gl);
+			} else {
+				_vbo.draw(gl);
+			}
+			
+			// Normalen
 			if(isDrawFacetteNormals()) {
 				_facetteNormals.draw(gl);
 			}
@@ -80,6 +61,22 @@ public class TriangleMeshNode extends LeafNode {
 				_vertexNormals.draw(gl);
 			}
 		}
+	}
+	
+	/**
+	 * Gibt zurück, ob das Mesh anhand der Vertexnormalen oder Facettennormalen gezeichnet wird.
+	 * @return {@code true} wenn es nach den Vertexnormalen gezeichnet wird, ansonsten {@code false} für Facettennormalen
+	 */
+	public boolean isDrawMeshVertexNormals() {
+		return _drawMeshVertexNormals;
+	}
+	
+	/**
+	 * Legt fest, ob das Mesh anhand der Vertexnormalen gezeichnet werden soll oder anhand der Facettennormalen.
+	 * @param draw {@code true} wenn es nach den Vertexnormalen gezeichnet werden soll, ansonsten {@code false} für Facettennormalen
+	 */
+	public void setDrawMeshVertexNormals(boolean draw) {
+		_drawMeshVertexNormals = draw;
 	}
 	
 	/**
@@ -121,7 +118,7 @@ public class TriangleMeshNode extends LeafNode {
 		}
 		if(length != _facetteNormalDrawLength) {
 			_facetteNormalDrawLength = length;
-			_facetteNormals = createFacettNormalsVBO();
+			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
 		}
 	}
 	
@@ -164,7 +161,7 @@ public class TriangleMeshNode extends LeafNode {
 		}
 		if(length != _vertexNormalDrawLength) {
 			_vertexNormalDrawLength = length;
-			_vertexNormals = createVertexNormalsVBO();
+			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
 		}
 	}
 }

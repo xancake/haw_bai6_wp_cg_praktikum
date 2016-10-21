@@ -4,14 +4,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
 import com.jogamp.opengl.GL2;
+
 import computergraphics.framework.math.Vector;
-import computergraphics.framework.mesh.ITriangleMesh;
-import computergraphics.framework.mesh.Triangle;
 
 /**
  * Rendering vie vertex buffer objects (VBO).
@@ -56,39 +55,6 @@ public class VertexBufferObject {
 	public VertexBufferObject(int primitiveType, List<RenderVertex> renderVertices) {
 		this.renderVertices = Objects.requireNonNull(renderVertices);
 		this.primitiveType = primitiveType;
-	}
-	
-	public VertexBufferObject(ITriangleMesh mesh, Vector color) {
-		Objects.requireNonNull(mesh);
-		if(Objects.requireNonNull(color).getDimension() != 4) {
-			throw new IllegalArgumentException("Die Farbe muss vierdimensional sein (R,G,B,A)");
-		}
-		
-		this.primitiveType = GL2.GL_TRIANGLES;
-		this.renderVertices = new ArrayList<RenderVertex>();
-		
-		for(int t=0; t<mesh.getNumberOfTriangles(); t++) {
-			Triangle triangle = mesh.getTriangle(t);
-			addTriangle(
-					renderVertices,
-					mesh.getVertex(triangle.getVertexIndex(2)).getPosition(),
-					mesh.getVertex(triangle.getVertexIndex(1)).getPosition(),
-					mesh.getVertex(triangle.getVertexIndex(0)).getPosition(),
-					triangle.getNormal(),
-					color
-			);
-		}
-	}
-	
-	private void addTriangle(
-			List<RenderVertex> renderVertices,
-			Vector p0, Vector p1, Vector p2,
-			Vector normal,
-			Vector color
-	) {
-		renderVertices.add(new RenderVertex(p2, normal, color));
-		renderVertices.add(new RenderVertex(p1, normal, color));
-		renderVertices.add(new RenderVertex(p0, normal, color));
 	}
 
 	/**
