@@ -46,6 +46,7 @@ public class TriangleMeshShowcaseScene extends Scene {
 			break;
 		case 'V':
 			_meshNode.setDrawVertexNormals(!_meshNode.isDrawVertexNormals());
+			break;
 		case '+':
 			normalDrawLength = _meshNode.getFacetteNormalDrawLength();
 			if (normalDrawLength > NORMAL_DRAW_LENGTH_STEP) {
