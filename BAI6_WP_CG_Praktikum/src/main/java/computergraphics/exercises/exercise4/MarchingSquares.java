@@ -30,6 +30,7 @@ public class MarchingSquares {
 		for(Cube cube : _area.createSubCubes(_resolution)) {
 			createMesh(cube, Objects.requireNonNull(mesh));
 		}
+		mesh.computeNormals();
 	}
 	
 	private void createMesh(Cube cube, ITriangleMesh mesh) {
