@@ -1,0 +1,6 @@
+Praktikum 4:
+- Marching Squares parallelisieren
+- Dreieckssuppe zu einem Dreiecksnetz zusammenfassen
+- Demo-Scene verbessern, sodass man mehrere Meshes anzeigen und individuell "konfigurieren" kann
+- weitere implizite Funktionen aufnehmen
+- Boysche Fläche Funktion korrigieren (wie?)
