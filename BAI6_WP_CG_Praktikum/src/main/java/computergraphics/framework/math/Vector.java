@@ -197,6 +197,31 @@ public class Vector implements Serializable {
 	}
 	
 	/**
+	 * Exponiert den Vektor (für jede Dimension einzeln).
+	 * @param exponent um den exponiert werden soll.
+	 * @return der exponierte Vektor
+	 */
+	public Vector power(double exponent) {
+		Vector result = new Vector(getDimension());
+		for(int index=0; index<getDimension(); index++) {
+			result.set(index, Math.pow(get(index), exponent));
+		}
+		return result;
+	}
+	
+	/**
+	 * Summiert die Werte aller Dimensionen auf und gibt dies zurück.
+	 * @return Die Summe alle Werte
+	 */
+	public double sum() {
+		double sum = 0.0;
+		for(int index=0; index<getDimension(); index++) {
+			sum += get(index);
+		}
+		return sum;
+	}
+	
+	/**
 	 * Compute the inner product of the vector with another vector.
 	 * @param other Other vector
 	 * @return Resulting matrix.
