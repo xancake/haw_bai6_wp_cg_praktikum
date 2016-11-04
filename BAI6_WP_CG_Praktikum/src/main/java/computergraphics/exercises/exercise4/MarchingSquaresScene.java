@@ -3,7 +3,8 @@ package computergraphics.exercises.exercise4;
 import java.io.IOException;
 
 import computergraphics.exercises.TriangleMeshShowcaseScene;
-import computergraphics.framework.datastructures.implicit_functions.Kugel;
+import computergraphics.framework.datastructures.Cube;
+import computergraphics.framework.datastructures.implicit_functions.Torus;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.HalfEdgeTriangleMesh;
 import computergraphics.framework.mesh.ITriangleMesh;
@@ -11,11 +12,12 @@ import computergraphics.framework.scenegraph.nodes.primitives.TriangleMeshNode;
 
 @SuppressWarnings("serial")
 public class MarchingSquaresScene extends TriangleMeshShowcaseScene {
-	public MarchingSquaresScene(int size) throws IOException {
+	public MarchingSquaresScene(double size) throws IOException {
 		super(cube(size));
 		
 		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
-		new MarchingSquares(size, new Kugel(1, new Vector(1, 1, 1)), 2).createMesh(mesh);
+		// new Kugel(1, new Vector(0, 0, 0))
+		new MarchingSquares(new Cube(-size, size), 25, new Torus(0.25, 0.5, new Vector(0, 0, 0)), 0).createMesh(mesh);
 		getRoot().addChild(new TriangleMeshNode(mesh, new Vector(0, 0, 1, 1)));
 	}
 	
@@ -23,7 +25,7 @@ public class MarchingSquaresScene extends TriangleMeshShowcaseScene {
 		new MarchingSquaresScene(1);
 	}
 	
-	private static ITriangleMesh cube(int size) {
+	private static ITriangleMesh cube(double size) {
 		ITriangleMesh cube = new HalfEdgeTriangleMesh();
 		cube.addVertex(new Vector(-size, -size, -size));
 		cube.addVertex(new Vector( size, -size, -size));

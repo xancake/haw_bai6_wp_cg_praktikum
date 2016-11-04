@@ -1,52 +1,43 @@
 package computergraphics.exercises.exercise4;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import computergraphics.framework.datastructures.Cube;
 import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.datastructures.implicit_functions.ImplicitFunction;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 
 public class MarchingSquares {
-	private double _resolution;
+	private Cube _area;
+	private int _resolution;
 	private ImplicitFunction _function;
 	private double _iso;
 	
-	public MarchingSquares(double resolution, ImplicitFunction function, double isowert) {
+	public MarchingSquares(Cube area, int resolution, ImplicitFunction function, double isowert) {
 		if(resolution < 1) {
 			throw new IllegalArgumentException("Die Auflösung für den MarchingSquares-Algorithmus muss mindestens 1 sein!");
 		}
+		_area = Objects.requireNonNull(area);
 		_resolution = resolution;
 		_function = Objects.requireNonNull(function);
 		_iso = isowert;
 	}
 	
-	
 	public void createMesh(ITriangleMesh mesh) {
-		Objects.requireNonNull(mesh);
-		
-		List<Vector> points = Arrays.asList(
-				new Vector(-_resolution, -_resolution, -_resolution),
-				new Vector( _resolution, -_resolution, -_resolution),
-				new Vector( _resolution,  _resolution, -_resolution),
-				new Vector(-_resolution,  _resolution, -_resolution),
-				new Vector(-_resolution, -_resolution,  _resolution),
-				new Vector( _resolution, -_resolution,  _resolution),
-				new Vector( _resolution,  _resolution,  _resolution),
-				new Vector(-_resolution,  _resolution,  _resolution)
-		);
+		for(Cube cube : _area.createSubCubes(_resolution)) {
+			createMesh(cube, Objects.requireNonNull(mesh));
+		}
+	}
+	
+	private void createMesh(Cube cube, ITriangleMesh mesh) {
+		List<Vector> points = cube.createVertexVectors();
 		List<Double> values = new ArrayList<>();
 		for(int i=0; i<points.size(); i++) {
 			values.add(_function.getValue(points.get(i)));
 		}
-//		List<Double> values = Arrays.asList(
-////				-2.,  1.,  2.,  3.,  6.,  0., -4., -2.
-////				-1., -1., -1., -1., -1., -1., -1.,  1.
-//				 2.,  7.,  3.,  1.,  7.,  2.,  7.,  6.
-//		);
 		createTriangles(mesh, points, values);
 	}
 	
