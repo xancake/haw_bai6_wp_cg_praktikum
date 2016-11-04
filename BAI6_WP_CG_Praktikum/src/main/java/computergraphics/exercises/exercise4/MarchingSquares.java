@@ -1,5 +1,6 @@
 package computergraphics.exercises.exercise4;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -8,47 +9,48 @@ import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.datastructures.implicit_functions.ImplicitFunction;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
-import computergraphics.framework.mesh.Triangle;
 
 public class MarchingSquares {
-	
+	private double _resolution;
 	private ImplicitFunction _function;
-	private double _iso = 0;
-	private ITriangleMesh _mesh;
+	private double _iso;
 	
-	
-	
-	
-	
-	
-	
-	public MarchingSquares(ImplicitFunction function, double isowert, ITriangleMesh mesh) {
+	public MarchingSquares(double resolution, ImplicitFunction function, double isowert) {
+		if(resolution < 1) {
+			throw new IllegalArgumentException("Die Auflösung für den MarchingSquares-Algorithmus muss mindestens 1 sein!");
+		}
+		_resolution = resolution;
 		_function = Objects.requireNonNull(function);
 		_iso = isowert;
-		_mesh = Objects.requireNonNull(mesh);
 	}
 	
 	
-	public void createMesh(double size) {
+	public void createMesh(ITriangleMesh mesh) {
+		Objects.requireNonNull(mesh);
+		
 		List<Vector> points = Arrays.asList(
-				new Vector(-size, -size, -size),
-				new Vector( size, -size, -size),
-				new Vector( size,  size, -size),
-				new Vector(-size,  size, -size),
-				new Vector(-size, -size,  size),
-				new Vector( size, -size,  size),
-				new Vector( size,  size,  size),
-				new Vector(-size,  size,  size)
+				new Vector(-_resolution, -_resolution, -_resolution),
+				new Vector( _resolution, -_resolution, -_resolution),
+				new Vector( _resolution,  _resolution, -_resolution),
+				new Vector(-_resolution,  _resolution, -_resolution),
+				new Vector(-_resolution, -_resolution,  _resolution),
+				new Vector( _resolution, -_resolution,  _resolution),
+				new Vector( _resolution,  _resolution,  _resolution),
+				new Vector(-_resolution,  _resolution,  _resolution)
 		);
-		List<Double> values = Arrays.asList(
-//				-2.,  1.,  2.,  3.,  6.,  0., -4., -2.
-//				-1., -1., -1., -1., -1., -1., -1.,  1.
-				 2.,  7.,  3.,  1.,  7.,  2.,  7.,  6.
-		);
-		createTriangles(points, values);
+		List<Double> values = new ArrayList<>();
+		for(int i=0; i<points.size(); i++) {
+			values.add(_function.getValue(points.get(i)));
+		}
+//		List<Double> values = Arrays.asList(
+////				-2.,  1.,  2.,  3.,  6.,  0., -4., -2.
+////				-1., -1., -1., -1., -1., -1., -1.,  1.
+//				 2.,  7.,  3.,  1.,  7.,  2.,  7.,  6.
+//		);
+		createTriangles(mesh, points, values);
 	}
 	
-	private void createTriangles(List<Vector> points, List<Double> values) {
+	private void createTriangles(ITriangleMesh mesh, List<Vector> points, List<Double> values) {
 		int caseIndex = 0;
 		for(int i = 0; i < values.size(); i++) {
 			double value = values.get(i);
@@ -56,24 +58,18 @@ public class MarchingSquares {
 		}
 		
 		int[] currentCase = MarchingSquaresLookupTable.getCase(caseIndex);
-		System.out.println(caseIndex + " " + Arrays.toString(currentCase));
 		for (int i = 0; i < currentCase.length; i += 3) {
-			Vector p1 = getPointOnEdge(points, values, currentCase[i]);
-			Vector p2 = getPointOnEdge(points, values, currentCase[i+1]);
-			Vector p3 = getPointOnEdge(points, values, currentCase[i+2]);
-			
-			if(p1 != null && p2 != null && p3 != null) {
-				_mesh.addTriangle(_mesh.addVertex(p1), _mesh.addVertex(p2), _mesh.addVertex(p3));
+			if(currentCase[i] != -1 && currentCase[i+1] != -1 && currentCase[i+2] != -1) {
+				Vector p1 = getPointOnEdge(points, values, currentCase[i]);
+				Vector p2 = getPointOnEdge(points, values, currentCase[i+1]);
+				Vector p3 = getPointOnEdge(points, values, currentCase[i+2]);
+				mesh.addTriangle(mesh.addVertex(p1), mesh.addVertex(p2), mesh.addVertex(p3));
 			}
 		}
 	}
 	
 	private Vector getPointOnEdge(List<Vector> points, List<Double> values, int edgeIndex) {
 		Pair<Pair<Vector, Double>, Pair<Vector, Double>> verticesValuesPairs = getVerticesOfEdge(points, values, edgeIndex);
-		if(verticesValuesPairs == null) {
-			return null;
-		}
-		
 		Pair<Vector, Double> pA = verticesValuesPairs.getKey();
 		Pair<Vector, Double> pB = verticesValuesPairs.getValue();
 		
@@ -86,7 +82,6 @@ public class MarchingSquares {
 
 	private Pair<Pair<Vector, Double>, Pair<Vector, Double>> getVerticesOfEdge(List<Vector> points, List<Double> values, int edgeIndex) {
 		switch(edgeIndex) {
-			case -1: return null;
 			case  0: return pair(pair(points.get(0), values.get(0)), pair(points.get(1), values.get(1)));
 			case  1: return pair(pair(points.get(1), values.get(1)), pair(points.get(2), values.get(2)));
 			case  2: return pair(pair(points.get(2), values.get(2)), pair(points.get(3), values.get(3)));

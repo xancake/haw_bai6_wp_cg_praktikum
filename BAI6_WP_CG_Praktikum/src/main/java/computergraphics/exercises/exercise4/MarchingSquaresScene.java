@@ -15,7 +15,7 @@ public class MarchingSquaresScene extends TriangleMeshShowcaseScene {
 		super(cube(size));
 		
 		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
-		new MarchingSquares(new Kugel(1, new Vector(1, 1, 1)), 2, mesh).createMesh(size);
+		new MarchingSquares(size, new Kugel(1, new Vector(1, 1, 1)), 2).createMesh(mesh);
 		getRoot().addChild(new TriangleMeshNode(mesh, new Vector(0, 0, 1, 1)));
 	}
 	
