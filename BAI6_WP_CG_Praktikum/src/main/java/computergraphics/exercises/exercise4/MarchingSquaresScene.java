@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import computergraphics.exercises.TriangleMeshShowcaseScene;
 import computergraphics.framework.datastructures.Cube;
-import computergraphics.framework.datastructures.implicit_functions.Torus;
+import computergraphics.framework.datastructures.implicit_functions.BoyscheFlaecheFunction;
+import computergraphics.framework.datastructures.implicit_functions.EllipsoidFunction;
+import computergraphics.framework.datastructures.implicit_functions.TorusFunction;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.HalfEdgeTriangleMesh;
 import computergraphics.framework.mesh.ITriangleMesh;
@@ -15,9 +17,13 @@ public class MarchingSquaresScene extends TriangleMeshShowcaseScene {
 	public MarchingSquaresScene(double size) throws IOException {
 		super(cube(size));
 		
+		Vector center = new Vector(0, 0, 0);
+		
 		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
-		// new Kugel(1, new Vector(0, 0, 0))
-		new MarchingSquares(new Cube(-size, size), 25, new Torus(0.25, 0.5, new Vector(0, 0, 0)), 0).createMesh(mesh);
+		// new Kugel(1, center)
+		// new TorusFunction(0.25, 0.5, center)
+		// new BoyscheFlaecheFunction(center)
+		new MarchingSquares(new Cube(-size, size), 25, new EllipsoidFunction(0.25, 0.5, 0.5, center), 1).createMesh(mesh);
 		getRoot().addChild(new TriangleMeshNode(mesh, new Vector(0, 0, 1, 1)));
 	}
 	
