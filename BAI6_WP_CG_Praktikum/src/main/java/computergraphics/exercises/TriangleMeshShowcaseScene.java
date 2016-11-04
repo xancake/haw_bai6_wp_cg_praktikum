@@ -16,14 +16,14 @@ public class TriangleMeshShowcaseScene extends Scene {
 	private TriangleMeshNode _meshNode;
 
 	public TriangleMeshShowcaseScene(ITriangleMesh mesh) throws IOException {
-			super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
+		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
 
-			getRoot().setLightPosition(new Vector(1, 1, 1));
-			getRoot().setAnimated(true);
-			
-			_meshNode = new TriangleMeshNode(mesh, new Vector(1, 0, 0, 1));
-			getRoot().addChild(_meshNode);
-		}
+		getRoot().setLightPosition(new Vector(1, 1, 1));
+		getRoot().setAnimated(true);
+		
+		_meshNode = new TriangleMeshNode(mesh, new Vector(1, 0, 0, 1));
+		getRoot().addChild(_meshNode);
+	}
 
 	public void keyPressed(int keyCode) {
 		int key = Character.toUpperCase(keyCode);
