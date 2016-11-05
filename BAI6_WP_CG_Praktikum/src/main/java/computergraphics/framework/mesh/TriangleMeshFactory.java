@@ -71,4 +71,29 @@ public class TriangleMeshFactory {
 		mesh.addTriangle(0, 3, 2);
 		mesh.computeNormals();
 	}
+	
+	public static void createInvertedCube(ITriangleMesh mesh, double size) {
+		mesh.clear();
+		mesh.addVertex(new Vector(-size, -size, -size));
+		mesh.addVertex(new Vector( size, -size, -size));
+		mesh.addVertex(new Vector( size,  size, -size));
+		mesh.addVertex(new Vector(-size,  size, -size));
+		mesh.addVertex(new Vector(-size, -size,  size));
+		mesh.addVertex(new Vector( size, -size,  size));
+		mesh.addVertex(new Vector( size,  size,  size));
+		mesh.addVertex(new Vector(-size,  size,  size));
+		mesh.addTriangle(0, 1, 2);
+		mesh.addTriangle(2, 3, 0);
+		mesh.addTriangle(6, 5, 4);
+		mesh.addTriangle(4, 7, 6);
+		mesh.addTriangle(5, 1, 0);
+		mesh.addTriangle(0, 4, 5);
+		mesh.addTriangle(1, 5, 6);
+		mesh.addTriangle(6, 2, 1);
+		mesh.addTriangle(2, 6, 7);
+		mesh.addTriangle(7, 3, 2);
+		mesh.addTriangle(4, 0, 3);
+		mesh.addTriangle(3, 7, 4);
+		mesh.computeNormals();
+	}
 }
