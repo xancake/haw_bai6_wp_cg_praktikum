@@ -6,7 +6,7 @@ public class KugelFunction extends AbstractImplicitFunction implements ImplicitF
 	private double _radius;
 	
 	public KugelFunction(double radius, Vector center) {
-		super(center);
+		super(center, 0);
 		this._radius = radius;
 	}
 	

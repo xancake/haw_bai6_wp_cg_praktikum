@@ -7,7 +7,7 @@ public class TorusFunction extends AbstractImplicitFunction implements ImplicitF
 	private double _outerRadius;
 	
 	public TorusFunction(double innerRadius, double outerRadius, Vector center) {
-		super(center);
+		super(center, 0);
 		_innerRadius = innerRadius;
 		_outerRadius = outerRadius;
 	}

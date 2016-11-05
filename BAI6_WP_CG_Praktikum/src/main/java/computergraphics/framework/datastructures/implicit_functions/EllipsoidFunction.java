@@ -10,7 +10,7 @@ public class EllipsoidFunction extends AbstractImplicitFunction implements Impli
 	private double _gamma;
 	
 	public EllipsoidFunction(double alpha, double beta, double gamma, Vector center) {
-		super(center);
+		super(center, 1);
 		_alpha = alpha;
 		_beta = beta;
 		_gamma = gamma;

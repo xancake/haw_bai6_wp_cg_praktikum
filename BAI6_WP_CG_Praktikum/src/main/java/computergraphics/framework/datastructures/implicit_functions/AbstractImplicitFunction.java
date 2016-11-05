@@ -1,14 +1,15 @@
 package computergraphics.framework.datastructures.implicit_functions;
 
 import java.util.Objects;
-
 import computergraphics.framework.math.Vector;
 
 public abstract class AbstractImplicitFunction implements ImplicitFunction {
 	private Vector _center;
+	private double _defaultIso;
 	
-	public AbstractImplicitFunction(Vector center) {
+	public AbstractImplicitFunction(Vector center, double defaultIso) {
 		_center = Objects.requireNonNull(center);
+		_defaultIso = defaultIso;
 	}
 	
 	@Override
@@ -22,4 +23,9 @@ public abstract class AbstractImplicitFunction implements ImplicitFunction {
 	}
 	
 	protected abstract double calculateValue(Vector scaledVector);
+	
+	@Override
+	public double getDefaultIso() {
+		return _defaultIso;
+	}
 }
