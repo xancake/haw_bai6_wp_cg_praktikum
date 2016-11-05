@@ -13,60 +13,56 @@ import computergraphics.framework.mesh.ITriangleMesh;
 public class MarchingSquares {
 	private Cube _area;
 	private int _resolution;
-	private ImplicitFunction _function;
-	private double _iso;
 	
-	public MarchingSquares(Cube area, int resolution, ImplicitFunction function, double isowert) {
+	public MarchingSquares(Cube area, int resolution) {
 		if(resolution < 1) {
 			throw new IllegalArgumentException("Die Auflösung für den MarchingSquares-Algorithmus muss mindestens 1 sein!");
 		}
 		_area = Objects.requireNonNull(area);
 		_resolution = resolution;
-		_function = Objects.requireNonNull(function);
-		_iso = isowert;
 	}
 	
-	public void createMesh(ITriangleMesh mesh) {
+	public void createMesh(ITriangleMesh mesh, ImplicitFunction function, double isowert) {
 		for(Cube cube : _area.createSubCubes(_resolution)) {
-			createMesh(cube, Objects.requireNonNull(mesh));
+			createMesh(cube, Objects.requireNonNull(mesh), Objects.requireNonNull(function), isowert);
 		}
 		mesh.computeNormals();
 	}
 	
-	private void createMesh(Cube cube, ITriangleMesh mesh) {
+	private void createMesh(Cube cube, ITriangleMesh mesh, ImplicitFunction function, double isowert) {
 		List<Vector> points = cube.createVertexVectors();
 		List<Double> values = new ArrayList<>();
 		for(int i=0; i<points.size(); i++) {
-			values.add(_function.getValue(points.get(i)));
+			values.add(function.getValue(points.get(i)));
 		}
-		createTriangles(mesh, points, values);
+		createTriangles(mesh, points, values, isowert);
 	}
 	
-	private void createTriangles(ITriangleMesh mesh, List<Vector> points, List<Double> values) {
+	private void createTriangles(ITriangleMesh mesh, List<Vector> points, List<Double> values, double isowert) {
 		int caseIndex = 0;
 		for(int i = 0; i < values.size(); i++) {
 			double value = values.get(i);
-			caseIndex += (value > _iso) ? 1 << i : 0;
+			caseIndex += (value > isowert) ? 1 << i : 0;
 		}
 		
 		int[] currentCase = MarchingSquaresLookupTable.getCase(caseIndex);
 		for (int i = 0; i < currentCase.length; i += 3) {
 			if(currentCase[i] != -1 && currentCase[i+1] != -1 && currentCase[i+2] != -1) {
-				Vector p1 = getPointOnEdge(points, values, currentCase[i]);
-				Vector p2 = getPointOnEdge(points, values, currentCase[i+1]);
-				Vector p3 = getPointOnEdge(points, values, currentCase[i+2]);
+				Vector p1 = getPointOnEdge(points, values, isowert, currentCase[i]);
+				Vector p2 = getPointOnEdge(points, values, isowert, currentCase[i+1]);
+				Vector p3 = getPointOnEdge(points, values, isowert, currentCase[i+2]);
 				mesh.addTriangle(mesh.addVertex(p1), mesh.addVertex(p2), mesh.addVertex(p3));
 			}
 		}
 	}
 	
-	private Vector getPointOnEdge(List<Vector> points, List<Double> values, int edgeIndex) {
+	private Vector getPointOnEdge(List<Vector> points, List<Double> values, double isowert, int edgeIndex) {
 		Pair<Pair<Vector, Double>, Pair<Vector, Double>> verticesValuesPairs = getVerticesOfEdge(points, values, edgeIndex);
 		Pair<Vector, Double> pA = verticesValuesPairs.getKey();
 		Pair<Vector, Double> pB = verticesValuesPairs.getValue();
 		
 		// Value zu Punkt Interpolation
-		double t = (_iso-pA.getValue()) / (pB.getValue()-pA.getValue());
+		double t = (isowert-pA.getValue()) / (pB.getValue()-pA.getValue());
 		Vector p = pA.getKey().multiply(1-t).add(pB.getKey().multiply(t));
 		
 		return p;

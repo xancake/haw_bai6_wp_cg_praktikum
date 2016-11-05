@@ -20,20 +20,23 @@ public class MarchingSquaresScene extends TriangleMeshShowcaseScene {
 	public MarchingSquaresScene(double size) throws IOException {
 		super(cube(size));
 		
-		Vector center = new Vector(0, 0, 0);
-//		ImplicitFunction function = new KugelFunction(1, center);
-//		ImplicitFunction function = new TorusFunction(0.25, 0.5, center);
-		ImplicitFunction function = new BoyscheFlaecheFunction(center);
-//		ImplicitFunction function = new EllipsoidFunction(0.25, 0.5, 0.5, center);
-//		ImplicitFunction function = new SteinerscheRoemischeFlaecheFunction(center);
+		MarchingSquares ms = new MarchingSquares(new Cube(-size, size), (int)size*25);
 		
-		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
-		new MarchingSquares(new Cube(-size, size), (int)size*25, function, function.getDefaultIso()).createMesh(mesh);
-		getRoot().addChild(new TriangleMeshNode(mesh, new Vector(0, 0, 1, 1)));
+		getRoot().addChild(new TriangleMeshNode(createMesh(ms, new KugelFunction(0.5, new Vector(1, 1, -1))), new Vector(0, 0, 1, 1)));
+		getRoot().addChild(new TriangleMeshNode(createMesh(ms, new TorusFunction(0.25, 0.5, new Vector(1, 1, 1))), new Vector(0, 0, 1, 1)));
+		getRoot().addChild(new TriangleMeshNode(createMesh(ms, new EllipsoidFunction(0.25, 0.5, 0.25, new Vector(1, -1, -1))), new Vector(0, 0, 1, 1)));
+		getRoot().addChild(new TriangleMeshNode(createMesh(ms, new SteinerscheRoemischeFlaecheFunction(new Vector(1, -1, 1))), new Vector(0, 0, 1, 1)));
+		getRoot().addChild(new TriangleMeshNode(createMesh(ms, new BoyscheFlaecheFunction(new Vector(-1, 1, -1))), new Vector(0, 0, 1, 1)));
 	}
 	
 	public static void main(String... args) throws Exception {
-		new MarchingSquaresScene(1);
+		new MarchingSquaresScene(2);
+	}
+	
+	private static ITriangleMesh createMesh(MarchingSquares ms, ImplicitFunction function) {
+		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
+		ms.createMesh(mesh, function, function.getDefaultIso());
+		return mesh;
 	}
 	
 	private static ITriangleMesh cube(double size) {
