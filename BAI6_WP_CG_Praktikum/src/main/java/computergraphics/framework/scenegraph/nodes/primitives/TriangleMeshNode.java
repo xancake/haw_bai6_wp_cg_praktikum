@@ -1,9 +1,7 @@
 package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.Objects;
-
 import com.jogamp.opengl.GL2;
-
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
@@ -15,11 +13,11 @@ public class TriangleMeshNode extends LeafNode {
 	private VertexBufferObjectFactory _factory;
 	
 	private ITriangleMesh _mesh;
-	private Vector _color;
-	private VertexBufferObject _vboWithFacetteNormals;
-	private VertexBufferObject _vboWithVertexNormals;
+	private VertexBufferObject _meshWithFacetteNormals;
+	private VertexBufferObject _meshWithVertexNormals;
+	private Vector _meshColor;
 	private boolean _drawMesh = true;
-	private boolean _drawMeshVertexNormals;
+	private boolean _toggleMeshVertexNormals;
 	
 	private VertexBufferObject _facetteNormals;
 	private double _facetteNormalDrawLength = 0.02;
@@ -44,10 +42,10 @@ public class TriangleMeshNode extends LeafNode {
 		if(Objects.requireNonNull(color).getDimension() != 4) {
 			throw new IllegalArgumentException("Die Farbe muss vierdimensional sein (R,G,B,A)");
 		}
-		_color = color;
+		_meshColor = color;
 		_factory = new VertexBufferObjectFactory();
-		_vboWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _color);
-		_vboWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _color);
+		_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _meshColor);
+		_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _meshColor);
 		_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
 		_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
 		_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
@@ -61,9 +59,9 @@ public class TriangleMeshNode extends LeafNode {
 			// Mesh
 			if(isDrawMesh()) {
 				if(isDrawMeshVertexNormals()) {
-					_vboWithVertexNormals.draw(gl);
+					_meshWithVertexNormals.draw(gl);
 				} else {
-					_vboWithFacetteNormals.draw(gl);
+					_meshWithFacetteNormals.draw(gl);
 				}
 			}
 			
@@ -104,11 +102,31 @@ public class TriangleMeshNode extends LeafNode {
 	}
 	
 	/**
+	 * Gibt die Farbe des Meshes zurück.
+	 * @return Die Farbe als vierdimensionaler Vektor (R,G,B,A)
+	 */
+	public Vector getMeshColor() {
+		return _meshColor;
+	}
+	
+	/**
+	 * Legt die Farbe des Meshes fest.
+	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
+	 */
+	public void setMeshColor(Vector color) {
+		if(!_meshColor.equals(color)) {
+			_meshColor = checkColorVektor(color);
+			_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _meshColor);
+			_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _meshColor);
+		}
+	}
+	
+	/**
 	 * Gibt zurück, ob das Mesh anhand der Vertexnormalen oder Facettennormalen gezeichnet wird.
 	 * @return {@code true} wenn es nach den Vertexnormalen gezeichnet wird, ansonsten {@code false} für Facettennormalen
 	 */
 	public boolean isDrawMeshVertexNormals() {
-		return _drawMeshVertexNormals;
+		return _toggleMeshVertexNormals;
 	}
 	
 	/**
@@ -116,7 +134,7 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true} wenn es nach den Vertexnormalen gezeichnet werden soll, ansonsten {@code false} für Facettennormalen
 	 */
 	public void setDrawMeshVertexNormals(boolean draw) {
-		_drawMeshVertexNormals = draw;
+		_toggleMeshVertexNormals = draw;
 	}
 	
 	/**
@@ -158,6 +176,25 @@ public class TriangleMeshNode extends LeafNode {
 		}
 		if(length != _facetteNormalDrawLength) {
 			_facetteNormalDrawLength = length;
+			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
+		}
+	}
+	
+	/**
+	 * Gibt die Farbe der Facettennormalen zurück.
+	 * @return Die Farbe als vierdimensionaler Vektor (R,G,B,A)
+	 */
+	public Vector getFacetteNormalColor() {
+		return _facetteNormalColor;
+	}
+	
+	/**
+	 * Legt die Farbe der Facettennormalen fest.
+	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
+	 */
+	public void setFacetteNormalColor(Vector color) {
+		if(!_facetteNormalColor.equals(color)) {
+    		_facetteNormalColor = checkColorVektor(color);
 			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
 		}
 	}
@@ -206,6 +243,25 @@ public class TriangleMeshNode extends LeafNode {
 	}
 	
 	/**
+	 * Gibt die Farbe der Vertexnormalen zurück.
+	 * @return Die Farbe als vierdimensionaler Vektor (R,G,B,A)
+	 */
+	public Vector getVertexNormalColor() {
+		return _vertexNormalColor;
+	}
+	
+	/**
+	 * Legt die Farbe der Vertexnormalen fest.
+	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
+	 */
+	public void setVertexNormalColor(Vector color) {
+		if(!_vertexNormalColor.equals(color)) {
+			_vertexNormalColor = checkColorVektor(color);
+			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+		}
+	}
+	
+	/**
 	 * Gibt zurück, ob das Wireframe des Meshes gezeichnet wird.
 	 * @return {@code true} wenn das Wireframe gezeichnet wird, ansonsten {@code false}
 	 */
@@ -222,6 +278,25 @@ public class TriangleMeshNode extends LeafNode {
 	}
 	
 	/**
+	 * Gibt die Farbe des Wireframes zurück.
+	 * @return Die Farbe als vierdimensionaler Vektor (R,G,B,A)
+	 */
+	public Vector getWireframeColor() {
+		return _wireframeColor;
+	}
+	
+	/**
+	 * Legt die Farbe des Wireframes fest.
+	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
+	 */
+	public void setWireframeColor(Vector color) {
+		if(!_wireframeColor.equals(color)) {
+			_wireframeColor = checkColorVektor(color);
+			_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
+		}
+	}
+	
+	/**
 	 * Gibt zurück, ob der Rand gezeichnet wird.
 	 * @return {@code true} wenn der Rand gezeichnet wird, ansonsten {@code false}
 	 */
@@ -235,5 +310,41 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setDrawBorder(boolean draw) {
 		_drawBorder = draw;
+	}
+	
+	/**
+	 * Gibt die Farbe des Rands zurück.
+	 * @return Die Farbe als vierdimensionaler Vektor (R,G,B,A)
+	 */
+	public Vector getBorderColor() {
+		return _borderColor;
+	}
+	
+	/**
+	 * Legt die Farbe des Rands fest.
+	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
+	 */
+	public void setBorderColor(Vector color) {
+		if(!_borderColor.equals(color)) {
+			_borderColor = checkColorVektor(color);
+			_border = _factory.createBorderVBO(_mesh, _borderColor);
+		}
+	}
+	
+	/**
+	 * Prüft ob der übergebene Vektor einen gültigen Farbvektor beschreibt und gibt eine Kopie des Vektors zurück,
+	 * wenn das der Fall ist. Ansonsten wird eine {@link IllegalArgumentException} geworfen.
+	 * <p>Ein gültiger Farbvektor hat entweder drei (R,G,B) oder vier (R,G,B,A) Dimensionen.
+	 * @param color Der zu prüfende Farbvektor
+	 * @return Eine Kopie des erfolgreich geprüften Vektors
+	 * @throws IllegalArgumentException Wenn der Vektor nicht drei- oder vierdimensional ist
+	 */
+	private Vector checkColorVektor(Vector color) {
+		switch(Objects.requireNonNull(color).getDimension()) {
+			case 3: return new Vector(color.x(), color.y(), color.z(), 1);
+			case 4: return new Vector(color);
+			default:
+				throw new IllegalArgumentException("Die Farbe muss als drei- oder vierdimensionaler Vektor übergeben werden!");
+		}
 	}
 }
