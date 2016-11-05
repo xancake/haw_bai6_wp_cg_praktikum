@@ -3,18 +3,22 @@ package computergraphics.exercises.exercise4;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import computergraphics.framework.datastructures.Cube;
 import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.datastructures.implicit_functions.ImplicitFunction;
+import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 
 public class MarchingSquares {
-	private Cube _area;
+	private Cuboid _area;
 	private int _resolution;
 	
-	public MarchingSquares(Cube area, int resolution) {
+	/**
+	 * Instanziiert ein neues Marching-Squares-Algorithmus Objekt
+	 * @param area Das Volumen in dem der Algorithmus angewendet wird
+	 * @param resolution Die Auflösung mit der der Algorithmus arbeitet
+	 */
+	public MarchingSquares(Cuboid area, int resolution) {
 		if(resolution < 1) {
 			throw new IllegalArgumentException("Die Auflösung für den MarchingSquares-Algorithmus muss mindestens 1 sein!");
 		}
@@ -22,15 +26,21 @@ public class MarchingSquares {
 		_resolution = resolution;
 	}
 	
+	/**
+	 * Erzeugt das Mesh der übergebenen impliziten Funktion und Isowert.
+	 * @param mesh Das Mesh
+	 * @param function Die implizite Funktion
+	 * @param isowert Der Isowert
+	 */
 	public void createMesh(ITriangleMesh mesh, ImplicitFunction function, double isowert) {
-		for(Cube cube : _area.createSubCubes(_resolution)) {
+		for(Cuboid cube : _area.createSubCuboids(_resolution)) {
 			createMesh(cube, Objects.requireNonNull(mesh), Objects.requireNonNull(function), isowert);
 		}
 		mesh.computeNormals();
 	}
 	
-	private void createMesh(Cube cube, ITriangleMesh mesh, ImplicitFunction function, double isowert) {
-		List<Vector> points = cube.createVertexVectors();
+	private void createMesh(Cuboid cube, ITriangleMesh mesh, ImplicitFunction function, double isowert) {
+		List<Vector> points = cube.getVertices();
 		List<Double> values = new ArrayList<>();
 		for(int i=0; i<points.size(); i++) {
 			values.add(function.getValue(points.get(i)));
@@ -91,4 +101,11 @@ public class MarchingSquares {
 		return new Pair<K, V>(k, v);
 	}
 	
+	public Cuboid getArea() {
+		return _area;
+	}
+	
+	public int getResolution() {
+		return _resolution;
+	}
 }

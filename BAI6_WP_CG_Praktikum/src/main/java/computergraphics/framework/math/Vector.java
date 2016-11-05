@@ -351,7 +351,7 @@ public class Vector implements Serializable {
 	
 	@Override
 	public String toString() {
-		String content = "( ";
+		String content = "(";
 		for(int index=0; index<getDimension(); index++) {
 			content += String.format("%4.3f ", get(index));
 		}
