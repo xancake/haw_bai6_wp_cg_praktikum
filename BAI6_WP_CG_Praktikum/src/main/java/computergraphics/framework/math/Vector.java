@@ -50,7 +50,7 @@ public class Vector implements Serializable {
 	}
 	
 	/**
-	 * Convenience constructor for 3-dimensional vectors.
+	 * Convenience constructor for 4-dimensional vectors.
 	 * @param x x-coordinate.
 	 * @param y y-coordinate.
 	 * @param z z-coordinate.

@@ -101,7 +101,7 @@ public class MarchingSquares {
 		return new Pair<K, V>(k, v);
 	}
 	
-	public Cuboid getArea() {
+	public Cuboid getVolume() {
 		return _area;
 	}
 	
