@@ -15,8 +15,8 @@ public class TriangleMeshNode extends LeafNode {
 	private ITriangleMesh _mesh;
 	private VertexBufferObject _meshWithFacetteNormals;
 	private VertexBufferObject _meshWithVertexNormals;
-	private Vector _meshColor;
-	private boolean _drawMesh = true;
+	private Vector _meshColor = new Vector(1, 0, 0, 1);
+	private boolean _drawMesh;
 	private boolean _toggleMeshVertexNormals;
 	
 	private VertexBufferObject _facetteNormals;
@@ -39,17 +39,9 @@ public class TriangleMeshNode extends LeafNode {
 	
 	public TriangleMeshNode(ITriangleMesh mesh, Vector color) {
 		_mesh = Objects.requireNonNull(mesh);
-		if(Objects.requireNonNull(color).getDimension() != 4) {
-			throw new IllegalArgumentException("Die Farbe muss vierdimensional sein (R,G,B,A)");
-		}
-		_meshColor = color;
 		_factory = new VertexBufferObjectFactory();
-		_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _meshColor);
-		_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _meshColor);
-		_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
-		_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
-		_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
-		_border = _factory.createBorderVBO(_mesh, _borderColor);
+		setMeshColor(color);
+		setDrawMesh(true); // erzeugt auch implizit eins der benötigten VBOs
 	}
 	
 	@Override
@@ -98,7 +90,10 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true} wenn das Mesh gezeichnet werden soll, ansonsten {@code false}
 	 */
 	public void setDrawMesh(boolean draw) {
-		_drawMesh = draw;
+		if(_drawMesh != draw) {
+			initMesh(false);
+			_drawMesh = draw;
+		}
 	}
 	
 	/**
@@ -114,10 +109,9 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
 	 */
 	public void setMeshColor(Vector color) {
-		if(!_meshColor.equals(color)) {
+		if(_meshColor == null || !_meshColor.equals(color)) {
 			_meshColor = checkColorVektor(color);
-			_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _meshColor);
-			_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _meshColor);
+			initMesh(true);
 		}
 	}
 	
@@ -134,7 +128,11 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true} wenn es nach den Vertexnormalen gezeichnet werden soll, ansonsten {@code false} für Facettennormalen
 	 */
 	public void setDrawMeshVertexNormals(boolean draw) {
-		_toggleMeshVertexNormals = draw;
+		if(_toggleMeshVertexNormals != draw) {
+			initMeshWithVertexNormals(false);
+			initMeshWithFacetteNormals(false);
+			_toggleMeshVertexNormals = draw;
+		}
 	}
 	
 	/**
@@ -150,7 +148,10 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true}, wenn die Normalen gezeichnet werden sollen, ansonsten {@code false}
 	 */
 	public void setDrawFacetteNormals(boolean draw) {
-		_drawFacetteNormals = draw;
+		if(_drawFacetteNormals != draw) {
+    		initFacetteNormals(false);
+			_drawFacetteNormals = draw;
+		}
 	}
 	
 	/**
@@ -176,7 +177,7 @@ public class TriangleMeshNode extends LeafNode {
 		}
 		if(length != _facetteNormalDrawLength) {
 			_facetteNormalDrawLength = length;
-			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
+			initFacetteNormals(true);
 		}
 	}
 	
@@ -195,7 +196,7 @@ public class TriangleMeshNode extends LeafNode {
 	public void setFacetteNormalColor(Vector color) {
 		if(!_facetteNormalColor.equals(color)) {
     		_facetteNormalColor = checkColorVektor(color);
-			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
+			initFacetteNormals(true);
 		}
 	}
 	
@@ -212,7 +213,10 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true}, wenn die Normalen gezeichnet werden sollen, ansonsten {@code false}
 	 */
 	public void setDrawVertexNormals(boolean draw) {
-		_drawVertexNormals = draw;
+		if(_drawVertexNormals != draw) {
+			initVertexNormals(false);
+			_drawVertexNormals = draw;
+		}
 	}
 	
 	/**
@@ -238,7 +242,7 @@ public class TriangleMeshNode extends LeafNode {
 		}
 		if(length != _vertexNormalDrawLength) {
 			_vertexNormalDrawLength = length;
-			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+			initVertexNormals(true);
 		}
 	}
 	
@@ -257,7 +261,7 @@ public class TriangleMeshNode extends LeafNode {
 	public void setVertexNormalColor(Vector color) {
 		if(!_vertexNormalColor.equals(color)) {
 			_vertexNormalColor = checkColorVektor(color);
-			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+			initVertexNormals(true);
 		}
 	}
 	
@@ -274,7 +278,10 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true} wenn das Wireframe gezeichnet werden soll, ansonsten {@code false}
 	 */
 	public void setDrawWireframe(boolean draw) {
-		_drawWireframe = draw;
+		if(_drawWireframe != draw) {
+			initWireframe(false);
+			_drawWireframe = draw;
+		}
 	}
 	
 	/**
@@ -292,7 +299,7 @@ public class TriangleMeshNode extends LeafNode {
 	public void setWireframeColor(Vector color) {
 		if(!_wireframeColor.equals(color)) {
 			_wireframeColor = checkColorVektor(color);
-			_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
+			initWireframe(true);
 		}
 	}
 	
@@ -309,7 +316,10 @@ public class TriangleMeshNode extends LeafNode {
 	 * @param draw {@code true} wenn der Rand gezeichnet werden soll, ansonsten {@code false}
 	 */
 	public void setDrawBorder(boolean draw) {
-		_drawBorder = draw;
+		if(_drawBorder != draw) {
+    		initBorder(false);
+    		_drawBorder = draw;
+		}
 	}
 	
 	/**
@@ -327,7 +337,7 @@ public class TriangleMeshNode extends LeafNode {
 	public void setBorderColor(Vector color) {
 		if(!_borderColor.equals(color)) {
 			_borderColor = checkColorVektor(color);
-			_border = _factory.createBorderVBO(_mesh, _borderColor);
+			initBorder(true);
 		}
 	}
 	
@@ -345,6 +355,50 @@ public class TriangleMeshNode extends LeafNode {
 			case 4: return new Vector(color);
 			default:
 				throw new IllegalArgumentException("Die Farbe muss als drei- oder vierdimensionaler Vektor übergeben werden!");
+		}
+	}
+	
+	private void initMesh(boolean recalculate) {
+		if(isDrawMeshVertexNormals()) {
+			initMeshWithVertexNormals(recalculate);
+		} else {
+			initMeshWithFacetteNormals(recalculate);
+		}
+	}
+	
+	private void initMeshWithFacetteNormals(boolean recalculate) {
+		if(recalculate || _meshWithFacetteNormals == null) {
+			_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _meshColor);
+		}
+	}
+	
+	private void initMeshWithVertexNormals(boolean recalculate) {
+		if(recalculate || _meshWithVertexNormals == null) {
+			_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _meshColor);
+		}
+	}
+	
+	private void initFacetteNormals(boolean recalculate) {
+		if(recalculate || _facetteNormals == null) {
+			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
+		}
+	}
+	
+	private void initVertexNormals(boolean recalculate) {
+		if(recalculate || _vertexNormals == null) {
+			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+		}
+	}
+	
+	private void initWireframe(boolean recalculate) {
+		if(recalculate || _wireframe == null) {
+			_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
+		}
+	}
+	
+	private void initBorder(boolean recalculate) {
+		if(recalculate || _border == null) {
+			_border = _factory.createBorderVBO(_mesh, _borderColor);
 		}
 	}
 }
