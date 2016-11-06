@@ -1,5 +1,7 @@
 package computergraphics.framework.algorithm.marching.cubes;
 
+import static computergraphics.framework.datastructures.Pair.pair;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -98,10 +100,6 @@ public class MarchingCubes {
 			case 11: return pair(pair(points.get(2), values.get(2)), pair(points.get(6), values.get(6)));
 		}
 		throw new IllegalArgumentException("Mehr als 12 Kanten werden nicht unterstützt. Schließlich haben Würfel nur genau 12 Kanten.");
-	}
-	
-	private <K, V> Pair<K, V> pair(K k, V v) {
-		return new Pair<K, V>(k, v);
 	}
 	
 	public Cuboid getVolume() {

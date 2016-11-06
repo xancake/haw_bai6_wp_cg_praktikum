@@ -11,6 +11,10 @@ public class Pair<K, V> {
 		_value = Objects.requireNonNull(value);
 	}
 	
+	public static <K, V> Pair<K, V> pair(K key, V value) {
+		return new Pair<K, V>(key, value);
+	}
+	
 	public K getKey() {
 		return _key;
 	}
