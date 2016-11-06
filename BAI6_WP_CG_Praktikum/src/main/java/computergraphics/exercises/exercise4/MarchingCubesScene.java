@@ -10,9 +10,9 @@ import computergraphics.framework.datastructures.implicit_functions.SteinerscheR
 import computergraphics.framework.datastructures.implicit_functions.TorusFunction;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
-import computergraphics.framework.mesh.HalfEdgeTriangleMesh;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.mesh.TriangleMeshFactory;
+import computergraphics.framework.mesh.halfedge.HalfEdgeTriangleMesh;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.scenegraph.nodes.primitives.MarchingCubesVisualizationNode;

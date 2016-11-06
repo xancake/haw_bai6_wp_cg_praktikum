@@ -1,4 +1,4 @@
-package computergraphics.framework.mesh;
+package computergraphics.framework.mesh.halfedge;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,13 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
 import computergraphics.framework.datastructures.Pair;
-import computergraphics.framework.datastructures.halfedge.HalfEdge;
-import computergraphics.framework.datastructures.halfedge.HalfEdgeTriangle;
-import computergraphics.framework.datastructures.halfedge.HalfEdgeVertex;
 import computergraphics.framework.math.Triangles;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.mesh.ITriangleMesh;
+import computergraphics.framework.mesh.ObjReader;
+import computergraphics.framework.mesh.Triangle;
+import computergraphics.framework.mesh.Vertex;
 import computergraphics.framework.rendering.Texture;
 import computergraphics.util.MultiKey;
 

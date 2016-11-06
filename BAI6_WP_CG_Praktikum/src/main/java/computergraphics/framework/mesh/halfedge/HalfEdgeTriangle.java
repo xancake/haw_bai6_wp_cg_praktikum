@@ -1,4 +1,4 @@
-package computergraphics.framework.datastructures.halfedge;
+package computergraphics.framework.mesh.halfedge;
 
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.Triangle;

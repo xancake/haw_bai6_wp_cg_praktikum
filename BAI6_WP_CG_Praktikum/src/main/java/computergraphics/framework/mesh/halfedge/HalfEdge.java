@@ -1,4 +1,4 @@
-package computergraphics.framework.datastructures.halfedge;
+package computergraphics.framework.mesh.halfedge;
 
 /**
  * A half edge has references to the next edge within the current facet, the
