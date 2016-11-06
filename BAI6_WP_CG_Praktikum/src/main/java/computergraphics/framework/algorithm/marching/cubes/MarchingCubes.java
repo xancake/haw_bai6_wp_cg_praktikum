@@ -1,4 +1,4 @@
-package computergraphics.exercises.exercise4;
+package computergraphics.framework.algorithm.marching.cubes;
 
 import java.util.ArrayList;
 import java.util.Collections;

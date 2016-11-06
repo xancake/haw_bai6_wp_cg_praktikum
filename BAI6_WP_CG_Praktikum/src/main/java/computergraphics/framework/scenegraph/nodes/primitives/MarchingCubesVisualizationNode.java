@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import com.jogamp.opengl.GL2;
-import computergraphics.exercises.exercise4.MarchingCubes;
+import computergraphics.framework.algorithm.marching.cubes.MarchingCubes;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
