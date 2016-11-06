@@ -1,4 +1,4 @@
-package computergraphics.framework.datastructures.implicit_functions;
+package computergraphics.framework.math.implicit_functions;
 
 import computergraphics.framework.math.Vector;
 

@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import computergraphics.framework.datastructures.Pair;
-import computergraphics.framework.datastructures.implicit_functions.ImplicitFunction;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.math.implicit_functions.ImplicitFunction;
 import computergraphics.framework.mesh.ITriangleMesh;
 
 public class MarchingCubes {

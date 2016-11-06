@@ -1,14 +1,14 @@
 package computergraphics.exercises.exercise4;
 
 import java.io.IOException;
-import computergraphics.framework.datastructures.implicit_functions.BoyscheFlaecheFunction;
-import computergraphics.framework.datastructures.implicit_functions.EllipsoidFunction;
-import computergraphics.framework.datastructures.implicit_functions.ImplicitFunction;
-import computergraphics.framework.datastructures.implicit_functions.KugelFunction;
-import computergraphics.framework.datastructures.implicit_functions.SteinerscheRoemischeFlaecheFunction;
-import computergraphics.framework.datastructures.implicit_functions.TorusFunction;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.math.implicit_functions.BoyscheFlaecheFunction;
+import computergraphics.framework.math.implicit_functions.EllipsoidFunction;
+import computergraphics.framework.math.implicit_functions.ImplicitFunction;
+import computergraphics.framework.math.implicit_functions.KugelFunction;
+import computergraphics.framework.math.implicit_functions.SteinerscheRoemischeFlaecheFunction;
+import computergraphics.framework.math.implicit_functions.TorusFunction;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.mesh.TriangleMeshFactory;
 import computergraphics.framework.mesh.halfedge.HalfEdgeTriangleMesh;
