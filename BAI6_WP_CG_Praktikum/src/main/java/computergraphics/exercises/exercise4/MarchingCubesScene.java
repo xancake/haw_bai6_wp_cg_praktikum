@@ -3,7 +3,6 @@ package computergraphics.exercises.exercise4;
 import java.io.IOException;
 import computergraphics.framework.algorithm.marching.cubes.MarchingCubes;
 import computergraphics.framework.algorithm.marching.cubes.MultiThreadedMarchingCubes;
-import computergraphics.framework.algorithm.marching.cubes.SingleThreadedMarchingCubes;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.implicit_functions.BoyscheFlaecheFunction;

@@ -5,6 +5,10 @@ import static java.lang.Math.*;
 import computergraphics.framework.math.Vector;
 
 public class SteinerscheRoemischeFlaecheFunction extends AbstractImplicitFunction implements ImplicitFunction {
+	public SteinerscheRoemischeFlaecheFunction() {
+		this(new Vector(3));
+	}
+	
 	public SteinerscheRoemischeFlaecheFunction(Vector center) {
 		super(center, 0);
 	}

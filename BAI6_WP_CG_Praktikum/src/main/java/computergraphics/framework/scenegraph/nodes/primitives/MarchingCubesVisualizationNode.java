@@ -23,7 +23,7 @@ public class MarchingCubesVisualizationNode extends LeafNode {
 	private boolean _drawVolume;
 	
 	private VertexBufferObject _subVolumes;
-	private Vector _subVolumesColor = new Vector(1, 1, 1, 1);
+	private Vector _subVolumesColor = new Vector(1, 1, 1, 0.4);
 	private boolean _drawSubVolumes;
 	
 	public MarchingCubesVisualizationNode(MarchingCubes marchingSquares) {

@@ -5,6 +5,10 @@ import static java.lang.Math.*;
 import computergraphics.framework.math.Vector;
 
 public class BoyscheFlaecheFunction extends AbstractImplicitFunction implements ImplicitFunction {
+	public BoyscheFlaecheFunction() {
+		this(new Vector(3));
+	}
+	
 	public BoyscheFlaecheFunction(Vector center) {
 		super(center, 0);
 	}

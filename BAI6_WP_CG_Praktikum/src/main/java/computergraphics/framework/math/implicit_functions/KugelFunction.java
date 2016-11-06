@@ -5,6 +5,10 @@ import computergraphics.framework.math.Vector;
 public class KugelFunction extends AbstractImplicitFunction implements ImplicitFunction {
 	private double _radius;
 	
+	public KugelFunction(double radius) {
+		this(radius, new Vector(3));
+	}
+	
 	public KugelFunction(double radius, Vector center) {
 		super(center, 0);
 		this._radius = radius;

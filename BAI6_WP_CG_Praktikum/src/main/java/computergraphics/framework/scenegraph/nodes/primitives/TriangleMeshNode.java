@@ -20,12 +20,12 @@ public class TriangleMeshNode extends LeafNode {
 	private boolean _toggleMeshVertexNormals;
 	
 	private VertexBufferObject _facetteNormals;
-	private double _facetteNormalDrawLength = 0.02;
+	private double _facetteNormalDrawLength = 0.05;
 	private Vector _facetteNormalColor = new Vector(0, 0, 1, 1);
 	private boolean _drawFacetteNormals;
 	
 	private VertexBufferObject _vertexNormals;
-	private double _vertexNormalDrawLength = 0.02;
+	private double _vertexNormalDrawLength = 0.05;
 	private Vector _vertexNormalColor = new Vector(0, 1, 0, 1);
 	private boolean _drawVertexNormals;
 	

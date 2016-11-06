@@ -1,4 +1,3 @@
 Praktikum 4:
-- Marching Cubes parallelisieren
 - Demo-Scene verbessern, sodass man mehrere Meshes anzeigen und individuell "konfigurieren" kann
 - Boysche Fläche Funktion korrigieren (wie?)
