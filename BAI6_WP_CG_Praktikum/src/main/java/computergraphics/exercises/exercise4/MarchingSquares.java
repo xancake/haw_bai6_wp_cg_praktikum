@@ -1,6 +1,7 @@
 package computergraphics.exercises.exercise4;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import computergraphics.framework.datastructures.Pair;
@@ -10,20 +11,22 @@ import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 
 public class MarchingSquares {
-	private Cuboid _area;
+	private Cuboid _volume;
+	private List<Cuboid> _subVolumes;
 	private int _resolution;
 	
 	/**
 	 * Instanziiert ein neues Marching-Squares-Algorithmus Objekt
-	 * @param area Das Volumen in dem der Algorithmus angewendet wird
+	 * @param volume Das Volumen in dem der Algorithmus angewendet wird
 	 * @param resolution Die Auflösung mit der der Algorithmus arbeitet
 	 */
-	public MarchingSquares(Cuboid area, int resolution) {
+	public MarchingSquares(Cuboid volume, int resolution) {
 		if(resolution < 1) {
 			throw new IllegalArgumentException("Die Auflösung für den MarchingSquares-Algorithmus muss mindestens 1 sein!");
 		}
-		_area = Objects.requireNonNull(area);
+		_volume = Objects.requireNonNull(volume);
 		_resolution = resolution;
+		_subVolumes = _volume.createSubCuboids(_resolution);
 	}
 	
 	/**
@@ -33,7 +36,7 @@ public class MarchingSquares {
 	 * @param isowert Der Isowert
 	 */
 	public void createMesh(ITriangleMesh mesh, ImplicitFunction function, double isowert) {
-		for(Cuboid cube : _area.createSubCuboids(_resolution)) {
+		for(Cuboid cube : _subVolumes) {
 			createMesh(cube, Objects.requireNonNull(mesh), Objects.requireNonNull(function), isowert);
 		}
 		mesh.computeNormals();
@@ -102,7 +105,11 @@ public class MarchingSquares {
 	}
 	
 	public Cuboid getVolume() {
-		return _area;
+		return _volume;
+	}
+	
+	public List<Cuboid> getSubVolumes() {
+		return Collections.unmodifiableList(_subVolumes);
 	}
 	
 	public int getResolution() {
