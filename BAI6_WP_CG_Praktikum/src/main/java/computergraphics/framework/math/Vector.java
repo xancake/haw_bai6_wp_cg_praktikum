@@ -243,7 +243,7 @@ public class Vector implements Serializable {
 	public Vector getNormalized() {
 		final double d = getNorm();
 		if(Math.abs(d) < MathHelpers.EPSILON) {
-			System.out.println("Cannot normalize zero-vector!");
+//			System.out.println("Cannot normalize zero-vector!");
 			return this;
 		}
 		return multiply(1.0 / d);

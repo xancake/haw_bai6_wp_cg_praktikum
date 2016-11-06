@@ -2,6 +2,8 @@ package computergraphics.exercises.exercise4;
 
 import java.io.IOException;
 import computergraphics.framework.algorithm.marching.cubes.MarchingCubes;
+import computergraphics.framework.algorithm.marching.cubes.MultiThreadedMarchingCubes;
+import computergraphics.framework.algorithm.marching.cubes.SingleThreadedMarchingCubes;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.implicit_functions.BoyscheFlaecheFunction;
@@ -27,7 +29,7 @@ public class MarchingCubesScene extends Scene {
 		getRoot().setLightPosition(new Vector(2, 2, 2));
 		getRoot().setAnimated(true);
 		
-		MarchingCubes mc = new MarchingCubes(new Cuboid(-size, size), (int)size*25);
+		MarchingCubes mc = new MultiThreadedMarchingCubes(new Cuboid(-size, size), (int)size*25);
 		
 		getRoot().addChild(new TriangleMeshNode(createMesh(mc, new KugelFunction(0.5, new Vector(1, 1, -1))), new Vector(0, 0, 1, 1)));
 		getRoot().addChild(new TriangleMeshNode(createMesh(mc, new TorusFunction(0.25, 0.5, new Vector(1, 1, 1))), new Vector(0, 0, 1, 1)));
@@ -45,7 +47,14 @@ public class MarchingCubesScene extends Scene {
 	
 	private static ITriangleMesh createMesh(MarchingCubes ms, ImplicitFunction function) {
 		ITriangleMesh soup = new HalfEdgeTriangleMesh();
+		
+		long start = System.currentTimeMillis();
+		
 		ms.createMesh(soup, function, function.getDefaultIso());
+		
+		long durationMarchingSquares = System.currentTimeMillis() - start;
+		System.out.println("Dauer (Marching Squares): " + durationMarchingSquares + "ms");
+		
 		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
 		TriangleMeshFactory.createUnsoupifiedMesh(mesh, soup);
 		return mesh;
