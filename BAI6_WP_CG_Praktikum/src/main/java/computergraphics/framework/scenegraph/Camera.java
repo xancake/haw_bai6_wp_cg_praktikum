@@ -4,7 +4,7 @@
  * 
  * Base framework for "WP Computergrafik".
  */
-package computergraphics.framework.scenegraph.nodes;
+package computergraphics.framework.scenegraph;
 
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;

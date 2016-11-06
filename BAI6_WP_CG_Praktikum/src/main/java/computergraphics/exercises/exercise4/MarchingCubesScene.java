@@ -1,7 +1,6 @@
 package computergraphics.exercises.exercise4;
 
 import java.io.IOException;
-import computergraphics.framework.Scene;
 import computergraphics.framework.datastructures.implicit_functions.BoyscheFlaecheFunction;
 import computergraphics.framework.datastructures.implicit_functions.EllipsoidFunction;
 import computergraphics.framework.datastructures.implicit_functions.ImplicitFunction;
@@ -14,6 +13,7 @@ import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.mesh.TriangleMeshFactory;
 import computergraphics.framework.mesh.halfedge.HalfEdgeTriangleMesh;
 import computergraphics.framework.rendering.Shader;
+import computergraphics.framework.scenegraph.Scene;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.scenegraph.nodes.primitives.MarchingCubesVisualizationNode;
 import computergraphics.framework.scenegraph.nodes.primitives.TriangleMeshNode;

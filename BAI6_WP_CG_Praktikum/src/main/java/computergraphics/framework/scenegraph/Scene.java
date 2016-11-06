@@ -4,7 +4,7 @@
  * 
  * Base framework for "WP Computergrafik".
  */
-package computergraphics.framework;
+package computergraphics.framework.scenegraph;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,15 +13,13 @@ import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 import com.jogamp.opengl.glu.GLU;
-
+import computergraphics.framework.ComputergraphicsWindow;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.rendering.Shader.ShaderMode;
-import computergraphics.framework.scenegraph.nodes.Camera;
 import computergraphics.framework.scenegraph.nodes.RootNode;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.rendering.ShaderAttributes;
-
 import javax.swing.JFrame;
 
 /**

@@ -1,8 +1,8 @@
 package computergraphics.exercises.exercise1;
 
-import computergraphics.framework.Scene;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Shader;
+import computergraphics.framework.scenegraph.Scene;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.scenegraph.nodes.animation.AnimatedRotationNode;
 import computergraphics.framework.scenegraph.nodes.animation.AnimatedTranslationNode;

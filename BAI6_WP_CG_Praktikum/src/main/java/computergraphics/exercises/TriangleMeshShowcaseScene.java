@@ -1,11 +1,10 @@
 package computergraphics.exercises;
 
 import java.io.IOException;
-
-import computergraphics.framework.Scene;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.rendering.Shader;
+import computergraphics.framework.scenegraph.Scene;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.scenegraph.nodes.primitives.TriangleMeshNode;
 
