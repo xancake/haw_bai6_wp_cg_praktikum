@@ -26,7 +26,7 @@ public class MultiThreadedMarchingCubes extends AbstractMarchingCubes implements
     		ExecutorService pool = Executors.newFixedThreadPool(_threadCount);
     		
     		for(Cuboid subVolume : getSubVolumes()) {
-    			pool.submit(() -> doCube(subVolume, mesh, function, isowert));
+    			pool.submit(() -> doVolume(subVolume, mesh, function, isowert));
     		}
     		
     		pool.shutdown();

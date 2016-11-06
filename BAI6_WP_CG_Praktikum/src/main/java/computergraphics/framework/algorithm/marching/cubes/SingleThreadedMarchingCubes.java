@@ -12,7 +12,7 @@ public class SingleThreadedMarchingCubes extends AbstractMarchingCubes implement
 	@Override
 	public void createMesh0(ITriangleMesh mesh, ImplicitFunction function, double isowert) {
 		for(Cuboid subVolume : getSubVolumes()) {
-			doCube(subVolume, mesh, function, isowert);
+			doVolume(subVolume, mesh, function, isowert);
 		}
 	}
 }

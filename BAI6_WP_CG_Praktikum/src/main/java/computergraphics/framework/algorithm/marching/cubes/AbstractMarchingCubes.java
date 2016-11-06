@@ -59,31 +59,72 @@ public abstract class AbstractMarchingCubes implements MarchingCubes {
 	 */
 	protected abstract void createMesh0(ITriangleMesh mesh, ImplicitFunction function, double isowert);
 	
-	protected void doCube(Cuboid subVolume, ITriangleMesh mesh, ImplicitFunction function, double isowert) {
-		List<Vector> points = subVolume.getVertices();
-		List<Double> values = new ArrayList<>();
-		for(int i=0; i<points.size(); i++) {
-			values.add(function.getValue(points.get(i)));
+	protected void doVolume(Cuboid subVolume, ITriangleMesh mesh, ImplicitFunction function, double isowert) {
+		List<PointValue> pointValueList = new ArrayList<>();
+		for(Vector point : subVolume.getVertices()) {
+			pointValueList.add(pv(point, function.getValue(point)));
 		}
-		createTriangles(mesh, points, values, isowert);
+		createTriangles(mesh, pointValueList, isowert);
 	}
 	
-	private void createTriangles(ITriangleMesh mesh, List<Vector> points, List<Double> values, double isowert) {
+	private void createTriangles(ITriangleMesh mesh, List<PointValue> pointValueList, double isowert) {
 		int caseIndex = 0;
-		for(int i = 0; i < values.size(); i++) {
-			double value = values.get(i);
+		for(int i = 0; i < pointValueList.size(); i++) {
+			double value = pointValueList.get(i).getValue();
 			caseIndex += (value > isowert) ? 1 << i : 0;
 		}
 		
 		int[] currentCase = MarchingCubesLookupTable.getCase(caseIndex);
 		for (int i = 0; i < currentCase.length; i += 3) {
 			if(currentCase[i] != -1 && currentCase[i+1] != -1 && currentCase[i+2] != -1) {
-				Vector p1 = getPointOnEdge(points, values, isowert, currentCase[i]);
-				Vector p2 = getPointOnEdge(points, values, isowert, currentCase[i+1]);
-				Vector p3 = getPointOnEdge(points, values, isowert, currentCase[i+2]);
+				Vector p1 = calculatePointOnEdge(getEdge(pointValueList, currentCase[i]), isowert);
+				Vector p2 = calculatePointOnEdge(getEdge(pointValueList, currentCase[i+1]), isowert);
+				Vector p3 = calculatePointOnEdge(getEdge(pointValueList, currentCase[i+2]), isowert);
 				addTriangle(mesh, p1, p2, p3);
 			}
 		}
+	}
+	
+	/**
+	 * Berechnet den Punkt auf der Kante, durch den die {@link ImplicitFunction} läuft.
+	 * @param edge Die Kante beschrieben durch die beiden Eckpunkte
+	 * @param isowert Der Isowert
+	 * @return Der Punkt auf dem die Funktion die Kante schneidet
+	 */
+	private Vector calculatePointOnEdge(Pair<PointValue, PointValue> edge, double isowert) {
+		PointValue pA = edge.getKey();
+		PointValue pB = edge.getValue();
+		
+		// Value zu Punkt Interpolation
+		double t = (isowert-pA.getValue()) / (pB.getValue()-pA.getValue());
+		Vector p = pA.getPoint().multiply(1-t).add(pB.getPoint().multiply(t));
+		
+		return p;
+	}
+	
+	/**
+	 * Ermittelt anhand des Kantenindex aus der {@link MarchingCubesLookupTable Lookup-Tabelle} die zwei Punkte, die
+	 * diese Kante beschreiben.
+	 * @param pointValueList Eine Liste aller Punkte
+	 * @param edgeIndex Der Kantenindex aus der Lookup-Tabelle
+	 * @return Die Kante zu dem Kantenindex beschrieben durch die beiden Eckpunkte
+	 */
+	private Pair<PointValue, PointValue> getEdge(List<PointValue> pointValueList, int edgeIndex) {
+		switch(edgeIndex) {
+			case  0: return pair(pointValueList.get(0), pointValueList.get(1));
+			case  1: return pair(pointValueList.get(1), pointValueList.get(2));
+			case  2: return pair(pointValueList.get(2), pointValueList.get(3));
+			case  3: return pair(pointValueList.get(3), pointValueList.get(0));
+			case  4: return pair(pointValueList.get(4), pointValueList.get(5));
+			case  5: return pair(pointValueList.get(5), pointValueList.get(6));
+			case  6: return pair(pointValueList.get(6), pointValueList.get(7));
+			case  7: return pair(pointValueList.get(7), pointValueList.get(4));
+			case  8: return pair(pointValueList.get(0), pointValueList.get(4));
+			case  9: return pair(pointValueList.get(1), pointValueList.get(5));
+			case 10: return pair(pointValueList.get(3), pointValueList.get(7));
+			case 11: return pair(pointValueList.get(2), pointValueList.get(6));
+		}
+		throw new IllegalArgumentException("Mehr als 12 Kanten werden nicht unterstützt. Schließlich haben Würfel nur genau 12 Kanten.");
 	}
 	
 	/**
@@ -102,34 +143,23 @@ public abstract class AbstractMarchingCubes implements MarchingCubes {
     	mesh.addTriangle(pi1, pi2, pi3);
 	}
 	
-	private Vector getPointOnEdge(List<Vector> points, List<Double> values, double isowert, int edgeIndex) {
-		Pair<Pair<Vector, Double>, Pair<Vector, Double>> verticesValuesPairs = getVerticesOfEdge(points, values, edgeIndex);
-		Pair<Vector, Double> pA = verticesValuesPairs.getKey();
-		Pair<Vector, Double> pB = verticesValuesPairs.getValue();
-		
-		// Value zu Punkt Interpolation
-		double t = (isowert-pA.getValue()) / (pB.getValue()-pA.getValue());
-		Vector p = pA.getKey().multiply(1-t).add(pB.getKey().multiply(t));
-		
-		return p;
+	private static PointValue pv(Vector point, Double value) {
+		return new PointValue(point, value);
 	}
-
-	private Pair<Pair<Vector, Double>, Pair<Vector, Double>> getVerticesOfEdge(List<Vector> points, List<Double> values, int edgeIndex) {
-		switch(edgeIndex) {
-			case  0: return pair(pair(points.get(0), values.get(0)), pair(points.get(1), values.get(1)));
-			case  1: return pair(pair(points.get(1), values.get(1)), pair(points.get(2), values.get(2)));
-			case  2: return pair(pair(points.get(2), values.get(2)), pair(points.get(3), values.get(3)));
-			case  3: return pair(pair(points.get(3), values.get(3)), pair(points.get(0), values.get(0)));
-			case  4: return pair(pair(points.get(4), values.get(4)), pair(points.get(5), values.get(5)));
-			case  5: return pair(pair(points.get(5), values.get(5)), pair(points.get(6), values.get(6)));
-			case  6: return pair(pair(points.get(6), values.get(6)), pair(points.get(7), values.get(7)));
-			case  7: return pair(pair(points.get(7), values.get(7)), pair(points.get(4), values.get(4)));
-			case  8: return pair(pair(points.get(0), values.get(0)), pair(points.get(4), values.get(4)));
-			case  9: return pair(pair(points.get(1), values.get(1)), pair(points.get(5), values.get(5)));
-			// FIXME: klären ob das so richtig ist mit den Kanten oder vertauscht werden soll?!?!?!?
-			case 10: return pair(pair(points.get(3), values.get(3)), pair(points.get(7), values.get(7)));
-			case 11: return pair(pair(points.get(2), values.get(2)), pair(points.get(6), values.get(6)));
+	
+	private static class PointValue {
+		private Pair<Vector, Double> _pair;
+		
+		public PointValue(Vector point, Double value) {
+			_pair = pair(point, value);
 		}
-		throw new IllegalArgumentException("Mehr als 12 Kanten werden nicht unterstützt. Schließlich haben Würfel nur genau 12 Kanten.");
+		
+		public Vector getPoint() {
+			return _pair.getKey();
+		}
+		
+		public Double getValue() {
+			return _pair.getValue();
+		}
 	}
 }
