@@ -1,5 +1,7 @@
 package computergraphics.framework.mesh;
 
+import java.util.HashMap;
+import java.util.Map;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
 
@@ -143,6 +145,35 @@ public class TriangleMeshFactory {
 			Triangle t = blueprint.getTriangle(i);
 			mesh.addTriangle(t.getVertexIndex(2), t.getVertexIndex(1), t.getVertexIndex(0));
 		}
+		mesh.computeNormals();
+	}
+	
+	/**
+	 * Erzeugt ein Mesh bei dem keine Eckpunkte doppelt vorkommen. 
+	 * @param mesh Das Mesh ohne Dreieckssuppe
+	 * @param soupMesh Das Mesh aus einer Dreieckssuppe
+	 */
+	public static void createUnsoupifiedMesh(ITriangleMesh mesh, ITriangleMesh soupMesh) {
+		mesh.clear();
+		
+		Map<Vector, Integer> map = new HashMap<>();
+		
+		for(int i=0; i<soupMesh.getNumberOfVertices(); i++) {
+			Vector v = soupMesh.getVertex(i).getPosition();
+			if(!map.containsKey(v)) {
+				map.put(v, mesh.getNumberOfVertices());
+				mesh.addVertex(v);
+			}
+		}
+		
+		for(int i=0; i<soupMesh.getNumberOfTriangles(); i++) {
+			Triangle t = soupMesh.getTriangle(i);
+			int v1 = map.get(soupMesh.getVertex(t.getVertexIndex(0)).getPosition());
+			int v2 = map.get(soupMesh.getVertex(t.getVertexIndex(1)).getPosition());
+			int v3 = map.get(soupMesh.getVertex(t.getVertexIndex(2)).getPosition());
+			mesh.addTriangle(v1, v2, v3);
+		}
+		
 		mesh.computeNormals();
 	}
 }
