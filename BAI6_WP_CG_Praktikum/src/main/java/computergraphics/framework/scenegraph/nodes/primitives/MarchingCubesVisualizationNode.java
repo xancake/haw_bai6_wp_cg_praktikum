@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import com.jogamp.opengl.GL2;
-import computergraphics.exercises.exercise4.MarchingSquares;
+import computergraphics.exercises.exercise4.MarchingCubes;
 import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
@@ -15,8 +15,8 @@ import computergraphics.framework.rendering.RenderVertex;
 import computergraphics.framework.rendering.VertexBufferObject;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
-public class MarchingSquaresVisualizationNode extends LeafNode {
-	private MarchingSquares _marchingSquares;
+public class MarchingCubesVisualizationNode extends LeafNode {
+	private MarchingCubes _marchingSquares;
 	
 	private TriangleMeshNode _volumeNode;
 	private Vector _volumeColor = new Vector(1, 0, 0, 1);
@@ -26,7 +26,7 @@ public class MarchingSquaresVisualizationNode extends LeafNode {
 	private Vector _subVolumesColor = new Vector(1, 1, 1, 1);
 	private boolean _drawSubVolumes;
 	
-	public MarchingSquaresVisualizationNode(MarchingSquares marchingSquares) {
+	public MarchingCubesVisualizationNode(MarchingCubes marchingSquares) {
 		_marchingSquares = Objects.requireNonNull(marchingSquares);
 		setDrawVolume(true);
 	}
@@ -129,9 +129,6 @@ public class MarchingSquaresVisualizationNode extends LeafNode {
 		Vector spannX = new Vector(spannR.x(), 0, 0);
 		Vector spannY = new Vector(0, spannR.y(), 0);
 		Vector spannZ = new Vector(0, 0, spannR.z());
-		Vector spannXY = new Vector(spannR.x(), spannR.y(), 0);
-		Vector spannYZ = new Vector(0, spannR.y(), spannR.z());
-		Vector spannXZ = new Vector(spannR.x(), 0, spannR.z());
 		Vector normal = new Vector(1, 0, 0);
 		
 		List<RenderVertex> renderVertices = new ArrayList<>();

@@ -1,6 +1,6 @@
 package computergraphics.exercises.exercise4;
 
-class MarchingSquaresLookupTable {
+class MarchingCubesLookupTable {
 
 	static int[] getCase(int caseIndex) {
 		return faces[caseIndex];

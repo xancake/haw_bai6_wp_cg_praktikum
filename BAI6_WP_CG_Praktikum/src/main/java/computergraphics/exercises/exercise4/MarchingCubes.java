@@ -10,7 +10,7 @@ import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 
-public class MarchingSquares {
+public class MarchingCubes {
 	private Cuboid _volume;
 	private List<Cuboid> _subVolumes;
 	private int _resolution;
@@ -20,7 +20,7 @@ public class MarchingSquares {
 	 * @param volume Das Volumen in dem der Algorithmus angewendet wird
 	 * @param resolution Die Auflösung mit der der Algorithmus arbeitet
 	 */
-	public MarchingSquares(Cuboid volume, int resolution) {
+	public MarchingCubes(Cuboid volume, int resolution) {
 		if(resolution < 1) {
 			throw new IllegalArgumentException("Die Auflösung für den MarchingSquares-Algorithmus muss mindestens 1 sein!");
 		}
@@ -58,7 +58,7 @@ public class MarchingSquares {
 			caseIndex += (value > isowert) ? 1 << i : 0;
 		}
 		
-		int[] currentCase = MarchingSquaresLookupTable.getCase(caseIndex);
+		int[] currentCase = MarchingCubesLookupTable.getCase(caseIndex);
 		for (int i = 0; i < currentCase.length; i += 3) {
 			if(currentCase[i] != -1 && currentCase[i+1] != -1 && currentCase[i+2] != -1) {
 				Vector p1 = getPointOnEdge(points, values, isowert, currentCase[i]);
