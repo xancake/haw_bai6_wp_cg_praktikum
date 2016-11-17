@@ -417,6 +417,22 @@ public class Vector implements Serializable {
 	}
 	
 	/**
+	 * Prüft ob die übergebenen Vektoren alle die selbe Diemension haben.
+	 * @param vectors Die zu prüfenden Vektoren
+	 */
+	public static void checkDimensionEqual(Vector... vectors) {
+		if(vectors == null || vectors.length < 1) {
+			return;
+		}
+		int dimension = vectors[0].getDimension();
+		for(Vector v : vectors) {
+			if(dimension != v.getDimension()) {
+				throw new IllegalArgumentException("Einer oder mehrere der übergebenen Eckpunkte haben eine andere Dimension!");
+			}
+		}
+	}
+	
+	/**
 	 * Berechnet den Schwerpunkt der durch die übergebenen Vektoren beschriebenen Eckpunkte.
 	 * <p>Diese Methode erwartet, dass alle übergebenen Vektoren dieselbe {@link #getDimension() Dimension} haben.
 	 * @param vertices Die Eckpunkte

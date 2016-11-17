@@ -3,6 +3,9 @@ package computergraphics.framework.math.curve;
 import java.util.List;
 import computergraphics.framework.math.Vector;
 
+/**
+ * Schnittstelle für Kurven.
+ */
 public interface Curve {
 	/**
 	 * Berechnet die Koordinate des Kurvenpunktes an dem Parameter {@code t}.
