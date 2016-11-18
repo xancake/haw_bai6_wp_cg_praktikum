@@ -149,7 +149,7 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setDrawFacetteNormals(boolean draw) {
 		if(_drawFacetteNormals != draw) {
-    		initFacetteNormals(false);
+			initFacetteNormals(false);
 			_drawFacetteNormals = draw;
 		}
 	}
@@ -317,8 +317,8 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setDrawBorder(boolean draw) {
 		if(_drawBorder != draw) {
-    		initBorder(false);
-    		_drawBorder = draw;
+			initBorder(false);
+			_drawBorder = draw;
 		}
 	}
 	

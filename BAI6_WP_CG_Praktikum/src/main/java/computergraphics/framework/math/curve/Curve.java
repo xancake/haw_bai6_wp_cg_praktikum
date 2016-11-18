@@ -9,14 +9,14 @@ import computergraphics.framework.math.Vector;
 public interface Curve {
 	/**
 	 * Berechnet die Koordinate des Kurvenpunktes an dem Parameter {@code t}.
-	 * @param t Der Parameter
+	 * @param t Der Parameter. Muss im Intervall 0 bis 1 liegen.
 	 * @return Die Koordinate des Kurvenpunktes
 	 */
 	Vector calculatePoint(double t);
 	
 	/**
 	 * Berechnet den Tangentialvektor an dem Parameter {@code t}.
-	 * @param t Der Parameter
+	 * @param t Der Parameter. Muss im Intervall 0 bis 1 liegen.
 	 * @return Der Tangentialvektor
 	 */
 	Vector calculateTangent(double t);

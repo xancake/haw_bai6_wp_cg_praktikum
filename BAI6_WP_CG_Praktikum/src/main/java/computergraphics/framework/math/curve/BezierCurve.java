@@ -1,5 +1,6 @@
 package computergraphics.framework.math.curve;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +10,10 @@ import computergraphics.framework.math.curve.basefunction.BernsteinPolynome;
 public class BezierCurve implements Curve {
 	private List<Vector> _controlPoints;
 	private List<BernsteinPolynome> _baseFunctions;
+	
+	public BezierCurve(Vector... controlPoints) {
+		this(Arrays.asList(controlPoints));
+	}
 	
 	public BezierCurve(List<Vector> controlPoints) {
 		Objects.requireNonNull(controlPoints);
@@ -32,7 +37,7 @@ public class BezierCurve implements Curve {
 	@Override
 	public Vector calculateTangent(double t) {
 		double h = 0.00001;
-		return calculatePoint(t+h).subtract(calculatePoint(t)).multiply(1/h);
+		return calculatePoint(t+h).subtract(calculatePoint(t)).multiply(1/h).getNormalized();
 	}
 	
 	@Override

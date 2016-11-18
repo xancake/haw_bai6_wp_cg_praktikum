@@ -8,6 +8,7 @@ import com.jogamp.opengl.GL2;
 
 import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.math.curve.Curve;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.mesh.Triangle;
 import computergraphics.framework.mesh.Vertex;
@@ -136,5 +137,50 @@ public class VertexBufferObjectFactory {
 			borderVertices.add(new RenderVertex(endVertex.getPosition(), endVertex.getNormal(), borderColor));
 		}
 		return new VertexBufferObject(GL2.GL_LINES, borderVertices);
+	}
+
+	public VertexBufferObject createCurveVBO(Curve curve, int curveResolution, Vector curveColor) {
+		List<RenderVertex> curveVertices = new ArrayList<>();
+		Vector lastPoint = curve.calculatePoint(0);
+		double step = 1.0/curveResolution;
+		boolean end = true;
+		for(double t=step; end; t+=step) {
+			// [DoubleTrouble] Aufgrund von der Ungenauigkeit von Double beim wiederholten Aufaddieren
+			// läuft man möglicherweise in die Problematik, dass der gewünschte Endpunkt 1 nicht genau
+			// erreicht wird und als Folge dessen die Kurve ggf. früher aufhört.
+			// Um das zu umgehen wird mit dieser Bedingung t auf 1 gesetzt, damit immer der letzte
+			// Punkt auch erreicht wird.
+			if(t>=1) {
+				t = 1;
+				end = false;
+			}
+			Vector currentPoint = curve.calculatePoint(t);
+			curveVertices.add(new RenderVertex(lastPoint, new Vector(3), curveColor));
+			curveVertices.add(new RenderVertex(currentPoint, new Vector(3), curveColor));
+			lastPoint = currentPoint;
+		}
+		return new VertexBufferObject(GL2.GL_LINES, curveVertices);
+	}
+
+	public VertexBufferObject createControlPointsVBO(Curve curve, Vector controlPointsColor) {
+		List<RenderVertex> controlPointsVertices = new ArrayList<>();
+		List<Vector> controlPoints = curve.getControlPoints();
+		Vector lastPoint = controlPoints.get(0);
+		for(int i=1; i<controlPoints.size(); i++) {
+			Vector currentPoint = controlPoints.get(i);
+			controlPointsVertices.add(new RenderVertex(lastPoint, new Vector(3), controlPointsColor));
+			controlPointsVertices.add(new RenderVertex(currentPoint, new Vector(3), controlPointsColor));
+			lastPoint = currentPoint;
+		}
+		return new VertexBufferObject(GL2.GL_LINES, controlPointsVertices);
+	}
+
+	public VertexBufferObject createTangentVBO(Curve curve, double tangentT, double drawLength, Vector tangentColor) {
+		List<RenderVertex> controlPointsVertices = new ArrayList<>();
+		Vector point = curve.calculatePoint(tangentT);
+		Vector tangentVector = curve.calculateTangent(tangentT);
+		controlPointsVertices.add(new RenderVertex(point, new Vector(3), tangentColor));
+		controlPointsVertices.add(new RenderVertex(point.add(tangentVector.multiply(drawLength)), new Vector(3), tangentColor));
+		return new VertexBufferObject(GL2.GL_LINES, controlPointsVertices);
 	}
 }
