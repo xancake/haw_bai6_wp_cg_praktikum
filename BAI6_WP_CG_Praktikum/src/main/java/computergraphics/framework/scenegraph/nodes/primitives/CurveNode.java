@@ -58,6 +58,14 @@ public class CurveNode extends LeafNode {
 	}
 	
 	/**
+	 * Gibt die Kurve zurück, die durch diesen Knoten dargestellt wird.
+	 * @return Die Kurve
+	 */
+	public Curve getCurve() {
+		return _curve;
+	}
+	
+	/**
 	 * Gibt zurück, ob die Kurve gezeichnet wird.
 	 * @return {@code true} wenn die Kurve gezeichnet wird, ansonsten {@code false}
 	 */
@@ -192,8 +200,8 @@ public class CurveNode extends LeafNode {
 	 * @see #setDrawTangent(boolean)
 	 */
 	public void setTangentT(double t) {
-		if(t < 0 || t > 1) {
-			throw new IllegalArgumentException("Die angegebene Stelle muss zwischen 0 und 1 liegen!");
+		if(t < 0 || t > _curve.getMaxT()) {
+			throw new IllegalArgumentException("Die angegebene Stelle muss zwischen 0 und " + _curve.getMaxT() + " liegen!");
 		}
 		if(t != _tangentT) {
 			_tangentT = t;

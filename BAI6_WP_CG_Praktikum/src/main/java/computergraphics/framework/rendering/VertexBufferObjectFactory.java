@@ -142,7 +142,8 @@ public class VertexBufferObjectFactory {
 	public VertexBufferObject createCurveVBO(Curve curve, int curveResolution, Vector curveColor) {
 		List<RenderVertex> curveVertices = new ArrayList<>();
 		Vector lastPoint = curve.calculatePoint(0);
-		double step = 1.0/curveResolution;
+		double tMax = curve.getMaxT();
+		double step = tMax/curveResolution;
 		boolean end = true;
 		for(double t=step; end; t+=step) {
 			// [DoubleTrouble] Aufgrund von der Ungenauigkeit von Double beim wiederholten Aufaddieren
@@ -150,8 +151,8 @@ public class VertexBufferObjectFactory {
 			// erreicht wird und als Folge dessen die Kurve ggf. früher aufhört.
 			// Um das zu umgehen wird mit dieser Bedingung t auf 1 gesetzt, damit immer der letzte
 			// Punkt auch erreicht wird.
-			if(t>=1) {
-				t = 1;
+			if(t>=tMax) {
+				t = tMax;
 				end = false;
 			}
 			Vector currentPoint = curve.calculatePoint(t);

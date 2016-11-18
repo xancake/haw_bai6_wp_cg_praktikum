@@ -28,12 +28,17 @@ public abstract class AbstractCurve implements Curve {
 	}
 	
 	@Override
-	public final List<Vector> getControlPoints() {
+	public List<Vector> getControlPoints() {
 		return Collections.unmodifiableList(_controlPoints);
 	}
 	
 	@Override
 	public final int getDegree() {
 		return _controlPoints.size()-1;
+	}
+	
+	@Override
+	public double getMaxT() {
+		return 1;
 	}
 }

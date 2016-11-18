@@ -9,14 +9,14 @@ import computergraphics.framework.math.Vector;
 public interface Curve {
 	/**
 	 * Berechnet die Koordinate des Kurvenpunktes an dem Parameter {@code t}.
-	 * @param t Der Parameter. Muss im Intervall 0 bis 1 liegen.
+	 * @param t Der Parameter. Muss im Intervall 0 bis {@link #getMaxT()} liegen.
 	 * @return Die Koordinate des Kurvenpunktes
 	 */
 	Vector calculatePoint(double t);
 	
 	/**
 	 * Berechnet den Tangentialvektor an dem Parameter {@code t}.
-	 * @param t Der Parameter. Muss im Intervall 0 bis 1 liegen.
+	 * @param t Der Parameter. Muss im Intervall 0 bis {@link #getMaxT()} liegen.
 	 * @return Der Tangentialvektor
 	 */
 	Vector calculateTangent(double t);
@@ -32,4 +32,10 @@ public interface Curve {
 	 * @return Der Grad
 	 */
 	int getDegree();
+	
+	/**
+	 * Gibt den maximalen Parameterwert für {@code t} zurück, der für diese Kurve erlaubt ist.
+	 * @return Der Parameterwert für {@code t}
+	 */
+	double getMaxT();
 }

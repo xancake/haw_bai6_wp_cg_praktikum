@@ -10,4 +10,14 @@ public interface BaseFunction {
 	 * @return Der Wert dieser Basisfunktion
 	 */
 	double solve(double t);
+	
+	/**
+	 * Berechnet den Wert der Ableitung dieser Basisfunktion an dem Parameter {@code t}.
+	 * @param t Der Parameter
+	 * @return Der Wert der Ableitung dieser Basisfunktion
+	 */
+	default double derive(double t) {
+		double h = 0.00001;
+		return (solve(t+h) - solve(t)) / h;
+	}
 }

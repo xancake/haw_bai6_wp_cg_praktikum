@@ -10,6 +10,7 @@ import computergraphics.framework.scenegraph.nodes.primitives.CurveNode;
 @SuppressWarnings("serial")
 public class CurveShowcaseScene extends Scene {
 	private static final int DEFAULT_RESOLUTION_STEP = 10;
+	private static final double TANGENT_DRAW_LENGTH_STEP = 0.01;
 	
 	private CurveNode _curveNode;
 	
@@ -20,10 +21,13 @@ public class CurveShowcaseScene extends Scene {
 		getRoot().setAnimated(true);
 
 		_curveNode = new CurveNode(curve);
+		_curveNode.setTangentDrawLength(0.25);
 		getRoot().addChild(_curveNode);
 	}
 
 	public void keyPressed(int keyCode) {
+		double maxT = _curveNode.getCurve().getMaxT();
+		int resolution = _curveNode.getCurveResolution();
 		switch (Character.toUpperCase(keyCode)) {
 			case 'C':
 				_curveNode.setDrawCurve(!_curveNode.isDrawCurve());
@@ -35,24 +39,32 @@ public class CurveShowcaseScene extends Scene {
 				_curveNode.setDrawTangent(!_curveNode.isDrawTangent());
 				break;
 			case '+':
-				_curveNode.setCurveResolution(_curveNode.getCurveResolution() + DEFAULT_RESOLUTION_STEP);
+				_curveNode.setCurveResolution(resolution + DEFAULT_RESOLUTION_STEP);
 				break;
 			case '-':
-				int resolution = _curveNode.getCurveResolution() - DEFAULT_RESOLUTION_STEP;
-				if(resolution > 0) {
-					_curveNode.setCurveResolution(resolution);
+				int newResolution = resolution - DEFAULT_RESOLUTION_STEP;
+				if(newResolution > 0) {
+					_curveNode.setCurveResolution(newResolution);
 				}
 				break;
 			case ',': {
-				double t = _curveNode.getTangentT() - 1.0/_curveNode.getCurveResolution();
+				double t = _curveNode.getTangentT() - maxT/resolution;
 				_curveNode.setTangentT(t > 0 ? t : 0);
 				break;
 			}
 			case '.': {
-				double t = _curveNode.getTangentT() + 1.0/_curveNode.getCurveResolution();
-				_curveNode.setTangentT(t < 1 ? t : 1);
+				double t = _curveNode.getTangentT() + maxT/resolution;
+				_curveNode.setTangentT(t < maxT ? t : maxT);
 				break;
 			}
+			case '*':
+				_curveNode.setTangentDrawLength(_curveNode.getTangentDrawLength() + TANGENT_DRAW_LENGTH_STEP);
+				break;
+			case '/':
+				if (_curveNode.getTangentDrawLength()-TANGENT_DRAW_LENGTH_STEP > 0) {
+					_curveNode.setTangentDrawLength(_curveNode.getTangentDrawLength() - TANGENT_DRAW_LENGTH_STEP);
+				}
+				break;
 		}
 	}
 }
