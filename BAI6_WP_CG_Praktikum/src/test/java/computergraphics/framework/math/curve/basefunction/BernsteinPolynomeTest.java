@@ -1,14 +1,15 @@
 package computergraphics.framework.math.curve.basefunction;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
+
 import org.junit.Test;
 
 public class BernsteinPolynomeTest {
 	@Test
 	public void testPolynome() {
-		List<BernsteinPolynome> polynome = BernsteinPolynome.createPolynome(3);
+		List<BernsteinPolynome> polynome = BaseFunctions.createBernsteinPolynome(3);
 		assertEquals(4, polynome.size());
 		assertStartEnd(polynome);
 		assertSum(polynome, 0.1);
