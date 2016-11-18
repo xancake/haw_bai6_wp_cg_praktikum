@@ -4,7 +4,7 @@ import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.curve.BezierCurve;
 import computergraphics.framework.math.curve.Curve;
 
-public class DemoCurve1 {
+public class BezierCurveDemo {
 	public static void main(String[] args) {
 		Curve curve = new BezierCurve(
 				new Vector(0, 0, 0),
