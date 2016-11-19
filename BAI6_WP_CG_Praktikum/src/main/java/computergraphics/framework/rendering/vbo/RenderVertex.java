@@ -1,4 +1,4 @@
-package computergraphics.framework.rendering;
+package computergraphics.framework.rendering.vbo;
 
 import computergraphics.framework.math.Vector;
 

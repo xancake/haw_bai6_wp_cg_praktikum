@@ -6,8 +6,6 @@ import java.util.Objects;
 import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.curve.Curve;
-import computergraphics.framework.rendering.RenderVertex;
-import computergraphics.framework.rendering.VertexBufferObject;
 
 /**
  * Eine Klasse zum Erzeugen von {@link VertexBufferObject}s für {@link Curve Kurven}.

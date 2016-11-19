@@ -5,8 +5,8 @@ import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.curve.Curve;
-import computergraphics.framework.rendering.VertexBufferObject;
 import computergraphics.framework.rendering.vbo.CurveVBOFactory;
+import computergraphics.framework.rendering.vbo.VertexBufferObject;
 import computergraphics.framework.rendering.vbo.VertexBufferObjectFactory;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 

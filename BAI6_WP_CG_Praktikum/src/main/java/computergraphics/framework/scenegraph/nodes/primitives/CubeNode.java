@@ -8,13 +8,11 @@ package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.jogamp.opengl.GL2;
-
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
-import computergraphics.framework.rendering.RenderVertex;
-import computergraphics.framework.rendering.VertexBufferObject;
+import computergraphics.framework.rendering.vbo.RenderVertex;
+import computergraphics.framework.rendering.vbo.VertexBufferObject;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
 /**

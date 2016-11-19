@@ -1,4 +1,4 @@
-package computergraphics.framework.rendering;
+package computergraphics.framework.rendering.vbo;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -7,10 +7,10 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
 import com.jogamp.opengl.GL2;
-
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.rendering.Shader;
+import computergraphics.framework.rendering.ShaderAttributes;
 
 /**
  * Rendering vie vertex buffer objects (VBO).

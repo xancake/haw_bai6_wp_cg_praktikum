@@ -9,8 +9,6 @@ import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.mesh.Triangle;
 import computergraphics.framework.mesh.Vertex;
-import computergraphics.framework.rendering.RenderVertex;
-import computergraphics.framework.rendering.VertexBufferObject;
 
 /**
  * Klasse zum Erzeugen von {@link VertexBufferObject}s für {@link ITriangleMesh Meshes}
