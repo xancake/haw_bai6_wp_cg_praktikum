@@ -21,8 +21,8 @@ import computergraphics.framework.scenegraph.nodes.primitives.MarchingCubesVisua
 import computergraphics.framework.scenegraph.nodes.primitives.TriangleMeshNode;
 
 @SuppressWarnings("serial")
-public class AllInOneMarchingCubesDemoScene extends Scene {
-	public AllInOneMarchingCubesDemoScene(double size) throws IOException {
+public class AllInOneMarchingCubesDemo extends Scene {
+	public AllInOneMarchingCubesDemo(double size) throws IOException {
 		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
 
 		getRoot().setLightPosition(new Vector(2, 2, 2));
@@ -41,7 +41,7 @@ public class AllInOneMarchingCubesDemoScene extends Scene {
 	}
 	
 	public static void main(String... args) throws Exception {
-		new AllInOneMarchingCubesDemoScene(2);
+		new AllInOneMarchingCubesDemo(2);
 	}
 	
 	private static ITriangleMesh createMesh(MarchingCubes ms, ImplicitFunction function) {
