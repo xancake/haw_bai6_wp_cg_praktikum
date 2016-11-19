@@ -1,18 +1,17 @@
 package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.Objects;
-
 import com.jogamp.opengl.GL2;
-
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.curve.Curve;
 import computergraphics.framework.rendering.VertexBufferObject;
-import computergraphics.framework.rendering.VertexBufferObjectFactory;
+import computergraphics.framework.rendering.vbo.CurveVBOFactory;
+import computergraphics.framework.rendering.vbo.VertexBufferObjectFactory;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
 public class CurveNode extends LeafNode {
-	private VertexBufferObjectFactory _factory;
+	private CurveVBOFactory _factory;
 	
 	private Curve _curve;
 	private VertexBufferObject _curveVBO;
@@ -31,7 +30,6 @@ public class CurveNode extends LeafNode {
 	private boolean _drawTangent;
 	
 	public CurveNode(Curve curve) {
-		_factory = new VertexBufferObjectFactory();
 		setCurve(curve);
 		setDrawCurve(true); // erzeugt implizit eins der benötigten VBOs
 	}
@@ -73,6 +71,7 @@ public class CurveNode extends LeafNode {
 	public void setCurve(Curve curve) {
 		_curve = Objects.requireNonNull(curve);
 		
+		_factory = VertexBufferObjectFactory.forCurve(_curve);
 		invalidateVBOs();
 		
 		if(isDrawCurve()) {
@@ -295,19 +294,19 @@ public class CurveNode extends LeafNode {
 	
 	private void initCurve(boolean recalculate) {
 		if(recalculate || _curveVBO == null) {
-			_curveVBO = _factory.createCurveVBO(_curve, _curveResolution, _curveColor);
+			_curveVBO = _factory.createCurveVBO(_curveResolution, _curveColor);
 		}
 	}
 	
 	private void initControlPoints(boolean recalculate) {
 		if(recalculate || _controlPointsVBO == null) {
-			_controlPointsVBO = _factory.createControlPointsVBO(_curve, _controlPointsColor);
+			_controlPointsVBO = _factory.createControlPolygonVBO(_controlPointsColor);
 		}
 	}
 	
 	private void initTangent(boolean recalculate) {
 		if(recalculate || _tangentVBO == null) {
-			_tangentVBO = _factory.createTangentVBO(_curve, _tangentT, _tangentDrawLength, _tangentColor);
+			_tangentVBO = _factory.createTangentVBO(_tangentT, _tangentDrawLength, _tangentColor);
 		}
 	}
 	

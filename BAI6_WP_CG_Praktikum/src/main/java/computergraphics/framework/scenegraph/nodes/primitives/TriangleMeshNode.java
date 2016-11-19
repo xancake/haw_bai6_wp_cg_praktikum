@@ -6,11 +6,12 @@ import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
 import computergraphics.framework.rendering.VertexBufferObject;
-import computergraphics.framework.rendering.VertexBufferObjectFactory;
+import computergraphics.framework.rendering.vbo.MeshVBOFactory;
+import computergraphics.framework.rendering.vbo.VertexBufferObjectFactory;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
 public class TriangleMeshNode extends LeafNode {
-	private VertexBufferObjectFactory _factory;
+	private MeshVBOFactory _factory;
 	
 	private ITriangleMesh _mesh;
 	private VertexBufferObject _meshWithFacetteNormals;
@@ -38,7 +39,6 @@ public class TriangleMeshNode extends LeafNode {
 	private boolean _drawBorder;
 	
 	public TriangleMeshNode(ITriangleMesh mesh, Vector color) {
-		_factory = new VertexBufferObjectFactory();
 		setMesh(mesh);
 		setMeshColor(color);
 		setDrawMesh(true); // erzeugt auch implizit eins der benötigten VBOs
@@ -66,12 +66,12 @@ public class TriangleMeshNode extends LeafNode {
 			}
 			
 			// Wireframe
-			if(_wireframe!=null && isDrawWireframe()) {
+			if(isDrawWireframe()) {
 				_wireframe.draw(gl);
 			}
 			
 			// Rand
-			if(_border!=null && isDrawBorder()) {
+			if(isDrawBorder()) {
 				_border.draw(gl);
 			}
 		}
@@ -99,6 +99,7 @@ public class TriangleMeshNode extends LeafNode {
 	public void setMesh(ITriangleMesh mesh) {
 		_mesh = Objects.requireNonNull(mesh);
 		
+		_factory = VertexBufferObjectFactory.forMesh(_mesh);
 		invalidateVBOs();
 		
 		if(isDrawMesh()) {
@@ -409,37 +410,37 @@ public class TriangleMeshNode extends LeafNode {
 	
 	private void initMeshWithFacetteNormals(boolean recalculate) {
 		if(recalculate || _meshWithFacetteNormals == null) {
-			_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_mesh, _meshColor);
+			_meshWithFacetteNormals = _factory.createMeshVBOWithTriangleNormals(_meshColor);
 		}
 	}
 	
 	private void initMeshWithVertexNormals(boolean recalculate) {
 		if(recalculate || _meshWithVertexNormals == null) {
-			_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_mesh, _meshColor);
+			_meshWithVertexNormals = _factory.createMeshVBOWithVertexNormals(_meshColor);
 		}
 	}
 	
 	private void initFacetteNormals(boolean recalculate) {
 		if(recalculate || _facetteNormals == null) {
-			_facetteNormals = _factory.createFacettNormalsVBO(_mesh, _facetteNormalDrawLength, _facetteNormalColor);
+			_facetteNormals = _factory.createFacettNormalsVBO(_facetteNormalDrawLength, _facetteNormalColor);
 		}
 	}
 	
 	private void initVertexNormals(boolean recalculate) {
 		if(recalculate || _vertexNormals == null) {
-			_vertexNormals = _factory.createVertexNormalsVBO(_mesh, _vertexNormalDrawLength, _vertexNormalColor);
+			_vertexNormals = _factory.createVertexNormalsVBO(_vertexNormalDrawLength, _vertexNormalColor);
 		}
 	}
 	
 	private void initWireframe(boolean recalculate) {
 		if(recalculate || _wireframe == null) {
-			_wireframe = _factory.createWireframeVBO(_mesh, _wireframeColor);
+			_wireframe = _factory.createWireframeVBO(_wireframeColor);
 		}
 	}
 	
 	private void initBorder(boolean recalculate) {
 		if(recalculate || _border == null) {
-			_border = _factory.createBorderVBO(_mesh, _borderColor);
+			_border = _factory.createBorderVBO(_borderColor);
 		}
 	}
 	
