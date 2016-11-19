@@ -27,12 +27,12 @@ public class CurveNode extends LeafNode {
 	private VertexBufferObject _tangentVBO;
 	private Vector _tangentColor = new Vector(0, 0, 1, 1);
 	private double _tangentT;
-	private double _tangentDrawLength = 0.1;
+	private double _tangentDrawLength = 0.25;
 	private boolean _drawTangent;
 	
 	public CurveNode(Curve curve) {
-		_curve = Objects.requireNonNull(curve);
 		_factory = new VertexBufferObjectFactory();
+		setCurve(curve);
 		setDrawCurve(true); // erzeugt implizit eins der benötigten VBOs
 	}
 	
@@ -63,6 +63,27 @@ public class CurveNode extends LeafNode {
 	 */
 	public Curve getCurve() {
 		return _curve;
+	}
+	
+	/**
+	 * Legt die Kurve fest, die durch diesen Knoten dargestellt werden soll.
+	 * @param curve Die Kurve, nicht {@code null}
+	 * @throws NullPointerException, wenn die übergebene Kurve {@code null} ist
+	 */
+	public void setCurve(Curve curve) {
+		_curve = Objects.requireNonNull(curve);
+		
+		invalidateVBOs();
+		
+		if(isDrawCurve()) {
+			initCurve(true);
+		}
+		if(isDrawControlPoints()) {
+			initControlPoints(true);
+		}
+		if(isDrawTangent()) {
+			initTangent(true);
+		}
 	}
 	
 	/**
@@ -117,7 +138,7 @@ public class CurveNode extends LeafNode {
 	 */
 	public void setCurveResolution(int curveResolution) {
 		if(curveResolution < 1) {
-			throw new IllegalArgumentException("Die Auflösung muss größer als 0 sein!");
+			throw new IllegalArgumentException("Die abgegebene Auflösung (" + curveResolution + ") muss größer als 0 sein!");
 		}
 		if(_curveResolution != curveResolution) {
 			_curveResolution = curveResolution;
@@ -201,7 +222,7 @@ public class CurveNode extends LeafNode {
 	 */
 	public void setTangentT(double t) {
 		if(t < 0 || t > _curve.getMaxT()) {
-			throw new IllegalArgumentException("Die angegebene Stelle muss zwischen 0 und " + _curve.getMaxT() + " liegen!");
+			throw new IllegalArgumentException("Die angegebene Stelle (" + t + ") muss zwischen 0 und " + _curve.getMaxT() + " liegen!");
 		}
 		if(t != _tangentT) {
 			_tangentT = t;
@@ -227,8 +248,8 @@ public class CurveNode extends LeafNode {
 	 * @see #setDrawTangent(boolean)
 	 */
 	public void setTangentDrawLength(double length) {
-		if(length < 0) {
-			throw new IllegalArgumentException("Die angegebene Länge muss positiv sein!");
+		if(length < 0 || !Double.isFinite(length)) {
+			throw new IllegalArgumentException("Die angegebene Länge (" + length + ") muss positiv und endlich sein!");
 		}
 		if(length != _tangentDrawLength) {
 			_tangentDrawLength = length;
@@ -288,5 +309,11 @@ public class CurveNode extends LeafNode {
 		if(recalculate || _tangentVBO == null) {
 			_tangentVBO = _factory.createTangentVBO(_curve, _tangentT, _tangentDrawLength, _tangentColor);
 		}
+	}
+	
+	private void invalidateVBOs() {
+		_curveVBO = null;
+		_controlPointsVBO = null;
+		_tangentVBO = null;
 	}
 }

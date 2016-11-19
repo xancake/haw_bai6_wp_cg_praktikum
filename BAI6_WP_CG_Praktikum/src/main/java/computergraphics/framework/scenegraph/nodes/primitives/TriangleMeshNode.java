@@ -38,8 +38,8 @@ public class TriangleMeshNode extends LeafNode {
 	private boolean _drawBorder;
 	
 	public TriangleMeshNode(ITriangleMesh mesh, Vector color) {
-		_mesh = Objects.requireNonNull(mesh);
 		_factory = new VertexBufferObjectFactory();
+		setMesh(mesh);
 		setMeshColor(color);
 		setDrawMesh(true); // erzeugt auch implizit eins der benötigten VBOs
 	}
@@ -74,6 +74,47 @@ public class TriangleMeshNode extends LeafNode {
 			if(_border!=null && isDrawBorder()) {
 				_border.draw(gl);
 			}
+		}
+	}
+	
+	/**
+	 * Gibt das Mesh zurück, das durch diesen Knoten dargestellt wird.
+	 * @return Das Mesh
+	 */
+	public ITriangleMesh getMesh() {
+		return _mesh;
+	}
+	
+	/**
+	 * Legt das Mesh fest, das durch diesen Knoten dargestellt werden soll.
+	 * <p>Der Aufgruf hat zur Folge, dass sämtliche {@link VertexBufferObject}s invalidiert und neu berechnet werden.
+	 * Welche VBOs neu erzeugt werden hängt davon ab, welche Darstellungen gezeichnet werden sollen.
+	 * @param mesh Das darzustellende Mesh
+	 * @see #isDrawMesh()
+	 * @see #isDrawFacetteNormals()
+	 * @see #isDrawVertexNormals()
+	 * @see #isDrawWireframe()
+	 * @see #isDrawBorder()
+	 */
+	public void setMesh(ITriangleMesh mesh) {
+		_mesh = Objects.requireNonNull(mesh);
+		
+		invalidateVBOs();
+		
+		if(isDrawMesh()) {
+			initMesh(true);
+		}
+		if(isDrawFacetteNormals()) {
+			initFacetteNormals(true);
+		}
+		if(isDrawVertexNormals()) {
+			initVertexNormals(true);
+		}
+		if(isDrawWireframe()) {
+			initWireframe(true);
+		}
+		if(isDrawBorder()) {
+			initBorder(true);
 		}
 	}
 	
@@ -400,5 +441,14 @@ public class TriangleMeshNode extends LeafNode {
 		if(recalculate || _border == null) {
 			_border = _factory.createBorderVBO(_mesh, _borderColor);
 		}
+	}
+	
+	private void invalidateVBOs() {
+		_meshWithVertexNormals = null;
+		_meshWithFacetteNormals = null;
+		_facetteNormals = null;
+		_vertexNormals = null;
+		_wireframe = null;
+		_border = null;
 	}
 }
