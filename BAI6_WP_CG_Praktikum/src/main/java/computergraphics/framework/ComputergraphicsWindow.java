@@ -97,16 +97,11 @@ public class ComputergraphicsWindow extends GLJPanel implements
 	@Override
 	public void mousePressed(MouseEvent event) {
 		currentButton = event.getButton();
-		if (event.getButton() == MouseEvent.BUTTON1) {
-			lastMouseCoordinates.set(0, event.getX());
-			lastMouseCoordinates.set(1, event.getY());
-		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
-		lastMouseCoordinates = new Vector(event.getX(), event.getY(), 0);
-		currentButton = -1;
+		currentButton = MouseEvent.NOBUTTON;
 	}
 
 	@Override
@@ -117,21 +112,20 @@ public class ComputergraphicsWindow extends GLJPanel implements
 				double deltaY = (float) (event.getY() - lastMouseCoordinates.get(1)) / 200.0f;
 				scene.rotateCamera(deltaX, deltaY);
 			}
-			lastMouseCoordinates.set(0, event.getX());
-			lastMouseCoordinates.set(1, event.getY());
 		} else if (currentButton == MouseEvent.BUTTON3) {
 			if ((lastMouseCoordinates.get(0) > 0) && (lastMouseCoordinates.get(1) > 0)) {
 				int deltaY = (int) (event.getY() - lastMouseCoordinates.get(1));
 				scene.zoom(deltaY);
 			}
-			lastMouseCoordinates.set(0, event.getX());
-			lastMouseCoordinates.set(1, event.getY());
 		}
+		lastMouseCoordinates.set(0, event.getX());
+		lastMouseCoordinates.set(1, event.getY());
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent event) {
-
+		lastMouseCoordinates.set(0, event.getX());
+		lastMouseCoordinates.set(1, event.getY());
 	}
 
 	@Override
