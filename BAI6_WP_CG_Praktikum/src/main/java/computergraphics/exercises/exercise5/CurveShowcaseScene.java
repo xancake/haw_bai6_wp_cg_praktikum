@@ -1,34 +1,49 @@
 package computergraphics.exercises.exercise5;
 
+import computergraphics.framework.algorithm.marching.cubes.SingleThreadedMarchingCubes;
+import computergraphics.framework.math.Cuboid;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.math.curve.Curve;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.Scene;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
 import computergraphics.framework.scenegraph.nodes.primitives.CurveNode;
+import computergraphics.framework.scenegraph.nodes.primitives.MarchingCubesVisualizationNode;
 
 @SuppressWarnings("serial")
 public class CurveShowcaseScene extends Scene {
 	private static final int DEFAULT_RESOLUTION_STEP = 10;
 	private static final double TANGENT_DRAW_LENGTH_STEP = 0.01;
 	
+	private MarchingCubesVisualizationNode _grid;
 	private CurveNode _curveNode;
 	
 	public CurveShowcaseScene(Curve curve) {
 		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
-
+		
 		getRoot().setLightPosition(new Vector(1, 1, 1));
 		getRoot().setAnimated(true);
-
+		
 		_curveNode = new CurveNode(curve);
-		_curveNode.setTangentDrawLength(0.25);
 		getRoot().addChild(_curveNode);
+		
+		// MarchingCubes Zweckentfremden, um das Koordinatenkreuz um den Nullpunkt von -2³ bis 2³ zu zeichnen
+		_grid = new MarchingCubesVisualizationNode(new SingleThreadedMarchingCubes(new Cuboid(-2, 2), 2));
+		_grid.setDrawVolume(false);
+		_grid.setDrawSubVolumes(true);
+		getRoot().addChild(_grid);
 	}
-
+	
 	public void keyPressed(int keyCode) {
 		double maxT = _curveNode.getCurve().getMaxT();
 		int resolution = _curveNode.getCurveResolution();
 		switch (Character.toUpperCase(keyCode)) {
+			case 'G':
+				_grid.setDrawSubVolumes(!_grid.isDrawSubVolumes());
+				break;
+			case 'V':
+				_grid.setDrawVolume(!_grid.isDrawVolume());
+				break;
 			case 'C':
 				_curveNode.setDrawCurve(!_curveNode.isDrawCurve());
 				break;
