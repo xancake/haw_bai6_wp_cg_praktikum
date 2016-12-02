@@ -175,15 +175,28 @@ public class MeshVBOFactory extends VertexBufferObjectFactory {
 		if(!_mesh.hasBorder()) {
 			return new VertexBufferObject();
 		}
-		
-		List<RenderVertex> borderVertices = new ArrayList<>();
-		for (Pair<Vertex, Vertex> vertexPair : _mesh.getBorderVertices()) {
+		return createEdgesVBO(_mesh.getBorderVertices(), color);
+	}
+	
+	/**
+	 * Erzeugt ein {@link VertexBufferObject} das die Silhouette des Meshes von einem Sichtpunkt darstellt.
+	 * @param color Die Farbe in der die Silhouette dargestellt werden soll
+	 * @return Ein {@link VertexBufferObject} das die Silhouette visualisiert
+	 */
+	public VertexBufferObject createSilhouetteVBO(Vector viewpoint, Vector color) {
+		checkColor(color);
+		return createEdgesVBO(_mesh.getSilhouetteVertices(viewpoint), color);
+	}
+	
+	private VertexBufferObject createEdgesVBO(List<Pair<Vertex, Vertex>> edges, Vector color) {
+		List<RenderVertex> edgeVertices = new ArrayList<>();
+		for (Pair<Vertex, Vertex> vertexPair : edges) {
 			Vertex startVertex = vertexPair.getKey();
 			Vertex endVertex = vertexPair.getValue();
 			
-			borderVertices.add(new RenderVertex(startVertex.getPosition(), startVertex.getNormal(), color));
-			borderVertices.add(new RenderVertex(endVertex.getPosition(), endVertex.getNormal(), color));
+			edgeVertices.add(new RenderVertex(startVertex.getPosition(), startVertex.getNormal(), color));
+			edgeVertices.add(new RenderVertex(endVertex.getPosition(), endVertex.getNormal(), color));
 		}
-		return new VertexBufferObject(GL2.GL_LINES, borderVertices);
+		return new VertexBufferObject(GL2.GL_LINES, edgeVertices);
 	}
 }

@@ -38,6 +38,11 @@ public class TriangleMeshNode extends LeafNode {
 	private Vector _borderColor = new Vector(0, 0, 0, 1);
 	private boolean _drawBorder;
 	
+	private VertexBufferObject _silhouette;
+	private Vector _silhouetteViewpoint;
+	private Vector _silhouetteColor = new Vector(0, 0, 0, 1);
+	private boolean _drawSilhouette;
+	
 	public TriangleMeshNode(ITriangleMesh mesh, Vector color) {
 		setMesh(mesh);
 		setMeshColor(color);
@@ -73,6 +78,11 @@ public class TriangleMeshNode extends LeafNode {
 			// Rand
 			if(isDrawBorder()) {
 				_border.draw(gl);
+			}
+			
+			// Silhouette
+			if(isDrawSilhouette()) {
+				_silhouette.draw(gl);
 			}
 		}
 	}
@@ -384,6 +394,70 @@ public class TriangleMeshNode extends LeafNode {
 	}
 	
 	/**
+	 * Gibt zurück, ob die Silhouette gezeichnet wird.
+	 * @return {@code true} wenn die Silhouette gezeichnet wird, ansonsten {@code false}
+	 */
+	public boolean isDrawSilhouette() {
+		return _drawSilhouette;
+	}
+	
+	/**
+	 * Legt fest, ob die Silhouette gezeichnet werden soll oder nicht.
+	 * @param draw {@code true} wenn die Silhouette gezeichnet werden soll, ansonsten {@code false}
+	 */
+	public void setDrawSilhouette(boolean draw) {
+		if(_drawSilhouette != draw) {
+			initSilhouette(false);
+			_drawSilhouette = draw;
+		}
+	}
+	
+	/**
+	 * Gibt den Sichtpunkt zurück, von dem aus die Silhouette berechnet wird.
+	 * @return Der Sichtpunkt
+	 */
+	public Vector getSilhouetteViewpoint() {
+		return _silhouetteViewpoint;
+	}
+	
+	/**
+	 * Legt den Sichtpunkt fest, von dem aus die Silhouette berechnet wird.
+	 * @param viewpoint Der Sichtpunkt, darf nicht {@code null} und muss {@link Vector#getDimension() dreidimensional} sein
+	 * @throws NullPointerException Wenn der Sichtpunkt {@code null} ist
+	 * @throws IllegalArgumentException Wenn der Sichtpunkt nicht dreidimensional ist
+	 */
+	public void setSilhouetteViewpoint(Vector viewpoint) {
+		if(viewpoint.getDimension() != 3) {
+			throw new IllegalArgumentException("Die Dimension des Sichtpunkts muss 3 sein (war " + viewpoint.getDimension() + ").");
+		}
+		if(_silhouetteViewpoint == null || !_silhouetteViewpoint.equals(viewpoint)) {
+			_silhouetteViewpoint = viewpoint;
+			if(isDrawSilhouette()) {
+				initSilhouette(true);
+			}
+		}
+	}
+	
+	/**
+	 * Gibt die Farbe der Silhouette zurück.
+	 * @return Die Farbe als vierdimensionaler Vektor (R,G,B,A)
+	 */
+	public Vector getSilhouetteColor() {
+		return _silhouetteColor;
+	}
+	
+	/**
+	 * Legt die Farbe der Silhouette fest.
+	 * @param color Ein drei- oder vierdimensionaler Vektor, der die Farbe angibt (R,G,B[,A])
+	 */
+	public void setSilhouetteColor(Vector color) {
+		if(!_silhouetteColor.equals(color)) {
+			_silhouetteColor = checkColorVektor(color);
+			initSilhouette(true);
+		}
+	}
+	
+	/**
 	 * Prüft ob der übergebene Vektor einen gültigen Farbvektor beschreibt und gibt eine Kopie des Vektors zurück,
 	 * wenn das der Fall ist. Ansonsten wird eine {@link IllegalArgumentException} geworfen.
 	 * <p>Ein gültiger Farbvektor hat entweder drei (R,G,B) oder vier (R,G,B,A) Dimensionen.
@@ -444,6 +518,12 @@ public class TriangleMeshNode extends LeafNode {
 		}
 	}
 	
+	private void initSilhouette(boolean recalculate) {
+		if(recalculate || _silhouette == null) {
+			_silhouette = _factory.createSilhouetteVBO(_silhouetteViewpoint, _silhouetteColor);
+		}
+	}
+	
 	private void invalidateVBOs() {
 		_meshWithVertexNormals = null;
 		_meshWithFacetteNormals = null;
@@ -451,5 +531,6 @@ public class TriangleMeshNode extends LeafNode {
 		_vertexNormals = null;
 		_wireframe = null;
 		_border = null;
+		_silhouette = null;
 	}
 }

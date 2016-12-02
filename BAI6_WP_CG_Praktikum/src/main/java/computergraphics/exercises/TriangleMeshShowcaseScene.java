@@ -20,6 +20,7 @@ public class TriangleMeshShowcaseScene extends Scene {
 		getRoot().setAnimated(true);
 
 		_meshNode = new TriangleMeshNode(mesh, new Vector(1, 0, 0, 1));
+		_meshNode.setSilhouetteViewpoint(getRoot().getLightPosition());
 		getRoot().addChild(_meshNode);
 	}
 
@@ -42,6 +43,9 @@ public class TriangleMeshShowcaseScene extends Scene {
 				break;
 			case 'V':
 				_meshNode.setDrawVertexNormals(!_meshNode.isDrawVertexNormals());
+				break;
+			case 'H':
+				_meshNode.setDrawSilhouette(!_meshNode.isDrawSilhouette());
 				break;
 			case '+':
 				if (_meshNode.getFacetteNormalDrawLength() > NORMAL_DRAW_LENGTH_STEP) {
