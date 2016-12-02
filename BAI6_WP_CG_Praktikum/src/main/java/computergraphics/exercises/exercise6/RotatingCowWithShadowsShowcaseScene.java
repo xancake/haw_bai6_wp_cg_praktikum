@@ -13,10 +13,10 @@ import computergraphics.framework.scenegraph.nodes.transformation.ScaleNode;
 import computergraphics.framework.scenegraph.nodes.transformation.TranslationNode;
 
 @SuppressWarnings("serial")
-public class JenkeMeshShowcaseScene extends Scene {
+public class RotatingCowWithShadowsShowcaseScene extends Scene {
 	private JenkeTriangleMeshNode _cowNode;
 	
-	public JenkeMeshShowcaseScene() throws IOException {
+	public RotatingCowWithShadowsShowcaseScene() throws IOException {
 		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
 		getRoot().setLightPosition(new Vector(1, 1, 1));
 		
@@ -49,6 +49,6 @@ public class JenkeMeshShowcaseScene extends Scene {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		new JenkeMeshShowcaseScene();
+		new RotatingCowWithShadowsShowcaseScene();
 	}
 }
