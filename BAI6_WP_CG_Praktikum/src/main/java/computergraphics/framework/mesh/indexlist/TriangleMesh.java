@@ -128,6 +128,12 @@ public class TriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
+	public List<Pair<Vertex, Vertex>> getSilhouetteVertices(Vector viewpoint) {
+		// TODO implement when necessary
+		throw new IllegalArgumentException("Not yet implemented");
+	}
+	
+	@Override
 	public void createShadowPolygons(Vector lightPosition, float extend, ITriangleMesh shadowPolygonMesh) {
 		// TODO implement when necessary
 		throw new IllegalArgumentException("Not yet implemented");

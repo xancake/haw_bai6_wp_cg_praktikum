@@ -3,11 +3,15 @@ package computergraphics.framework.mesh.halfedge;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+
 import computergraphics.framework.datastructures.Pair;
+import computergraphics.framework.math.HessescheEbene;
 import computergraphics.framework.math.Triangles;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
@@ -223,8 +227,65 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
+	public List<Pair<Vertex, Vertex>> getSilhouetteVertices(Vector viewpoint) {
+		List<Pair<Vertex, Vertex>> silhouette = new ArrayList<>();
+		
+		Set<HalfEdge> closedSet = new HashSet<>();
+		for(HalfEdge edge : _halfEdges) {
+			if(!closedSet.contains(edge)) {
+				HalfEdge opposite = edge.getOpposite();
+				
+				double lambda = lambda(edge, viewpoint);
+				double oppositeLambda = lambda(opposite, viewpoint);
+				if((lambda > 0 && oppositeLambda <= 0)) {
+					silhouette.add(new Pair<>(edge.getStartVertex(), opposite.getStartVertex()));
+				}
+				if((lambda <= 0 && oppositeLambda > 0)) {
+					silhouette.add(new Pair<>(opposite.getStartVertex(), edge.getStartVertex()));
+				}
+				
+				closedSet.add(edge);
+				closedSet.add(opposite);
+			}
+		}
+		
+		return silhouette;
+	}
+	
+	/**
+	 * Berechnet das Lambda für den Schnitt eines Strahls ausgehend vom übergebenen Viewpoint
+	 * durch das zur übergebenen Kante gehörenden Dreieck.
+	 * @param edge Die Kante
+	 * @param viewpoint Der Viewpoint
+	 * @return Das Lambda oder {@link Double#NaN}, wenn der Strahl parallel zum Dreieck verläuft, es also nicht schneidet
+	 */
+	private double lambda(HalfEdge edge, Vector viewpoint) {
+		HalfEdgeTriangle facette = edge.getFacet();
+		HessescheEbene facetteEbene = new HessescheEbene(edge.getStartVertex().getPosition(), facette.getNormal());
+		return -facetteEbene.calculateLambda(viewpoint, facette.getNormal());
+	}
+	
+	@Override
 	public void createShadowPolygons(Vector lightPosition, float extend, ITriangleMesh shadowPolygonMesh) {
-		// TODO implement when necessary
-		throw new IllegalArgumentException("Not yet implemented");
+		shadowPolygonMesh.clear();
+		
+		List<Pair<Vertex, Vertex>> silhouette = getSilhouetteVertices(lightPosition);
+		for(Pair<Vertex, Vertex> edge : silhouette) {
+			Vector v1 = edge.getKey().getPosition();
+			Vector v2 = edge.getValue().getPosition();
+			Vector ray1 = v1.subtract(lightPosition).getNormalized();
+			Vector ray2 = v2.subtract(lightPosition).getNormalized();
+			Vector v3 = v1.add(ray1.multiply(extend));
+			Vector v4 = v2.add(ray2.multiply(extend));
+			
+			int i1 = shadowPolygonMesh.addVertex(v1);
+			int i2 = shadowPolygonMesh.addVertex(v2);
+			int i3 = shadowPolygonMesh.addVertex(v3);
+			int i4 = shadowPolygonMesh.addVertex(v4);
+			shadowPolygonMesh.addTriangle(i1, i3, i2);
+			shadowPolygonMesh.addTriangle(i2, i3, i4);
+		}
+		
+		shadowPolygonMesh.computeNormals();
 	}
 }
