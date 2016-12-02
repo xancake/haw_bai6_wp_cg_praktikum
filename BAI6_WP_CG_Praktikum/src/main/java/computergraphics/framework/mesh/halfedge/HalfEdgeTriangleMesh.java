@@ -233,19 +233,30 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		Set<HalfEdge> closedSet = new HashSet<>();
 		for(HalfEdge edge : _halfEdges) {
 			if(!closedSet.contains(edge)) {
-				HalfEdge opposite = edge.getOpposite();
-				
 				double lambda = lambda(edge, viewpoint);
-				double oppositeLambda = lambda(opposite, viewpoint);
-				if((lambda > 0 && oppositeLambda <= 0)) {
-					silhouette.add(new Pair<>(edge.getStartVertex(), opposite.getStartVertex()));
-				}
-				if((lambda <= 0 && oppositeLambda > 0)) {
-					silhouette.add(new Pair<>(opposite.getStartVertex(), edge.getStartVertex()));
-				}
 				
+				HalfEdge opposite = edge.getOpposite();
+				if(opposite != null) {
+					// Wenn es eine Opposite-Kante gibt, heißt das, dass wir für zwei Dreiecke
+					// prüfen müssen, ob nur eins von beiden der Lichtquelle zugewandt ist und
+					// das andere eben nicht.
+					double oppositeLambda = lambda(opposite, viewpoint);
+					if(lambda > 0 && oppositeLambda <= 0) {
+						silhouette.add(new Pair<>(edge.getStartVertex(), opposite.getStartVertex()));
+					}
+					if(lambda <= 0 && oppositeLambda > 0) {
+						silhouette.add(new Pair<>(opposite.getStartVertex(), edge.getStartVertex()));
+					}
+					closedSet.add(opposite);
+				} else {
+					// Wenn es keine Opposite-Kante gibt, bedeutet das, dass wir uns am Rand des
+					// Meshes befinden und die Kante somit automatisch zu Silhouette gehört, wenn
+					// das Dreieck der Lichtquelle zugewandt ist.
+					if(lambda > 0) {
+						silhouette.add(new Pair<>(edge.getStartVertex(), edge.getNext().getStartVertex()));
+					}
+				}
 				closedSet.add(edge);
-				closedSet.add(opposite);
 			}
 		}
 		
