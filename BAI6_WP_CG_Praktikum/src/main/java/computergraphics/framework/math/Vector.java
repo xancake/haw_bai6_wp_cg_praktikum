@@ -417,8 +417,23 @@ public class Vector implements Serializable {
 	}
 	
 	/**
+	 * Prüft, ob der übergebene Vektor die übergebe Dimension hat.
+	 * @param vector Der zu prüfende Vektor
+	 * @param dimension Die Dimension auf die geprüft werden soll
+	 * @return Der Vektor, wenn er der Dimension entspricht
+	 * @throws IllegalArgumentException Wenn der Vektor nicht der Dimension entspricht
+	 */
+	public static Vector checkDimension(Vector vector, int dimension) {
+		if(Objects.requireNonNull(vector).getDimension() != dimension) {
+			throw new IllegalArgumentException("");
+		}
+		return vector;
+	}
+	
+	/**
 	 * Prüft ob die übergebenen Vektoren alle die selbe Diemension haben.
 	 * @param vectors Die zu prüfenden Vektoren
+	 * @throws IllegalArgumentException Wenn einer der Vektoren eine andere Dimension hat
 	 */
 	public static void checkDimensionEqual(Vector... vectors) {
 		if(vectors == null || vectors.length < 1) {

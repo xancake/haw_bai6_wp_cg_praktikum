@@ -5,6 +5,7 @@ import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.mesh.ITriangleMesh;
+import computergraphics.framework.rendering.CGUtils;
 import computergraphics.framework.rendering.vbo.MeshVBOFactory;
 import computergraphics.framework.rendering.vbo.VertexBufferObject;
 import computergraphics.framework.rendering.vbo.VertexBufferObjectFactory;
@@ -162,7 +163,7 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setMeshColor(Vector color) {
 		if(_meshColor == null || !_meshColor.equals(color)) {
-			_meshColor = checkColorVektor(color);
+			_meshColor = CGUtils.checkColorVector(color);
 			initMesh(true);
 		}
 	}
@@ -247,7 +248,7 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setFacetteNormalColor(Vector color) {
 		if(!_facetteNormalColor.equals(color)) {
-    		_facetteNormalColor = checkColorVektor(color);
+    		_facetteNormalColor = CGUtils.checkColorVector(color);
 			initFacetteNormals(true);
 		}
 	}
@@ -312,7 +313,7 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setVertexNormalColor(Vector color) {
 		if(!_vertexNormalColor.equals(color)) {
-			_vertexNormalColor = checkColorVektor(color);
+			_vertexNormalColor = CGUtils.checkColorVector(color);
 			initVertexNormals(true);
 		}
 	}
@@ -350,7 +351,7 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setWireframeColor(Vector color) {
 		if(!_wireframeColor.equals(color)) {
-			_wireframeColor = checkColorVektor(color);
+			_wireframeColor = CGUtils.checkColorVector(color);
 			initWireframe(true);
 		}
 	}
@@ -388,7 +389,7 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setBorderColor(Vector color) {
 		if(!_borderColor.equals(color)) {
-			_borderColor = checkColorVektor(color);
+			_borderColor = CGUtils.checkColorVector(color);
 			initBorder(true);
 		}
 	}
@@ -452,25 +453,8 @@ public class TriangleMeshNode extends LeafNode {
 	 */
 	public void setSilhouetteColor(Vector color) {
 		if(!_silhouetteColor.equals(color)) {
-			_silhouetteColor = checkColorVektor(color);
+			_silhouetteColor = CGUtils.checkColorVector(color);
 			initSilhouette(true);
-		}
-	}
-	
-	/**
-	 * Prüft ob der übergebene Vektor einen gültigen Farbvektor beschreibt und gibt eine Kopie des Vektors zurück,
-	 * wenn das der Fall ist. Ansonsten wird eine {@link IllegalArgumentException} geworfen.
-	 * <p>Ein gültiger Farbvektor hat entweder drei (R,G,B) oder vier (R,G,B,A) Dimensionen.
-	 * @param color Der zu prüfende Farbvektor
-	 * @return Eine Kopie des erfolgreich geprüften Vektors
-	 * @throws IllegalArgumentException Wenn der Vektor nicht drei- oder vierdimensional ist
-	 */
-	private Vector checkColorVektor(Vector color) {
-		switch(Objects.requireNonNull(color).getDimension()) {
-			case 3: return new Vector(color.x(), color.y(), color.z(), 1);
-			case 4: return new Vector(color);
-			default:
-				throw new IllegalArgumentException("Die Farbe muss als drei- oder vierdimensionaler Vektor übergeben werden!");
 		}
 	}
 	

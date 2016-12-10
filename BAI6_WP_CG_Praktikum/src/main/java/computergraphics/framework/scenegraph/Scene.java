@@ -78,8 +78,7 @@ public abstract class Scene extends JFrame {
 	/**
 	 * Constructor
 	 */
-	public Scene(int timerTimeout, Shader.ShaderMode shaderMode,
-			RenderMode renderMode) {
+	public Scene(int timerTimeout, Shader.ShaderMode shaderMode, RenderMode renderMode) {
 		Shader shader = new Shader(shaderMode);
 		Camera camera = new Camera();
 

@@ -20,6 +20,7 @@ public class MarchingCubesShowcaseScene extends TriangleMeshShowcaseScene {
 		getRoot().setAnimated(true);
 		
 		_mcNode = new MarchingCubesVisualizationNode(mc);
+		_mcNode.setVolumeColor(new Vector(0, 0.25, 1));
 		_mcNode.setDrawVolume(false);
 		_mcNode.setDrawSubVolumes(true);
 		getRoot().addChild(_mcNode);
@@ -30,6 +31,8 @@ public class MarchingCubesShowcaseScene extends TriangleMeshShowcaseScene {
 		ms.createMesh(soup, function, function.getDefaultIso());
 		ITriangleMesh mesh = new HalfEdgeTriangleMesh();
 		TriangleMeshFactory.createUnsoupifiedMesh(mesh, soup);
+		
+		System.out.println(soup.getNumberOfVertices() + " --> " + mesh.getNumberOfVertices());
 		return mesh;
 	}
 	

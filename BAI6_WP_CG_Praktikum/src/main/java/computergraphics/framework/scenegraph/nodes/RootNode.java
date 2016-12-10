@@ -3,6 +3,7 @@ package computergraphics.framework.scenegraph.nodes;
 import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
+import computergraphics.framework.rendering.CGUtils;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.Camera;
 
@@ -80,11 +81,15 @@ public class RootNode extends InnerNode {
 		return lightPosition;
 	}
 
+	public void setLightPosition(Vector lightPosition) {
+		this.lightPosition = Vector.checkDimension(lightPosition, 3);
+	}
+
 	public Vector getBackgroundColor() {
 		return backGroundColor;
 	}
-
-	public void setLightPosition(Vector lightPosition) {
-		this.lightPosition = lightPosition;
+	
+	public void setBackgroundColor(Vector color) {
+		backGroundColor = CGUtils.checkColorVector(color);
 	}
 }
