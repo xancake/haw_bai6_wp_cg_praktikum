@@ -5,15 +5,17 @@
  * Base framework for "WP Computergrafik".
  */
 
-package computergraphics.framework.scenegraph.bsp;
+package computergraphics.exercises.exercise7;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.Shader;
 import computergraphics.framework.scenegraph.Scene;
+import computergraphics.framework.scenegraph.bsp.BspTreeNode;
+import computergraphics.framework.scenegraph.bsp.BspTreeTools;
 import computergraphics.framework.scenegraph.nodes.INode.RenderMode;
+import computergraphics.framework.scenegraph.nodes.primitives.BspNode;
 
 /**
  * Scene and application for the BSP tree example.
@@ -28,39 +30,30 @@ public class BspScene extends Scene {
 	 */
 	private BspNode node;
 	
-	public BspScene() {
+	public BspScene(List<Vector> points) {
 		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
-	}
-	
-	// TODO: Herausfinden, was es damit auf sich hat und wie man das korrekt einbindet o.O
-	@Override
-	public void setupScenegraph(GL2 gl) {
 		getRoot().setLightPosition(new Vector(1, 1, 1));
 		getRoot().setAnimated(true);
 		getRoot().setBackgroundColor(new Vector(0.25, 0.25, 0.25, 1));
-		gl.glLineWidth(5);
-		gl.glPointSize(5);
-		
-		// Create data
-		int numberOfPoints = 10;
-		List<Vector> points = new ArrayList<Vector>();
-		List<Integer> pointIndices = new ArrayList<Integer>();
-		for(int i = 0; i < numberOfPoints; i++) {
-			points.add(new Vector((float)(2 * Math.random() - 1), (float)(2 * Math.random() - 1), 0));
-			pointIndices.add(i);
-		}
 		
 		// Create tree
-		BspTreeToolsDummy tools = new BspTreeToolsDummy();
-		BspTreeNode rootNode = tools.createBspTree(null, points, pointIndices);
+		BspTreeTools tools = new BspTreeTools();
+		BspTreeNode rootNode = tools.createBspTree(points);
 		
-		// Add result to scne graph
+		// Add result to scene graph
 		if(rootNode != null) {
 			Vector observer = new Vector(1, 1, 0);
 			List<Integer> back2FrontSorted = tools.getBackToFront(rootNode, points, observer);
 			node = new BspNode(rootNode, points, back2FrontSorted, observer);
 			getRoot().addChild(node);
 		}
+	}
+	
+	@Override
+	public void init(GL2 gl) {
+		super.init(gl);
+		gl.glLineWidth(5);
+		gl.glPointSize(5);
 	}
 	
 	@Override
@@ -83,9 +76,5 @@ public class BspScene extends Scene {
 	
 	@Override
 	public void timerTick(int counter) {
-	}
-	
-	public static void main(String[] args) {
-		new BspScene();
 	}
 }

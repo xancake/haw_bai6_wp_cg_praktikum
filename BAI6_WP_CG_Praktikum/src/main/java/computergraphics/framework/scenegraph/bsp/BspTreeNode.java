@@ -108,6 +108,7 @@ public class BspTreeNode {
 	 * @return {@code true} wenn der Punkt auf der Vorderseite liegt, ansonsten {@code false}
 	 */
 	public boolean isPositive(Vector p) {
-		return _base.multiply(_normal) - p.multiply(_normal) > 0;
+		// XXX: Vorzeichen haben wir umgedreht, weil sonst falsche Werte kamen (passt so?)
+		return _base.multiply(_normal) - p.multiply(_normal) < 0;
 	}
 }

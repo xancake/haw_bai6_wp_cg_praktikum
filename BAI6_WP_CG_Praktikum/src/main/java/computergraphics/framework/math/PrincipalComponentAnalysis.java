@@ -32,6 +32,10 @@ public class PrincipalComponentAnalysis {
 		points.add(point);
 	}
 	
+	public void addAll(List<Vector> points) {
+		this.points.addAll(points);
+	}
+	
 	/**
 	 * Apply the PCA, compute tangentU, tangentV and normal.
 	 */
@@ -82,17 +86,27 @@ public class PrincipalComponentAnalysis {
 	}
 	
 	/**
-	 * Getter.
-	 */
-	public Vector getCentroid() {
-		return centroid;
-	}
-	
-	/**
 	 * Return vector of eigenvalues; smallest first.
 	 */
 	public Vector getEigenValues() {
 		return eigenValues;
+	}
+	
+	public Vector getCentroid() {
+		return centroid;
+	}
+	
+	public Vector getNormal() {
+		int maxIndex = 0;
+		double maxValue = -Double.MAX_VALUE;
+		for(int i=0; i<eigenVectors.length; i++) {
+			double v = eigenValues.get(i);
+			if(v > maxValue) {
+				maxIndex = i;
+				maxValue = v;
+			}
+		}
+		return eigenVectors[maxIndex];
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package computergraphics.framework.scenegraph.bsp;
+package computergraphics.framework.scenegraph.nodes.primitives;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import computergraphics.framework.math.Matrix;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.vbo.RenderVertex;
 import computergraphics.framework.rendering.vbo.VertexBufferObject;
+import computergraphics.framework.scenegraph.bsp.BspTreeNode;
 import computergraphics.framework.scenegraph.bsp.BspTreeNode.Orientation;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
