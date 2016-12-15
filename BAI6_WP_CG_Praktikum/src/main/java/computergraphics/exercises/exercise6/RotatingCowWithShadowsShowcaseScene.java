@@ -40,6 +40,7 @@ public class RotatingCowWithShadowsShowcaseScene extends Scene {
 		getRoot().addChild(squareTrans);
 	}
 
+	@Override
 	public void keyPressed(int keyCode) {
 		switch (Character.toUpperCase(keyCode)) {
 			case 'N':
