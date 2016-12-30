@@ -469,4 +469,19 @@ public class Vector implements Serializable {
 		}
 		return result.multiply(1.0 / vertices.length); // Durch Anzahl der Eckpunkte teilen
 	}
+	
+	/**
+	 * Erzeugt einen n-dimensionalen Vektor der in alle Dimensionen einen zufällig gewählten Wert aufweist.
+	 * @param dimension Die Dimension des Vektors
+	 * @param from Der Minimalwert aus dem die tatsächlichen Werte ermittelt werden
+	 * @param to Der Maximalwert aus dem die tatsächlichen Werte ermittelt werden
+	 * @return Ein zufälliger n-dimensionaler Vektor
+	 */
+	public static Vector random(int dimension, double from, double to) {
+		Vector v = new Vector(dimension);
+		for(int i=0; i<dimension; i++) {
+			v.set(i, from + (to-from) * Math.random());
+		}
+		return v;
+	}
 }
