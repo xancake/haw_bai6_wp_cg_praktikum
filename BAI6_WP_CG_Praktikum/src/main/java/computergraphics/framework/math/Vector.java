@@ -484,4 +484,20 @@ public class Vector implements Serializable {
 		}
 		return v;
 	}
+	
+	/**
+	 * Erzeugt einen zufälligen Vektor abhängig von den beiden übergebenen Vektoren.
+	 * @param from Der Vektor der alle minimal möglichen Werte beschreibt
+	 * @param to Der Vektor der alle maximal möglichen Werte beschreibt
+	 * @return Ein Vektor dessen Werte sich zwischen denen der übergebenen Vektoren befinden
+	 * @throws IllegalArgumentException Wenn die Dimension der beiden übergebenen Vektoren ungleich ist
+	 */
+	public static Vector random(Vector from, Vector to) {
+		checkDimensionEqual(from, to);
+		Vector v = new Vector(from.getDimension());
+		for(int i=0; i<from.getDimension(); i++) {
+			v.set(i, Math.random() * (to.get(i) - from.get(i)) + from.get(i));
+		}
+		return v;
+	}
 }
