@@ -1,5 +1,6 @@
 package org.haw.cg.lnielsen.particle;
 
+import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
 
@@ -10,6 +11,8 @@ public class Particle {
 	private Vector _location     = new Vector(0,0,0);
 	private Vector _velocity     = new Vector(0,0,0);
 	private Vector _acceleration = new Vector(0,0,0);
+	
+	private double _mass;
 	
 	private Vector _color        = new Vector(0,0,0,1);
 	private boolean _fadeOut;
@@ -35,6 +38,26 @@ public class Particle {
 		}
 	}
 	
+	/**
+	 * Lässt die übergebene Kraft auf diesen Partikel einwirken. Dabei wird die aktuell auf das Partikel einwirkende
+	 * Beschleunigung mit der übergebenen Kraft verrechnet.
+	 * @param force Die Kraft
+	 */
+	public void applyForce(Vector force) {
+		_acceleration = _acceleration.add(force.multiply(1/_mass));
+	}
+	
+	/**
+	 * Sorgt dafür, dass die übergebene Kraft nicht mehr auf diesen Partikel einwirkt. Dabei wird die aktuell auf das
+	 * Partikel einwirkende Beschleunigung mit der übergebenen Kraft verrechnet.
+	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
+	 * entfernende Kraft vorher wirklich auf das Partikel gewirkt hat.
+	 * @param force Die Kraft
+	 */
+	public void removeForce(Vector force) {
+		_acceleration = _acceleration.subtract(force.multiply(1/_mass));
+	}
+	
 	public Vector getLocation() {
 		return _location;
 	}
@@ -45,6 +68,10 @@ public class Particle {
 	
 	public Vector getAcceleration() {
 		return _acceleration;
+	}
+	
+	public double getMass() {
+		return _mass;
 	}
 	
 	public Vector getColor() {
@@ -79,6 +106,10 @@ public class Particle {
 		_acceleration = Vector.checkDimension(acceleration, 3);
 	}
 	
+	public void setMass(double mass) {
+		_mass = Numbers.require(mass).greaterThanOrEqual(0, "Die Masse eines Partikels muss positiv sein!");
+	}
+	
 	public void setColor(Vector color) {
 		_color = CGUtils.checkColorVector(color);
 	}
@@ -88,10 +119,7 @@ public class Particle {
 	}
 	
 	public void setStartLife(long lifeMS) {
-		if(lifeMS < 0) {
-			throw new IllegalArgumentException("Die Lebenszeit eines Partikels muss positiv sein!");
-		}
-		_startLife = lifeMS;
+		_startLife = Numbers.require(lifeMS).greaterThanOrEqual(0, "Die Lebenszeit eines Partikels muss positiv sein!");
 	}
 	
 	public void setLife(long lifeMS) {
@@ -118,6 +146,11 @@ public class Particle {
 		private Vector _accelerationFrom = new Vector(0,0,0);
 		private Vector _accelerationTo   = new Vector(0,0,0);
 		
+		private double _massFrom         = 1;
+		private double _massTo           = 1;
+		
+		private Vector _force            = new Vector(0,0,0);
+		
 		private Vector _colorFrom        = new Vector(0,0,0,1);
 		private Vector _colorTo          = new Vector(0,0,0,1);
 		private boolean _fadeOut;
@@ -128,14 +161,8 @@ public class Particle {
 		public Builder() {}
 		
 		public Builder withStartLife(long startLifeFrom, long startLifeTo) {
-			if(startLifeFrom < 0) {
-				throw new IllegalArgumentException("Die Lebenszeit eines Partikels muss positiv sein!");
-			}
-			if(startLifeTo < 0) {
-				throw new IllegalArgumentException("Die Lebenszeit eines Partikels muss positiv sein!");
-			}
-			_startLifeFrom = startLifeFrom;
-			_startLifeTo   = startLifeTo;
+			_startLifeFrom = Numbers.require(startLifeFrom).greaterThanOrEqual(0, "Die Lebenszeit eines Partikels muss positiv sein!");
+			_startLifeTo   = Numbers.require(startLifeTo).greaterThanOrEqual(0, "Die Lebenszeit eines Partikels muss positiv sein!");
 			return this;
 		}
 		
@@ -154,6 +181,12 @@ public class Particle {
 		public Builder withAcceleration(Vector accelerationFrom, Vector accelerationTo) {
 			_accelerationFrom = Vector.checkDimension(accelerationFrom, 3);
 			_accelerationTo   = Vector.checkDimension(accelerationTo,   3);
+			return this;
+		}
+		
+		public Builder withMass(double massFrom, double massTo) {
+			_massFrom = Numbers.require(massFrom).greaterThanOrEqual(0, "Die Masse eines Partikels muss positiv sein!");
+			_massTo   = Numbers.require(massTo).greaterThanOrEqual(0, "Die Masse eines Partikels muss positiv sein!");
 			return this;
 		}
 		
@@ -179,12 +212,21 @@ public class Particle {
 			return withAcceleration(acceleration, acceleration);
 		}
 		
+		public Builder withMass(double mass) {
+			return withMass(mass, mass);
+		}
+		
 		public Builder withColor(Vector color) {
 			return withColor(color, color);
 		}
 		
 		public Builder withFadeOut(boolean fadeOut) {
 			_fadeOut = fadeOut;
+			return this;
+		}
+		
+		public Builder addForce(Vector force) {
+			_force = _force.add(force);
 			return this;
 		}
 		
@@ -210,8 +252,10 @@ public class Particle {
 			particle.setLocation(Vector.random(_locationFrom, _locationTo));
 			particle.setVelocity(Vector.random(_velocityFrom, _velocityTo));
 			particle.setAcceleration(Vector.random(_accelerationFrom, _accelerationTo));
+			particle.setMass(Math.random() * (_massTo - _massFrom) + _massTo);
 			particle.setColor(Vector.random(_colorFrom, _colorTo));
 			particle.setFadeOut(_fadeOut);
+			particle.applyForce(_force);
 		}
 	}
 }
