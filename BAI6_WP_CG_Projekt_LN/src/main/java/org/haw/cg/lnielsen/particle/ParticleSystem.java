@@ -93,11 +93,28 @@ public class ParticleSystem {
 		}
 	}
 	
+	/**
+	 * Wendet die übergebene Kraft auf alle lebendigen und zukünftigen Partikel dieses Partikelsystems an.
+	 * @param force Die Kraft
+	 */
 	public void applyForce(Vector force) {
 		for(Particle p : _lifeParticles) {
 			p.applyForce(force);
 		}
 		_builder.addForce(force);
+	}
+	
+	/**
+	 * Entfernt Einwirkung der übergebenen Kraft auf alle lebendigen und zukünfigen Partikel dieses Partikelsystems.
+	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
+	 * entfernende Kraft vorher wirklich auf das Partikelsystem gewirkt hat.
+	 * @param force Die Kraft
+	 */
+	public void removeForce(Vector force) {
+		for(Particle p : _lifeParticles) {
+			p.removeForce(force);
+		}
+		_builder.removeForce(force);
 	}
 	
 	/**

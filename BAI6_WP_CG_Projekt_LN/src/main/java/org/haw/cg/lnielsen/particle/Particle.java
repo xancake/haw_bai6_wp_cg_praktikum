@@ -230,6 +230,11 @@ public class Particle {
 			return this;
 		}
 		
+		public Builder removeForce(Vector force) {
+			_force = _force.subtract(force);
+			return this;
+		}
+		
 		/**
 		 * Erzeugt ein Partikel und initialisiert es zufällig im Rahmen der an diesem Builder konfigurierten Parameter.
 		 * @return Das erzeugte Partikel
