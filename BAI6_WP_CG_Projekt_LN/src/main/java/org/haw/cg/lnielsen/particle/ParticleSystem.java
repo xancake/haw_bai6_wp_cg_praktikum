@@ -16,6 +16,7 @@ import computergraphics.framework.math.Vector;
 public class ParticleSystem {
 	private long _last;
 	private long _curr;
+	private boolean _initialized;
 	
 	private Particle.Builder _builder;
 	
@@ -24,6 +25,7 @@ public class ParticleSystem {
 	private Set<Particle> _deadParticles;
 	
 	private int _spawnPerSecond;
+	private long _lastCreatedTime; /** Der Zeitpunkt zu dem das letzte Mal ein Partikel erzeugt wurde. */
 	
 	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond) {
 		_builder = Objects.requireNonNull(builder);
@@ -34,17 +36,33 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Initialisiert die Zeitpunkte beim ersten Aufruf von {@link #update()}, damit beim ersten Aufruf keine riesigen
+	 * Sprünge auftreten. Das hätte nämlich zur Folge, dass bereits alle Partikel erzeugt werden, auch wenn lange nicht
+	 * soviele benötigt werden.
+	 */
+	private void initTime() {
+		if(!_initialized) {
+			_initialized = true;
+			_last = _curr = System.currentTimeMillis();
+		}
+	}
+	
+	/**
 	 * Updatet alle von diesem Partikelsystem verwalteten Partikel und sorgt für die Berechnung der vergangenen Zeit
 	 * seit dem letzten Update.
 	 */
 	public void update() {
+		initTime();
+		
 		_last = _curr;
 		_curr = System.currentTimeMillis();
 		
 		long timeMS = _curr - _last;
 		double timeS  = timeMS / 1000.0;
 		
-		System.out.printf("Life: %2d, Dead: %2d, Max: %2d%n", getLifeParticlesCount(), getDeadParticlesCount(), getMaxParticlesCount());
+		System.out.printf("Life: %5d, Dead: %5d, Max: %5d, diff: %4d%n", getLifeParticlesCount(), getDeadParticlesCount(), getMaxParticlesCount(), timeMS);
+		
+		// TODO: Spawnmechanismus überarbeiten, sodass nicht mehr als _spawnPerSecond Partikel pro Sekunde gespawnt werden können
 		
 		// Partikel (re-)spawnen
 		Iterator<Particle> dead = _deadParticles.iterator();
