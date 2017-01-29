@@ -70,7 +70,7 @@ public class VertexBufferObject {
 		colorBuffer = createColorBuffer(gl);
 		indexBuffer = createIndexBuffer();
 		Shader.checkGlError(gl);
-		System.out.println("Created VBO buffers (vertex, normal, color, index).");
+//		System.out.println("Created VBO buffers (vertex, normal, color, index).");
 	}
 
 	/**
