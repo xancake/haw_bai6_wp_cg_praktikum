@@ -15,6 +15,8 @@ public class Particle {
 	private double _mass;
 	
 	private Vector _color        = new Vector(0,0,0,1);
+	private Vector _colorStart   = new Vector(0,0,0,1);
+	private Vector _colorEnd     = new Vector(0,0,0,1);
 	private boolean _fadeOut;
 	
 	private long _startLife;
@@ -33,8 +35,12 @@ public class Particle {
 		_velocity = _velocity.add(_acceleration.multiply(updateSeconds));
 		_location = _location.add(_velocity.multiply(updateSeconds));
 		
+		double alifePercentage = (double)getLife() / getStartLife();
+		for(int i=0; i<_color.getDimension(); i++) {
+			_color.set(i, alifePercentage*_colorStart.get(i) + (1-alifePercentage)*_colorEnd.get(i));
+		}
 		if(_fadeOut) {
-			_color.set(3, (double)getLife() / getStartLife());
+			_color.set(3, alifePercentage);
 		}
 	}
 	
@@ -78,6 +84,14 @@ public class Particle {
 		return _color;
 	}
 	
+	public Vector getColorStart() {
+		return _colorStart;
+	}
+	
+	public Vector getColorEnd() {
+		return _colorEnd;
+	}
+	
 	public boolean isFadeOut() {
 		return _fadeOut;
 	}
@@ -112,6 +126,14 @@ public class Particle {
 	
 	public void setColor(Vector color) {
 		_color = CGUtils.checkColorVector(color);
+	}
+	
+	public void setColorStart(Vector color) {
+		_colorStart = CGUtils.checkColorVector(color);
+	}
+	
+	public void setColorEnd(Vector color) {
+		_colorEnd = CGUtils.checkColorVector(color);
 	}
 	
 	public void setFadeOut(boolean fadeOut) {
@@ -151,8 +173,10 @@ public class Particle {
 		
 		private Vector _force            = new Vector(0,0,0);
 		
-		private Vector _colorFrom        = new Vector(0,0,0,1);
-		private Vector _colorTo          = new Vector(0,0,0,1);
+		private Vector _colorStartFrom   = new Vector(0,0,0,1);
+		private Vector _colorStartTo     = new Vector(0,0,0,1);
+		private Vector _colorEndFrom     = new Vector(0,0,0,1);
+		private Vector _colorEndTo       = new Vector(0,0,0,1);
 		private boolean _fadeOut;
 		
 		private long _startLifeFrom;
@@ -190,9 +214,15 @@ public class Particle {
 			return this;
 		}
 		
-		public Builder withColor(Vector colorFrom, Vector colorTo) {
-			_colorFrom = CGUtils.checkColorVector(colorFrom);
-			_colorTo   = CGUtils.checkColorVector(colorTo);
+		public Builder withColorStart(Vector colorFrom, Vector colorTo) {
+			_colorStartFrom = CGUtils.checkColorVector(colorFrom);
+			_colorStartTo   = CGUtils.checkColorVector(colorTo);
+			return this;
+		}
+		
+		public Builder withColorEnd(Vector colorFrom, Vector colorTo) {
+			_colorEndFrom = CGUtils.checkColorVector(colorFrom);
+			_colorEndTo   = CGUtils.checkColorVector(colorTo);
 			return this;
 		}
 		
@@ -216,8 +246,12 @@ public class Particle {
 			return withMass(mass, mass);
 		}
 		
-		public Builder withColor(Vector color) {
-			return withColor(color, color);
+		public Builder withColorStart(Vector color) {
+			return withColorStart(color, color);
+		}
+		
+		public Builder withColorEnd(Vector color) {
+			return withColorEnd(color, color);
 		}
 		
 		public Builder withFadeOut(boolean fadeOut) {
@@ -258,7 +292,8 @@ public class Particle {
 			particle.setVelocity(Vector.random(_velocityFrom, _velocityTo));
 			particle.setAcceleration(Vector.random(_accelerationFrom, _accelerationTo));
 			particle.setMass(Math.random() * (_massTo - _massFrom) + _massTo);
-			particle.setColor(Vector.random(_colorFrom, _colorTo));
+			particle.setColorStart(Vector.random(_colorStartFrom, _colorStartTo));
+			particle.setColorEnd(Vector.random(_colorEndFrom, _colorEndTo));
 			particle.setFadeOut(_fadeOut);
 			particle.applyForce(_force);
 		}
