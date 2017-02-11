@@ -43,7 +43,7 @@ public class BspScene extends Scene {
 		// Add result to scene graph
 		if(rootNode != null) {
 			Vector observer = new Vector(1, 1, 0);
-			List<Integer> back2FrontSorted = tools.getBackToFront(rootNode, points, observer);
+			List<Integer> back2FrontSorted = tools.getBackToFront(rootNode, observer);
 			node = new BspNode(rootNode, points, back2FrontSorted, observer);
 			getRoot().addChild(node);
 		}

@@ -66,7 +66,7 @@ public class BspTreeTools {
 	 * @param eye Observer position
 	 * @return Sorted (back-to-front) list of points
 	 */
-	public List<Integer> getBackToFront(BspTreeNode node, List<Vector> points, Vector eye) {
+	public List<Integer> getBackToFront(BspTreeNode node, Vector eye) {
 		if(node == null) {
 			return new ArrayList<>();
 		}
@@ -75,7 +75,7 @@ public class BspTreeTools {
 		
 		Orientation orientation = node.isPositive(eye) ? Orientation.NEGATIVE : Orientation.POSITIVE;
 		
-		sortierung.addAll(getBackToFront(node.getChild(orientation), points, eye));
+		sortierung.addAll(getBackToFront(node.getChild(orientation), eye));
 		if(node.getChild(orientation) == null) {
 			sortierung.add(node.getElement(orientation, 0));
 		}
@@ -85,8 +85,13 @@ public class BspTreeTools {
 		if(node.getChild(orientation) == null) {
 			sortierung.add(node.getElement(orientation, 0));
 		}
-		sortierung.addAll(getBackToFront(node.getChild(orientation), points, eye));
+		sortierung.addAll(getBackToFront(node.getChild(orientation), eye));
 		
 		return sortierung;
+	}
+	
+	public List<Integer> getBackToFront(List<Vector> points, Vector eye) {
+		BspTreeNode root = createBspTree(points);
+		return getBackToFront(root, eye);
 	}
 }
