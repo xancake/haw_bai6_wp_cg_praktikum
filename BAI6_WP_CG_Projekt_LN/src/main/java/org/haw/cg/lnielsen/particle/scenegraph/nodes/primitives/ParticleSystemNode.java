@@ -5,6 +5,7 @@ import org.haw.cg.lnielsen.particle.ParticleSystem;
 import org.haw.cg.lnielsen.particle.rendering.vbo.ParticleSystemVBOFactory;
 import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
+import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.vbo.VertexBufferObject;
 import computergraphics.framework.scenegraph.nodes.LeafNode;
 
@@ -13,11 +14,14 @@ public class ParticleSystemNode extends LeafNode {
 	private ParticleSystemVBOFactory _factory;
 	
 	private VertexBufferObject _particleSystemVBO;
+	private boolean _drawBackToFront;
+	private Vector _viewpoint;
 	private boolean _drawParticleSystem;
 	
 	public ParticleSystemNode(ParticleSystem system) {
 		setParticleSystem(system);
 		setDrawParticleSystem(true);
+		setViewpoint(new Vector(0,0,0));
 	}
 	
 	@Override
@@ -31,7 +35,9 @@ public class ParticleSystemNode extends LeafNode {
 	public void timerTick(int counter) {
 		if(isDrawParticleSystem()) {
     		_particleSystem.update();
-    		_particleSystemVBO = _factory.createParticleSystemVBO();
+    		_particleSystemVBO = isBackToFront()
+    				? _factory.createBackToFrontSortedParticleSystemVBO(_viewpoint)
+    				: _factory.createParticleSystemVBO();
 		}
 	}
 	
@@ -51,5 +57,21 @@ public class ParticleSystemNode extends LeafNode {
 	
 	public void setDrawParticleSystem(boolean draw) {
 		_drawParticleSystem = draw;
+	}
+	
+	public boolean isBackToFront() {
+		return _drawBackToFront;
+	}
+	
+	public void setBackToFront(boolean backToFront) {
+		_drawBackToFront = backToFront;
+	}
+	
+	public Vector getViewpoint() {
+		return _viewpoint;
+	}
+	
+	public void setViewpoint(Vector viewpoint) {
+		_viewpoint = Vector.checkDimension(viewpoint, 3);
 	}
 }

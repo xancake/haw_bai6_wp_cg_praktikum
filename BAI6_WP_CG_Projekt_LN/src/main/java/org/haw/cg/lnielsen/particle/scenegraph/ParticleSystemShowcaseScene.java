@@ -51,6 +51,16 @@ public class ParticleSystemShowcaseScene extends Scene {
 			case 'D':
 				_particleSystemNode.setDrawParticleSystem(!_particleSystemNode.isDrawParticleSystem());
 				break;
+			case 'B':
+				_particleSystemNode.setBackToFront(!_particleSystemNode.isBackToFront());
+				break;
 		}
+	}
+	
+	@Override
+	public void rotateCamera(double angleAroundUp, double angleUpDown) {
+		super.rotateCamera(angleAroundUp, angleUpDown);
+		// Kameraviewpoint dem Partikelsystem-Node übergeben, damit die Back-to-Front-Sortierung korrekt erfolgen kann
+		_particleSystemNode.setViewpoint(getRoot().getCamera().getEye());
 	}
 }
