@@ -1,24 +1,19 @@
-\chapter{Implementation}
+\chapter{Implementation} \label{implementation}
 \textmd{In diesem Kapitel wird die Implementation des Partikelsystems aus dem Projekt erläutert. Dabei wird auf die Techniken eingegangen, die zur Realisierung des Partikelsystems eingesetzt wurden.}
 
-\section{Datenstrukturen}
+\section{Datenstrukturen} \label{datastructures}
 \textmd{}
 \textmd{TODO: Particle, Particle.Builder, ParticleSystem, ParticleSystemManager erklären}
 
-\section{Anziehen und Abstoßen (?)}
-\textmd{}
-\textmd{TODO: Attraktoren und Repeller}
-\cite{natureofcode2012} \cite{khan}
-
-\section{Lebenszyklusmanagement}
+\section{Lebenszyklusmanagement} \label{lifecyclemanagement}
 \textmd{}
 \textmd{TODO: ParticleSystemManager, Particle-Pool erklären }
 
-\section{Darstellung}
+\section{Darstellung} \label{rendering}
 \textmd{Das Projekt verwendet den aus dem Praktikum bekannten Szenengraphen. Die Einbindung eines Partikelsystems in den Szenengraphen wird mit einem ParticleSystemNode realisiert. Dieser erhält bei seiner Erzeugung das Partikelsystem das er darstellen soll. Ab der Einbindung in den Szenengraphen ist der ParticleSystemNode für das Aktualisieren und Zeichnen des Partikelsystems zuständig. Zum Zeichnen wird ein VertexBufferObject der einzelnen Partikel erzeugt und OpenGL übergeben. Zur flüssigen Darstellung des Partikelsystems geschieht das in jedem Renderzyklus. Um die Häufigkeit des Renderzyklus festzulegen, kann über die Klasse ParticleSystemShowcaseScene eine gewünschte Frames-Per-Second-Rate angegeben werden.}
 \textmd{Die konkrete Darstellung der Partikel wird als farbige Punkte realisiert.}
 
-\section{Transparenz}
+\section{Transparenz} \label{transparency}
 \textmd{Standardmäßig werden die Partikel ohne eine bestimmte Sortierung gezeichnet. Das sorgt in OpenGL dafür, dass Transparenz nicht richtig dargestellt werden kann. Wenn ein transparentes Objekt das näher zur Kamera ist zuerst gezeichnet wird und danach eines das weiter hinten ist, so werden die Pixel des ersten Objekts nicht mehr angepasst. Für ein Partikelsystem mit Transparenz sieht das aus wie in Abbildung \ref{transparency-no-btf}. In der Abbildung können dunkle Partikel beobachtet werden, die transparent sein sollten.}
 \begin{figure}[h]
 	\begin{center}
@@ -27,8 +22,8 @@
 		\label{transparency-no-btf}
 	\end{center}
 \end{figure}
-\textmd{\\Um die Transparenz korrekt darzustellen wurde eine Back-to-Front-Sortierung unter Zuhilfenahme der Binary-Space-Partition berechnet. Bei der Binary-Space-Partition werden die Partikel räumlich durch Hyperebenen in einer Baumstruktur getrennt \cite[Folie 26]{jenke2016}. Jeder Partikel befindet sich dann entweder vor oder hinter einer Hyperebene, bei der er einsortiert wurde. Betrachtet man nun einen Sichtpunkt, so kann anhand der Hyperebenen die Back-to-Front-Sortierung ermittelt werden \cite[Folie 32]{jenke2016}.}
-\textmd{\\Die Back-to-Front-Sortierung wiederum ist wichtig um die Partikel in der richtigen Reihenfolge zu zeichnen, sodass OpenGL die Transparenz korrekt darstellt. In der Darstellung des Beispiels aus Abbildung \ref{transparency-no-btf} mit Back-to-Front-Sortierung (siehe Abbildung \ref{transparency-with-btf}) fallen nun keine dunklen Partikel mehr auf. }
+\textmd{\\Um die Transparenz korrekt darzustellen wurde eine Back-to-Front-Sortierung unter Zuhilfenahme der Binary-Space-Partition berechnet. Bei der Binary-Space-Partition werden die Partikel räumlich durch Hyperebenen in einer Baumstruktur getrennt, vgl. \cite[Folie 26]{jenke2016}. Jeder Partikel befindet sich dann entweder vor oder hinter einer Hyperebene, bei der er einsortiert wurde. Betrachtet man nun einen Sichtpunkt, so kann anhand der Hyperebenen die Back-to-Front-Sortierung ermittelt werden, vgl. \cite[Folie 32]{jenke2016}.}
+\textmd{\\Die Back-to-Front-Sortierung wiederum ist wichtig um die Partikel in der richtigen Reihenfolge zu zeichnen, sodass OpenGL die Transparenz korrekt darstellt. In der Darstellung des Beispiels aus Abbildung \ref{transparency-no-btf} mit Back-to-Front-Sortierung (siehe Abbildung \ref{transparency-with-btf}) fallen nun keine dunklen Partikel mehr auf.}
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=25em]{img/transparency_with_back-to-front_ordering.png}
@@ -36,3 +31,9 @@
 		\label{transparency-with-btf}
 	\end{center}
 \end{figure}
+\textmd{\\Es sollte jedoch erwähnt werden, dass die Back-to-Front-Sortierung insbesondere bei einer großen Anzahl von Partikeln gewisse Performance-Einbußen mit sich führt. Während ein Partikelsystem mit 10000 Partikeln ohne Back-to-Front-Sortierung in meinen Tests mit einer Bildrate von 30 Frames-per-Second gerendert werden kann, so fällt die Bildrate mit Back-to-Front-Sortierung in dem Szenario auf 10 Frames-per-Second.}
+
+\section{Anziehen und Abstoßen (?)} \label{attraction_repulsion}
+\textmd{}
+\textmd{TODO: Attraktoren und Repeller}
+\cite{natureofcode2012} \cite{khan}
