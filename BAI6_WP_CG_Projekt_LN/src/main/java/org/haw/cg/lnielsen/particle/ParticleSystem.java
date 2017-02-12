@@ -25,7 +25,7 @@ public class ParticleSystem {
 	private Set<Particle> _deadParticles;
 	
 	private int _spawnPerSecond;
-	private long _lastCreatedTime; /** Der Zeitpunkt zu dem das letzte Mal ein Partikel erzeugt wurde. */
+	private long _lastSpawnTime; /** Der Zeitpunkt zu dem das letzte Mal ein Partikel erzeugt wurde. */
 	
 	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond) {
 		_builder = Objects.requireNonNull(builder);
@@ -125,16 +125,37 @@ public class ParticleSystem {
 		return Collections.unmodifiableSet(_lifeParticles);
 	}
 	
+	/**
+	 * Gibt die maximale Anzahl an Partikel zurück, die von diesem Partikelsystem gleichzeitig verwaltet werden.
+	 * @return Die maximale Anzahl Partikel dieses Partikelsystems
+	 */
 	public int getMaxParticlesCount() {
 		return _maxParticles;
 	}
 	
+	/**
+	 * Gibt die Anzahl der gerade {@link Particle#isDead() lebendigen Partikel} zurück.
+	 * @return Die Anzahl der lebendigen Partikel
+	 */
 	public int getLifeParticlesCount() {
 		return _lifeParticles.size();
 	}
 	
+	/**
+	 * Gibt die Anzahl der gerade {@link Particle#isDead() toten Partikel} zurück.
+	 * @return Die Anzahl der toten Partikel
+	 */
 	public int getDeadParticlesCount() {
 		return _deadParticles.size();
+	}
+	
+	/**
+	 * Prüft ob dieses Partikelsystem tot ist. Das heißt, dass es keine lebendigen Partikel mehr gibt und dieses
+	 * Partikelsystem keine weiteren Partikel mehr spawnen möchte.
+	 * @return {@code true} wenn dieses Partikelsystem tot ist, ansonsten {@code false}
+	 */
+	public boolean isDead() {
+		return _lifeParticles.isEmpty(); // TODO: Auch prüfen, ob keine Partikel mehr erzeugt werden sollen
 	}
 	
 	/**
