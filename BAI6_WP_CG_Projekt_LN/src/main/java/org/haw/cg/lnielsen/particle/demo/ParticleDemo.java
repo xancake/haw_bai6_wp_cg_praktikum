@@ -7,10 +7,11 @@ import org.haw.cg.lnielsen.particle.scenegraph.ParticleSystemShowcaseScene;
 import computergraphics.framework.math.Vector;
 
 public class ParticleDemo {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		Particle.Builder builder = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(-1, -1, 0), new Vector(1, -1, 0))
+        		.withVelocity(new Vector(0, 0, 0.5))
         		.withAcceleration(new Vector(-0.5, 0, -0.5), new Vector(0.5, 0, 0.5))
 //        		.withMass(0, 2)
         		.withColorStart(new Vector(1, 0.1, 0, 1))
@@ -22,5 +23,11 @@ public class ParticleDemo {
 		system.applyForce(new Vector(0, 0, -0.25)); // Wind
 		
 		new ParticleSystemShowcaseScene(system, 60);
+		
+		// TODO: Das wäre echt schön... Vielleicht Partikelsystem threadsafe machen, damit das geht?
+//		Vector wind = new Vector(0, 0, -1);
+//		system.applyForce(wind);
+//		Thread.sleep(1000);
+//		system.removeForce(wind);
 	}
 }
