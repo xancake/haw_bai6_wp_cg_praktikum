@@ -25,14 +25,17 @@ public class ParticleSystem {
 	private Set<Particle> _deadParticles;
 	
 	private int _spawnPerSecond;
-	private long _lastSpawnTime; /** Der Zeitpunkt zu dem das letzte Mal ein Partikel erzeugt wurde. */
+	private long _lastSpawnTime;	/** Der Zeitpunkt zu dem das letzte Mal ein Partikel erzeugt wurde. */
+	private long _spawnCount;		/** Hält fest, wieviele Partikel bisher gespawned wurden. */
+	private boolean _spawnCapped;	/** Steuert ob weiterhin Partikel gespawned werden sollen, nachdem die Maximalzahl an Partikeln gespawned wurde. */
 	
-	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond) {
+	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond, boolean spawnCapped) {
 		_builder = Objects.requireNonNull(builder);
 		_spawnPerSecond = Numbers.require(spawnPerSecond).greaterThanOrEqual(0, "Die Anzahl der pro Sekunde zu spawnenden Partikel muss positiv sein!");
         _maxParticles = Numbers.require(maxParticles).greaterThanOrEqual(0, "Die maximale Anzahl der Partikel muss positiv sein!");
         _lifeParticles = new HashSet<>(_maxParticles);
         _deadParticles = new HashSet<>(_maxParticles);
+        _spawnCapped = spawnCapped;
 	}
 	
 	/**
@@ -56,36 +59,55 @@ public class ParticleSystem {
 		
 		_last = _curr;
 		_curr = System.currentTimeMillis();
+		long deltaMS = _curr - _last;
 		
-		long timeMS = _curr - _last;
-		double timeS  = timeMS / 1000.0;
+		System.out.printf("Life: %5d, Dead: %5d, Max: %5d, diff: %4d%n", getLifeParticlesCount(), getDeadParticlesCount(), getMaxParticlesCount(), deltaMS);
 		
-		System.out.printf("Life: %5d, Dead: %5d, Max: %5d, diff: %4d%n", getLifeParticlesCount(), getDeadParticlesCount(), getMaxParticlesCount(), timeMS);
-		
-		// TODO: Spawnmechanismus überarbeiten, sodass nicht mehr als _spawnPerSecond Partikel pro Sekunde gespawnt werden können
-		
-		// Partikel (re-)spawnen
-		Iterator<Particle> dead = _deadParticles.iterator();
-		for(int i=0; i<timeS*_spawnPerSecond; i++) {
-			if(dead.hasNext()) {
-				// Wenn wir noch Partikel haben, die wir wiederverwenden können, dann tun wir das
-				Particle p = dead.next();
-				_builder.initialize(p);
-				dead.remove();
-				_lifeParticles.add(p);
-			} else if(_lifeParticles.size() + _deadParticles.size() < _maxParticles) {
-				// Wenn die Maximalzahl an Partikeln noch nicht erreich ist, erzeugen wir neue Partikel
-				_lifeParticles.add(_builder.build());
-			} else {
-				// Ansonsten erzeugen wir keine weiteren Partikel mehr
-				break;
-			}
+		spawnParticles(deltaMS);
+		updateParticles(deltaMS);
+	}
+	
+	/**
+	 * Spawnt Partikel für die übergebene Vergangene Zeit seit dem letzten Update-Zyklus.
+	 * <p>Wenn dieses Partikelsystem {@link #isSpawnCapped() spawn-capped} ist, werden nur noch Partikel gespawned
+	 * insofern dieses Partikelsystem noch nicht die {@link #getMaxParticlesCount() Maximalzahl} zu spawnender Prtikel
+	 * gespawned hat.
+	 * @param deltaMS Die vergangene Zeit seit dem letzten Update-Zyklus in Millisekunden
+	 */
+	private void spawnParticles(long deltaMS) {
+		if(!_spawnCapped || _spawnCount < _maxParticles) {
+    		Iterator<Particle> dead = _deadParticles.iterator();
+    		// TODO: Spawnmechanismus überarbeiten, sodass nicht mehr als _spawnPerSecond Partikel pro Sekunde gespawnt werden können
+    		double particlesToSpawn = deltaMS/1000.0 * _spawnPerSecond;
+    		for(int i=0; i<particlesToSpawn; i++) {
+    			if(dead.hasNext()) {
+    				// Wenn wir noch Partikel haben, die wir wiederverwenden können, dann tun wir das
+    				Particle p = dead.next();
+    				_builder.initialize(p);
+    				dead.remove();
+    				_lifeParticles.add(p);
+    			} else if(_lifeParticles.size() + _deadParticles.size() < _maxParticles) {
+    				// Wenn die Maximalzahl an Partikeln noch nicht erreich ist, erzeugen wir neue Partikel
+    				_lifeParticles.add(_builder.build());
+    			} else {
+    				// Ansonsten erzeugen wir keine weiteren Partikel mehr
+    				break;
+    			}
+    			_spawnCount++;
+    		}
 		}
-		
-		// Partikel updaten und ggf. als Tot markieren
+	}
+	
+	/**
+	 * Updatet alle lebendigen Partikel und markiert sie ggf. als tot, wenn sie nach dem Update ihre Lebenszeit
+	 * überdauert haben.
+	 * @param deltaMS Die vergangene Zeit seit dem letzten Update-Zyklus in Millisekunden
+	 * @see #getLifeParticlesCount()
+	 */
+	private void updateParticles(long deltaMS) {
 		for(Iterator<Particle> life=_lifeParticles.iterator(); life.hasNext(); ) {
 			Particle p = life.next();
-			p.update(timeMS);
+			p.update(deltaMS);
 			if(p.isDead()) {
 				life.remove();
 				_deadParticles.add(p);
@@ -150,12 +172,31 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Gibt zurück, wieviele Partikel von diesem Partikelsystem bereits gespawned wurden.
+	 * @return Die Anzahl der bisher gespawnten Partikel
+	 */
+	public long getParticlesSpawnedCount() {
+		return _spawnCount;
+	}
+	
+	/**
 	 * Prüft ob dieses Partikelsystem tot ist. Das heißt, dass es keine lebendigen Partikel mehr gibt und dieses
 	 * Partikelsystem keine weiteren Partikel mehr spawnen möchte.
 	 * @return {@code true} wenn dieses Partikelsystem tot ist, ansonsten {@code false}
 	 */
 	public boolean isDead() {
-		return _lifeParticles.isEmpty(); // TODO: Auch prüfen, ob keine Partikel mehr erzeugt werden sollen
+		return _spawnCapped && _lifeParticles.isEmpty();
+	}
+	
+	/**
+	 * Gibt zurück ob dieses Partikelsystem weitere Partikel spawned, auch nachdem es bereits die Maximalzahl an
+	 * Partikeln gespawned erreicht hat.
+	 * @return {@code true} wenn das Partikelsystem Partikel respawned, ansonsten {@code false}
+	 * @see #getMaxParticlesCount()
+	 * @see #getParticlesSpawnedCount()
+	 */
+	public boolean isSpawnCapped() {
+		return _spawnCapped;
 	}
 	
 	/**

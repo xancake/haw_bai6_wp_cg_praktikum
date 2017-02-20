@@ -18,7 +18,7 @@ public class ParticleDemo {
         		.withColorEnd(new Vector(1, 0.9, 0, 0.1))
         		.withFadeOut(false);
 		
-		ParticleSystem system = new ParticleSystem(builder, 10000, 5000);
+		ParticleSystem system = new ParticleSystem(builder, 10000, 5000, true);
 		system.applyForce(new Vector(0, 1, 0));     // Feuer aufsteigend
 		system.applyForce(new Vector(0, 0, -0.25)); // Wind
 		
