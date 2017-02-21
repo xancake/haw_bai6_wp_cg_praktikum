@@ -2,19 +2,42 @@
 \textmd{In diesem Kapitel wird die Implementation des Partikelsystems aus dem Projekt erläutert. Dabei wird auf die Techniken eingegangen, die zur Realisierung des Partikelsystems eingesetzt wurden.}
 
 \section{Datenstrukturen} \label{datastructures}
-\textmd{}
-\textmd{TODO: Particle, Particle.Builder, ParticleSystem, ParticleSystemManager erklären}
+\textmd{Dieser Abschnitt beschreibt die angelegten Datenstrukturen und Algorithmen um Partikelsysteme zu realisieren und zu verwalten. Davon abgegrenzt ist die Darstellung die in Abschnitt \ref{rendering} beschrieben wird.}
+
+\textmd{\\Partikel wurden mit der Klasse Particle modelliert. Sie verfügt über eine Lebenszeit, physikalische Eigenschaften wie Position, Geschwindigkeit und Beschleunigung, sowie Farbe. Eine update-Funktion sorgt für das Aktualisieren der Eigenschaften über den Lebenszyklus des Partikels. Getter und Setter ermöglichen den Zugriff auf ihre Eigenschaften, wobei die Setter eher nicht direkt verwendet werden sollten. Für das Setzen der Eigenschaften gibt es mit Particle.Builder eine Klasse über die Partikel konfiguriert und anschließend erzeugt werden können.}
+
+\textmd{\\Partikelsysteme sind durch die Klasse ParticleSystem modelliert. Ein Partikelsystem verwaltet alle seine zugehörigen Partikel und erhält bei der Instanziierung einen Particle.Builder übergeben, anhand dessen Konfiguration er seine Partikel erzeugt.}
+\textmd{\\Das Partikelsystem hat eine update-Methode, die das Erzeugen neuer Partikel sowie das Aktualisieren und Sterben bestehender Partikel umsetzt. Dafür wird anhand der Systemzeit berechnet wie viele Millisekunden seit dem letzten update-Aufruf vergangen sind und als zeitliches Delta verwendet.}
+\textmd{\\An einem Partikelsystem kann festgelegt werden, wie viele Partikel maximal gleichzeitig existieren und wie viele Partikel pro Sekunde erzeugt werden können. Um einen stetigen Partikelfluss zu gewährleisten hat sich die Faustregel in Formel \ref{emissionrate} durchgesetzt, vgl. \cite[Abschnitt Emission Rate]{greer2012}.}
+\begin{align}
+	Emissionsrate = \frac{maxPartikel}{Lebenszeit_{Partikel}}
+	\label{emissionrate}
+\end{align}
+
+\textmd{\\}
+
+\textmd{\\TODO: ParticleSystemManager erklären}
 
 \section{Lebenszyklusmanagement} \label{lifecyclemanagement}
+\textmd{Partikelsysteme erzeugen ständig neue Partikel und bestehende Partikel sterben. }
+
+\textmd{\\TODO: ParticleSystemManager, Particle-Pool erklären }
+\cite{gamasutra2000} (ParticleSystemManager)
+\cite{greer2012}, \cite{natureofcode2012}, \cite{khan} (Particle-Pool)
+
+\section{Kräfte} \label{forces}
 \textmd{}
-\textmd{TODO: ParticleSystemManager, Particle-Pool erklären }
+
+\textmd{\\TODO: Kräfte, Attraktoren und Repeller}
+\cite{natureofcode2012} \cite{khan}
 
 \section{Darstellung} \label{rendering}
-\textmd{Das Projekt verwendet den aus dem Praktikum bekannten Szenengraphen. Die Einbindung eines Partikelsystems in den Szenengraphen wird mit einem ParticleSystemNode realisiert. Dieser erhält bei seiner Erzeugung das Partikelsystem das er darstellen soll. Ab der Einbindung in den Szenengraphen ist der ParticleSystemNode für das Aktualisieren und Zeichnen des Partikelsystems zuständig. Zum Zeichnen wird ein VertexBufferObject der einzelnen Partikel erzeugt und OpenGL übergeben. Zur flüssigen Darstellung des Partikelsystems geschieht das in jedem Renderzyklus. Um die Häufigkeit des Renderzyklus festzulegen, kann über die Klasse ParticleSystemShowcaseScene eine gewünschte Frames-Per-Second-Rate angegeben werden.}
-\textmd{Die konkrete Darstellung der Partikel wird als farbige Punkte realisiert.}
+\textmd{In diesem Abschnitt wird die Darstellung der Partikelsysteme beschrieben. Das Projekt verwendet den aus dem Praktikum bekannten Szenengraphen. Die Einbindung eines Partikelsystems in den Szenengraphen wird mit einem ParticleSystemNode realisiert. Dieser erhält bei seiner Erzeugung das Partikelsystem das er darstellen soll. Ab der Einbindung in den Szenengraphen ist der ParticleSystemNode für das Aktualisieren und Zeichnen des Partikelsystems zuständig. Zum Zeichnen wird ein VertexBufferObject der einzelnen Partikel erzeugt und OpenGL übergeben. Zur flüssigen Darstellung des Partikelsystems geschieht das in jedem Renderzyklus. Um die Häufigkeit des Renderzyklus festzulegen, kann über die Klasse ParticleSystemShowcaseScene eine gewünschte Frames-Per-Second-Rate angegeben werden.}
+
+\textmd{\\Die einzelnen Partikel werden als einfache, farbige Punkte gezeichnet. Sie können über die Zeit ausgeblendet werden, was in OpenGL zu Problemen mit der Transparenz führt. Der nächste Abschnitt beschreibt das Problem und den Umgang mit der Transparenz in OpenGL.}
 
 \section{Transparenz} \label{transparency}
-\textmd{Standardmäßig werden die Partikel ohne eine bestimmte Sortierung gezeichnet. Das sorgt in OpenGL dafür, dass Transparenz nicht richtig dargestellt werden kann. Wenn ein transparentes Objekt das näher zur Kamera ist zuerst gezeichnet wird und danach eines das weiter hinten ist, so werden die Pixel des ersten Objekts nicht mehr angepasst. Für ein Partikelsystem mit Transparenz sieht das aus wie in Abbildung \ref{transparency-no-btf}. In der Abbildung können dunkle Partikel beobachtet werden, die transparent sein sollten.}
+\textmd{Dieser Abschnitt behandelt den Umgang mit Transparenz in der Darstellung der einzelnen Partikel. Standardmäßig werden die Partikel ohne eine bestimmte Sortierung gezeichnet. Das sorgt in OpenGL dafür, dass Transparenz nicht richtig dargestellt werden kann. Wenn ein transparentes Objekt das näher zur Kamera ist zuerst gezeichnet wird und danach eines das weiter hinten ist, so werden die Pixel des ersten Objekts nicht mehr angepasst. Für ein Partikelsystem mit Transparenz sieht das aus wie in Abbildung \ref{transparency-no-btf}. In der Abbildung können dunkle Partikel beobachtet werden, die transparent sein sollten.}
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width=25em]{img/transparency_no_back-to-front_ordering.png}
@@ -31,9 +54,4 @@
 		\label{transparency-with-btf}
 	\end{center}
 \end{figure}
-\textmd{\\Es sollte jedoch erwähnt werden, dass die Back-to-Front-Sortierung insbesondere bei einer großen Anzahl von Partikeln gewisse Performance-Einbußen mit sich führt. Während ein Partikelsystem mit 10000 Partikeln ohne Back-to-Front-Sortierung in meinen Tests mit einer Bildrate von 30 Frames-per-Second gerendert werden kann, so fällt die Bildrate mit Back-to-Front-Sortierung in dem Szenario auf 10 Frames-per-Second.}
-
-\section{Anziehen und Abstoßen (?)} \label{attraction_repulsion}
-\textmd{}
-\textmd{TODO: Attraktoren und Repeller}
-\cite{natureofcode2012} \cite{khan}
+\textmd{\\\\Es sollte erwähnt werden, dass die Back-to-Front-Sortierung insbesondere bei einer großen Anzahl von Partikeln gewisse Performance-Einbußen mit sich führt. Während ein Partikelsystem mit 10.000 Partikeln ohne Back-to-Front-Sortierung in meinen Tests mit einer Bildrate von 30 Frames-per-Second gerendert werden kann, so fällt die Bildrate mit Back-to-Front-Sortierung in dem Szenario auf 10 Frames-per-Second.}
