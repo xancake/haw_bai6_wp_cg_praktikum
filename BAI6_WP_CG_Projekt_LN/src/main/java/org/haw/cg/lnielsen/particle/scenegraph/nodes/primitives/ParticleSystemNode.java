@@ -3,6 +3,7 @@ package org.haw.cg.lnielsen.particle.scenegraph.nodes.primitives;
 import java.util.Objects;
 import org.haw.cg.lnielsen.particle.Particle;
 import org.haw.cg.lnielsen.particle.ParticleSystem;
+import org.haw.cg.lnielsen.particle.ParticleSystemManager;
 import org.haw.cg.lnielsen.particle.rendering.vbo.ParticleSystemVBOFactory;
 import com.jogamp.opengl.GL2;
 import computergraphics.framework.math.Matrix;
@@ -16,6 +17,7 @@ import computergraphics.framework.scenegraph.nodes.LeafNode;
 public class ParticleSystemNode extends LeafNode {
 	private ParticleSystem _particleSystem;
 	private ParticleSystemVBOFactory _factory;
+	private boolean _doUpdates;
 	
 	private VertexBufferObject _particleSystemVBO;
 	private boolean _drawBackToFront;
@@ -24,6 +26,8 @@ public class ParticleSystemNode extends LeafNode {
 	
 	/**
 	 * Instanziiert einen neuen Szenengraphknoten für das übergebene {@link ParticleSystem}.
+	 * <p>Wenn das Partikelsystem standalone dargestellt werden soll (also nicht in einem {@link ParticleSystemManager}
+	 * registriert ist), sollte über {@link #setDoUpdates(boolean)} das Updaten des Partikelsystems aktiviert werden.
 	 * @param system Ein Partikelsystem
 	 */
 	public ParticleSystemNode(ParticleSystem system) {
@@ -42,7 +46,9 @@ public class ParticleSystemNode extends LeafNode {
 	@Override
 	public void timerTick(int counter) {
 		if(isDrawParticleSystem()) {
-    		_particleSystem.update();
+			if(isDoUpdates()) {
+				_particleSystem.update();
+			}
     		_particleSystemVBO = isBackToFront()
     				? _factory.createBackToFrontSortedParticleSystemVBO(_viewpoint)
     				: _factory.createParticleSystemVBO();
@@ -65,6 +71,25 @@ public class ParticleSystemNode extends LeafNode {
 		_particleSystem = Objects.requireNonNull(system);
 		_factory = new ParticleSystemVBOFactory(_particleSystem);
 		_particleSystemVBO = _factory.createParticleSystemVBO();
+	}
+	
+	/**
+	 * Gibt zurück, ob dieser Szenengraphknoten sich um das Updaten seines {@link ParticleSystem}s kümmert oder nicht.
+	 * @return {@code true} wenn dieser Szenengraphknoten sein Partikelsystem updated, ansonsten {@code false}
+	 */
+	public boolean isDoUpdates() {
+		return _doUpdates;
+	}
+	
+	/**
+	 * Legt fest, ob sich dieser Szenengraphknoten um das Updaten seines {@link ParticleSystem}s kümmern soll oder
+	 * nicht.
+	 * <p>Partikelsysteme die von einem {@link ParticleSystemManager} gemanaged werden werden bereits über diesen
+	 * geupdated. In dem Fall sollte der Szenengraphknoten nicht zusätzlich noch updaten wollen.
+	 * @param updates {@code true} wenn dieser Szenengraphknoten sein Partikelsystem updaten soll, ansonsten {@code false}
+	 */
+	public void setDoUpdates(boolean updates) {
+		_doUpdates = updates;
 	}
 	
 	/**

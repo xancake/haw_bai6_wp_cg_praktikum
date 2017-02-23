@@ -185,7 +185,7 @@ public class ParticleSystem {
 	 * @return {@code true} wenn dieses Partikelsystem tot ist, ansonsten {@code false}
 	 */
 	public boolean isDead() {
-		return _spawnCapped && _lifeParticles.isEmpty();
+		return _spawnCapped && _lifeParticles.isEmpty() && _spawnCount >= _maxParticles;
 	}
 	
 	/**
