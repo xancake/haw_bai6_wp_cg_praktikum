@@ -31,4 +31,16 @@ public class InnerNode extends INode {
 		child.setParentNode(this);
 		children.add(child);
 	}
+	
+	/**
+	 * Remove child node from this node.
+	 * @param child The child node
+	 */
+	public void removeChild(INode child) {
+		int index = children.indexOf(child);
+		if(index != -1) {
+			child.setParentNode(null);
+			children.remove(index);
+		}
+	}
 }
