@@ -85,7 +85,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 				_grid.setDrawVolume(!_grid.isDrawVolume());
 				break;
 			case '+':
-				addParticleSystem(ParticlePresets.randomSystem());
+				addParticleSystem(ParticlePreset.randomSystem());
 				break;
 		}
 	}
@@ -121,7 +121,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 		}
 	}
 	
-	private static enum ParticlePresets {
+	private static enum ParticlePreset {
 		EXPLOSION(10000, 10000, true, new Particle.Builder()
 				.withStartLife(TimeUnit.SECONDS.toMillis(2))
 				.withVelocity(new Vector(-1, -1, -1), new Vector(1, 1, 1))
@@ -135,7 +135,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 		private int _spawnPerSecond;
 		private boolean _spawnCapped;
 		
-		private ParticlePresets(int maxParticles, int spawnPerSecond, boolean spawnCapped, Particle.Builder builder) {
+		private ParticlePreset(int maxParticles, int spawnPerSecond, boolean spawnCapped, Particle.Builder builder) {
 			_maxParticles = maxParticles;
 			_spawnPerSecond = spawnPerSecond;
 			_spawnCapped = spawnCapped;
@@ -146,8 +146,12 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 			return new ParticleSystem(_builder, _maxParticles, _spawnPerSecond, _spawnCapped);
 		}
 		
+		public static ParticlePreset random() {
+			return values()[(int)(Math.random()*(values().length-1))];
+		}
+		
 		public static ParticleSystem randomSystem() {
-			return values()[(int)(Math.random()*(values().length-1))].create();
+			return random().create();
 		}
 	}
 }
