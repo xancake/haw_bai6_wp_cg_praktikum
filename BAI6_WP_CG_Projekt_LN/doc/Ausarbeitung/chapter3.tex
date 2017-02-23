@@ -2,28 +2,30 @@
 \textmd{In diesem Kapitel wird die Implementation des Partikelsystems aus dem Projekt erläutert. Dabei wird auf die Techniken eingegangen, die zur Realisierung des Partikelsystems eingesetzt wurden.}
 
 \section{Datenstrukturen} \label{datastructures}
-\textmd{Dieser Abschnitt beschreibt die angelegten Datenstrukturen und Algorithmen um Partikelsysteme zu realisieren und zu verwalten. Davon abgegrenzt ist die Darstellung die in Abschnitt \ref{rendering} beschrieben wird.}
+\textmd{Dieser Abschnitt beschreibt die angelegten Datenstrukturen und Algorithmen um Partikelsysteme zu realisieren und zu verwalten. Davon abgegrenzt ist die Darstellung eines Partikelsystems die in Abschnitt \ref{rendering} beschrieben wird.}
 
 \textmd{\\Partikel wurden mit der Klasse Particle modelliert. Sie verfügt über eine Lebenszeit, physikalische Eigenschaften wie Position, Geschwindigkeit und Beschleunigung, sowie Farbe. Eine update-Funktion sorgt für das Aktualisieren der Eigenschaften über den Lebenszyklus des Partikels. Getter und Setter ermöglichen den Zugriff auf ihre Eigenschaften, wobei die Setter eher nicht direkt verwendet werden sollten. Für das Setzen der Eigenschaften gibt es mit Particle.Builder eine Klasse über die Partikel konfiguriert und anschließend erzeugt werden können.}
 
-\textmd{\\Partikelsysteme sind durch die Klasse ParticleSystem modelliert. Ein Partikelsystem verwaltet alle seine zugehörigen Partikel und erhält bei der Instanziierung einen Particle.Builder übergeben, anhand dessen Konfiguration er seine Partikel erzeugt.}
-\textmd{\\Das Partikelsystem hat eine update-Methode, die das Erzeugen neuer Partikel sowie das Aktualisieren und Sterben bestehender Partikel umsetzt. Dafür wird anhand der Systemzeit berechnet wie viele Millisekunden seit dem letzten update-Aufruf vergangen sind und als zeitliches Delta verwendet.}
+\textmd{\\Partikelsysteme sind durch die Klasse ParticleSystem modelliert. Ein Partikelsystem verwaltet alle seine zugehörigen Partikel. Es erhält bei der Instanziierung einen Particle.Builder übergeben, anhand dessen Konfiguration die Partikel des Partikelsystems erzeugt werden.}
+\textmd{\\Das Partikelsystem hat eine update-Methode, die das Erzeugen neuer Partikel sowie das Aktualisieren und Sterben bestehender Partikel umsetzt. Dafür wird anhand der Systemzeit berechnet wie viele Millisekunden seit dem letzten update-Aufruf vergangen sind und als zeitliches Delta verwendet. Daraus wird wiederum die Veränderung der Partikeleigenschaften berechnet, wie zum Beispiel die neue Position oder Farbe.}
 \textmd{\\An einem Partikelsystem kann festgelegt werden, wie viele Partikel maximal gleichzeitig existieren und wie viele Partikel pro Sekunde erzeugt werden können. Um einen stetigen Partikelfluss zu gewährleisten hat sich die Faustregel in Formel \ref{emissionrate} durchgesetzt, vgl. \cite[Abschnitt Emission Rate]{greer2012}.}
 \begin{align}
 	Emissionsrate = \frac{maxPartikel}{Lebenszeit_{Partikel}}
 	\label{emissionrate}
 \end{align}
 
-\textmd{\\}
-
-\textmd{\\TODO: ParticleSystemManager erklären}
+\textmd{\\Mit ParticleSystemManager gibt es eine Klasse die alle erzeugten Partikelsysteme verwalten kann, vgl. \cite[Kapitel 4.5 A System of Systems]{natureofcode2012}, \cite[Kapitel Systems of particle systems]{khan}. Der ParticleSystemManager bietet Funktionen zum Hinzufügen und Entfernen von Partikelsystemen an. Weiterhin kümmert er sich um das Updaten der registrierten Partikelsysteme und entfernt sie wenn sie tot sind, vgl. \cite[S. 3]{gamasutra2000}. Weiteres dazu kann in dem Kapitel \ref{lifecyclemanagement} zum Lebenszyklusmanagement nachgelesen werden.}
+\textmd{Um auf Ereignisse des ParticleSystemManagers reagieren zu können, können entsprechend des Listener-Patterns Listener registriert werden. Zur Zeit implementierte Ereignisse sind das Hinzufügen, das Sterben und das Entfernen von Partikelsystemen.}
 
 \section{Lebenszyklusmanagement} \label{lifecyclemanagement}
-\textmd{Partikelsysteme erzeugen ständig neue Partikel und bestehende Partikel sterben. }
+\textmd{In diesem Abschnitt wird zunächst das Lebenszyklusmanagement von Partikeln und danach das Lebenszyklusmanagement von Partikelsystemen beschrieben.}
 
-\textmd{\\TODO: ParticleSystemManager, Particle-Pool erklären }
-\cite{gamasutra2000} (ParticleSystemManager)
-\cite{greer2012}, \cite{natureofcode2012}, \cite{khan} (Particle-Pool)
+\textmd{\\Partikelsysteme erzeugen ständig neue Partikel und bestehende Partikel sterben. In der einfachsten Implementation könnte eine Liste der lebendigen Partikel geführt werden und die sterbenden Partikel aus der Liste entfernt werden. Das führt dazu, dass sehr viele Objekte erzeugt und wieder vom Garbage-Collector aufgeräumt werden müssen. Dabei sind sowohl die Objekt-Erzeugung und -Zerstörung relativ zeit-aufwändige Vorgänge. Indem die gestorbenen Partikel nicht verworfen sondern wiederverwendet werden, kann der Overhead für die Objekt-Erzeugung und -Zerstörung auf das Nötigste reduziert werden, vgl. \cite[S. 1]{gamasutra2000}.}
+
+\textmd{\\In der Implementation aus dieser Arbeit gibt es hierfür zwei Sammlungen, eine für lebendige Partikel (lifeParticles) und eine für tote Partikel (deadParticles). Nur die Partikel in lifeParticles erhalten Updates. Die Summe der Partikel aus beiden Sammlungen darf die Maximalzahl an Partikeln nicht übersteigen, die an dem Partikelsystem festgelegt wurde. Sollen neue Partikel erzeugt werden, so werden Partikel aus deadParticles anhand des Particle.Builders zurückgesetzt und nach lifeParticles verschoben. Stirbt ein Partikel wird er in seinem aktuellen Zustand von lifeParticles nach deadParticles verschoben und erhält so keine Updates mehr.}
+\textmd{\\Es gibt alternative Implementationen, die mit nur einer Liste auskommen. Die lebendigen Partikel werden hierbei vorne und die toten Partikel hinten einsortiert, vgl. \cite[Abschnitt How the Particle Pool Works]{greer2012}, \cite[Kapitel 4.3 The ArrayList]{natureofcode2012}, \cite[Kapitel A particle system]{khan}. Ich habe mich hier für die Variante mit den zwei Sammlungen entschieden, da ich so eine komplette Sammlung iterieren kann und nicht darauf achten muss, sie nur bis zu einem Teil zu iterieren. Das Sortieren wird durch das verschieben in die jeweils andere Sammlung umgesetzt. Da hier aber zwei Sammlungen eingesetzt werden ist mein Ansatz an der Stelle geringfügig speicherintensiver.}
+
+\textmd{\\So wie Partikel sterben, können auch Partikelsysteme sterben. Es Partikelsysteme die in einer Endlosschleife laufen, wie zum Beispiel Feuer und welchen die nur über eine begrenzte Zeit Partikel erzeugen, wie bei einer Explosion. Letztere sterben nachdem ihre Partikel ihre Lebenszeit vollendet haben. Um keine Updates auf Partikelsysteme zu verschwenden, die nicht mehr angezeigt werden sollen, kümmert sich der ParticleSystemManager darum diese zu entfernen, vgl. \cite[S. 3]{gamasutra2000}. Über das in \ref{datastructures} erwähnte Listener-Pattern können Softwarekomponenten über den Tod eines Partikelsystems benachrichtigt werden, die nun gegebenenfalls Referenzen auf das Partikelsystem invalidieren können.}
 
 \section{Kräfte} \label{forces}
 \textmd{}
