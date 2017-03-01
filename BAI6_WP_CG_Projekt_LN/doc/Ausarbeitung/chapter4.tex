@@ -1,1 +1,19 @@
-\chapter{Zusammenfassung und Ausblick} \label{summary}
+\chapter{Zusammenfassung und Erkenntnisse} \label{summary}
+\textmd{In diesem Kapitel werden Erkenntnisse widergespiegelt, die während der Implementation des Partikelsystems in dem Projekt aufgetreten sind.}
+
+
+\textmd{
+\\ TODOs:
+\\
+\\ - 
+\\ - 
+\\ - 
+\\ - 
+}
+
+\section{Performance in der Update-Methode}
+\textmd{In den Update-Methoden sollte möglichst viel wiederverwendet werden. Insbesondere immutable Datentypen sind hier schädlich. Die Update-Methoden werden bei Echtzeitanwendungen mindestens 30 Mal pro Sekunde aufgerufen um einen flüssigen Ablauf zu garantieren. Das bietet großes Potential für ein Speicherleck. In der Update-Methode der Partikel z.B. wurden ursprünglich bei Änderung der Position und Geschwindigkeit ständig neue Vektoren erzeugt. Durch umstellen auf mutable Operationen konnte bei einem Partikelsystem mit 10.000 Partikeln der Speicherbedarf von 660MB auf 330MB reduziert werden.}
+
+\section{Transparenz zwischen Partikelsystemen}
+\textmd{Die Darstellung von Transparenz wurde nur für die Partikel eines Partikelsystems untereinander umgesetzt. Die Partikel mehrerer Partikelsysteme untereinander werden nicht sortiert. Um bei mehreren Partikelsystemen alle Partikel mit Transparenz korrekt zeichnen zu können, müssten alle Partikel aller Partikelsysteme wie in Abschnitt \ref{transparency} unabhängig von ihrem Partikelsystem back-to-front sortiert werden.}
+\textmd{\\Technisch ist das in meinem Aufbau leider nicht so einfach möglich, da jedes Partikelsystem durch einen eigenen Szenengraphknoten eingebunden und gerendert wird. Der Szenengraphknoten funktioniert dabei autonom und weiß nicht von anderen Szenengraphknoten und ob sie überhaupt Partikelsysteme darstellen.}

@@ -32,8 +32,8 @@ public class Particle {
 		_life -= millis;
 		
 		double updateSeconds = millis / 1000.0;
-		_velocity = _velocity.add(_acceleration.multiply(updateSeconds));
-		_location = _location.add(_velocity.multiply(updateSeconds));
+		_velocity.addSelf(_acceleration.multiply(updateSeconds));
+		_location.addSelf(_velocity.multiply(updateSeconds));
 		
 		double alifePercentage = (double)getLife() / getStartLife();
 		for(int i=0; i<_color.getDimension(); i++) {
