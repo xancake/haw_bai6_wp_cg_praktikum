@@ -22,6 +22,7 @@ public class ParticleDemo {
 		system.applyForce(new Vector(0, 1, 0));     // Feuer aufsteigend
 		system.applyForce(new Vector(0, 0, -0.25)); // Wind
 		
+		ParticleSystem.DEBUG = true;
 		new ParticleSystemShowcaseScene(system, 60);
 		
 		// TODO: Das wäre echt schön... Vielleicht Partikelsystem threadsafe machen, damit das geht?

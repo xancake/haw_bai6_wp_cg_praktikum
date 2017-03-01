@@ -14,6 +14,8 @@ import computergraphics.framework.math.Vector;
  * <p>Ein Partikelsystem verwaltet mehrere Partikel über ihren Lebenszyklus hinweg.
  */
 public class ParticleSystem {
+	public static boolean DEBUG = false;
+	
 	private long _last;
 	private long _curr;
 	private boolean _initialized;
@@ -61,7 +63,9 @@ public class ParticleSystem {
 		_curr = System.currentTimeMillis();
 		long deltaMS = _curr - _last;
 		
-		System.out.printf("Life: %5d, Dead: %5d, Max: %5d, diff: %4d%n", getLifeParticlesCount(), getDeadParticlesCount(), getMaxParticlesCount(), deltaMS);
+		if(DEBUG) {
+			System.out.printf("Life: %5d, Dead: %5d, Max: %5d, diff: %4d%n", getLifeParticlesCount(), getDeadParticlesCount(), getMaxParticlesCount(), deltaMS);
+		}
 		
 		spawnParticles(deltaMS);
 		updateParticles(deltaMS);

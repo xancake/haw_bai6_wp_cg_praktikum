@@ -84,6 +84,9 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 			case 'V':
 				_grid.setDrawVolume(!_grid.isDrawVolume());
 				break;
+			case '1':
+				ParticleSystem.DEBUG = !ParticleSystem.DEBUG;
+				break;
 			case '+':
 				addParticleSystem(ParticlePreset.randomSystem());
 				break;
