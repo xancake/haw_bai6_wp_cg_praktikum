@@ -8,42 +8,44 @@ import computergraphics.framework.math.Vector;
 
 public class PhysicsParticleDemo {
 	public static void main(String[] args) throws InterruptedException {
-		ParticleSystemManagerShowcaseScene scene = new ParticleSystemManagerShowcaseScene(60);
+		double massFrom = 0.5;
+		double massTo   = 2;
 		
-		// Partikelsystem mit Schwerkraft
 		Particle.Builder gravityBuilder = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(-1, 0, 0))
         		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
         		.withColor(new Vector(1, 0, 0))
-        		.withMass(0.5, 2);
+        		.withMass(massFrom, massTo);
 		Particle.Builder forceBuilder = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(0, 0, 0))
         		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(0, 1, 1))
-        		.withMass(0.5, 2);
+        		.withColor(new Vector(1, 1, 0))
+        		.withMass(massFrom, massTo);
 		Particle.Builder noForceBuilder = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(1, 0, 0))
         		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(1, 1, 0))
-        		.withMass(0.5, 2);
+        		.withColor(new Vector(0, 1, 0))
+        		.withMass(massFrom, massTo);
 		Particle.Builder attractorRepellerBuilder = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(0, 0, -1))
         		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(1, 0, 1))
-        		.withMass(0.5, 2);
+        		.withColor(new Vector(0, 1, 1))
+        		.withMass(massFrom, massTo);
 		
 		ParticleSystem gravitySystem = new ParticleSystem(gravityBuilder, 1000, 1000, false);
 		ParticleSystem forceSystem   = new ParticleSystem(forceBuilder,   1000, 1000, false);
 		ParticleSystem noForceSystem = new ParticleSystem(noForceBuilder, 1000, 1000, false);
 		ParticleSystem attractorRepellerSystem = new ParticleSystem(attractorRepellerBuilder, 1000, 1000, false);
 		
-		gravitySystem.applyGravity(new Vector(0, -1, 0));
-		forceSystem.applyForce(new Vector(0, -1, 0));
+		Vector gravity = new Vector(0, -1, 0);
+		gravitySystem.applyGravity(gravity);
+		forceSystem.applyForce(gravity);
 		
+		ParticleSystemManagerShowcaseScene scene = new ParticleSystemManagerShowcaseScene(60);
 		scene.addParticleSystem(gravitySystem);
 		scene.addParticleSystem(forceSystem);
 		scene.addParticleSystem(noForceSystem);

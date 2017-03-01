@@ -71,21 +71,21 @@ public class ParticleSystemShowcaseScene extends Scene {
 	}
 	
 	private void toggleWind() {
+		_applyWind = !_applyWind;
 		if(_applyWind) {
 			_particleSystemNode.getParticleSystem().applyForce(WIND);
 		} else {
 			_particleSystemNode.getParticleSystem().removeForce(WIND);
 		}
-		_applyWind = !_applyWind;
 	}
 	
 	private void toggleGravity() {
+		_applyGravity = !_applyGravity;
 		if(_applyGravity) {
 			_particleSystemNode.getParticleSystem().applyGravity(GRAVITY);
 		} else {
 			_particleSystemNode.getParticleSystem().removeGravity(GRAVITY);
 		}
-		_applyGravity = !_applyGravity;
 	}
 	
 	@Override
