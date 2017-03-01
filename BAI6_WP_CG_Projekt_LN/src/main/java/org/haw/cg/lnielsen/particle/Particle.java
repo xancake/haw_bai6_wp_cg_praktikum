@@ -1,6 +1,5 @@
 package org.haw.cg.lnielsen.particle;
 
-import java.util.Objects;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
@@ -35,6 +34,7 @@ public class Particle {
 		double updateSeconds = millis / 1000.0;
 		_velocity.addSelf(_acceleration.multiply(updateSeconds));
 		_location.addSelf(_velocity.multiply(updateSeconds));
+		_acceleration.multiplySelf(0);
 		
 		double alifePercentage = (double)getLife() / getStartLife();
 		for(int i=0; i<_color.getDimension(); i++) {
@@ -55,29 +55,6 @@ public class Particle {
 	}
 	
 	/**
-	 * Sorgt dafür, dass die übergebene Kraft nicht mehr auf diesen Partikel einwirkt. Dabei wird die aktuell auf das
-	 * Partikel einwirkende Beschleunigung mit der übergebenen Kraft verrechnet.
-	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
-	 * entfernende Kraft vorher wirklich auf das Partikel gewirkt hat.
-	 * @param force Die Kraft
-	 */
-	public void removeForce(Vector force) {
-		_acceleration = _acceleration.subtract(force.multiply(1/_mass));
-	}
-	
-	/**
-	 * Lässt die übergebene Schwerkraft auf diesen Partikel einwirken. Die Schwerkraft wird auf die Z-Achse übertragen.
-	 * Soll die Schwerkraft in eine andere Achse gehen, so kann {@link #applyGravity(Vector)} verwendet werden.
-	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #applyForce(Vector) Kräften}, als dass die
-	 * {@link #getMass() Masse} des Partikels auf sie keinen Einfluss hat.
-	 * @param gravity Die Schwerkraft als Skalar
-	 * @see #applyGravity(Vector)
-	 */
-	public void applyGravity(double gravity) {
-		applyGravity(new Vector(0, 0, gravity));
-	}
-	
-	/**
 	 * Lässt die übergebene Schwerkraft auf diesen Partikel einwirken.
 	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #applyForce(Vector) Kräften}, als dass die
 	 * {@link #getMass() Masse} des Partikels auf sie keinen Einfluss hat.
@@ -86,34 +63,6 @@ public class Particle {
 	 */
 	public void applyGravity(Vector gravity) {
 		applyForce(gravity.multiply(_mass));
-	}
-	
-	/**
-	 * Sorgt dafür, dass die übergebene Schwerkraft nicht mehr auf diesen Partikel einwirkt. Die Schwerkraft wird nur
-	 * von der Z-Achse entfernt. Soll die Schwerkraft von anderen Achsen entfernt werden, so kann
-	 * {@link #removeGravity(Vector)} verwendet werden.
-	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #removeForce(Vector) Kräften}, als dass die
-	 * {@link #getMass() Masse} des Partikels auf sie keinen Einfluss hat.
-	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
-	 * entfernende Kraft vorher wirklich auf das Partikel gewirkt hat.
-	 * @param gravity Die Schwerkraft als Skalar
-	 * @see #removeGravity(Vector)
-	 */
-	public void removeGravity(double gravity) {
-		removeGravity(new Vector(0, 0, gravity));
-	}
-	
-	/**
-	 * Sorgt dafür, dass die übergebene Schwerkraft nicht mehr auf diesen Partikel einwirkt.
-	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #removeForce(Vector) Kräften}, als dass die
-	 * {@link #getMass() Masse} des Partikels auf sie keinen Einfluss hat.
-	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
-	 * entfernende Kraft vorher wirklich auf das Partikel gewirkt hat.
-	 * @param gravity Die Schwerkraft als Vektor
-	 * @see #removeGravity(double)
-	 */
-	public void removeGravity(Vector gravity) {
-		removeForce(gravity.multiply(_mass));
 	}
 	
 	public Vector getLocation() {
@@ -223,9 +172,6 @@ public class Particle {
 		private double _massFrom         = 1;
 		private double _massTo           = 1;
 		
-		private Vector _force            = new Vector(0,0,0);
-		private Vector _gravity          = new Vector(0,0,0);
-		
 		private Vector _colorStartFrom   = new Vector(0,0,0,1);
 		private Vector _colorStartTo     = new Vector(0,0,0,1);
 		private Vector _colorEndFrom     = new Vector(0,0,0,1);
@@ -316,34 +262,6 @@ public class Particle {
 			return this;
 		}
 		
-		public Builder addForce(Vector force) {
-			_force = _force.add(force);
-			return this;
-		}
-		
-		public Builder removeForce(Vector force) {
-			_force = _force.subtract(force);
-			return this;
-		}
-		
-		public Builder addGravity(double gravity) {
-			return addGravity(new Vector(0, 0, gravity));
-		}
-		
-		public Builder addGravity(Vector gravity) {
-			_gravity = _gravity.add(Objects.requireNonNull(gravity));
-			return this;
-		}
-		
-		public Builder removeGravity(double gravity) {
-			return removeGravity(new Vector(0, 0, gravity));
-		}
-		
-		public Builder removeGravity(Vector gravity) {
-			_gravity = _gravity.subtract(Objects.requireNonNull(gravity));
-			return this;
-		}
-		
 		/**
 		 * Erzeugt ein Partikel und initialisiert es zufällig im Rahmen der an diesem Builder konfigurierten Parameter.
 		 * @return Das erzeugte Partikel
@@ -370,8 +288,6 @@ public class Particle {
 			particle.setColorStart(Vector.random(_colorStartFrom, _colorStartTo));
 			particle.setColorEnd(Vector.random(_colorEndFrom, _colorEndTo));
 			particle.setFadeOut(_fadeOut);
-			particle.applyForce(_force);
-			particle.applyGravity(_gravity);
 		}
 	}
 }

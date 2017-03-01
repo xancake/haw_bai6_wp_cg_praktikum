@@ -31,6 +31,9 @@ public class ParticleSystem {
 	private long _spawnCount;		/** Hält fest, wieviele Partikel bisher gespawned wurden. */
 	private boolean _spawnCapped;	/** Steuert ob weiterhin Partikel gespawned werden sollen, nachdem die Maximalzahl an Partikeln gespawned wurde. */
 	
+	private Vector _gravity  = new Vector(0, 0, 0);
+	private Vector _netForce = new Vector(0, 0, 0);
+	
 	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond, boolean spawnCapped) {
 		_builder = Objects.requireNonNull(builder);
 		_spawnPerSecond = Numbers.require(spawnPerSecond).greaterThanOrEqual(0, "Die Anzahl der pro Sekunde zu spawnenden Partikel muss positiv sein!");
@@ -111,6 +114,8 @@ public class ParticleSystem {
 	private void updateParticles(long deltaMS) {
 		for(Iterator<Particle> life=_lifeParticles.iterator(); life.hasNext(); ) {
 			Particle p = life.next();
+			p.applyForce(_netForce);
+			p.applyGravity(_gravity);
 			p.update(deltaMS);
 			if(p.isDead()) {
 				life.remove();
@@ -124,10 +129,7 @@ public class ParticleSystem {
 	 * @param force Die Kraft
 	 */
 	public void applyForce(Vector force) {
-		for(Particle p : _lifeParticles) {
-			p.applyForce(force);
-		}
-		_builder.addForce(force);
+		_netForce.addSelf(force);
 	}
 	
 	/**
@@ -137,10 +139,7 @@ public class ParticleSystem {
 	 * @param force Die Kraft
 	 */
 	public void removeForce(Vector force) {
-		for(Particle p : _lifeParticles) {
-			p.removeForce(force);
-		}
-		_builder.removeForce(force);
+		_netForce.subtractSelf(force);
 	}
 	
 	/**
@@ -153,10 +152,7 @@ public class ParticleSystem {
 	 * @see #applyGravity(Vector)
 	 */
 	public void applyGravity(double gravity) {
-		for(Particle p : _lifeParticles) {
-			p.applyGravity(gravity);
-		}
-		_builder.addGravity(gravity);
+		applyGravity(new Vector(0, 0, gravity));
 	}
 	
 	/**
@@ -167,10 +163,7 @@ public class ParticleSystem {
 	 * @see #applyGravity(double)
 	 */
 	public void applyGravity(Vector gravity) {
-		for(Particle p : _lifeParticles) {
-			p.applyGravity(gravity);
-		}
-		_builder.addGravity(gravity);
+		_gravity.addSelf(gravity);
 	}
 	
 	/**
@@ -185,10 +178,7 @@ public class ParticleSystem {
 	 * @see #removeGravity(Vector)
 	 */
 	public void removeGravity(double gravity) {
-		for(Particle p : _lifeParticles) {
-			p.removeGravity(gravity);
-		}
-		_builder.removeGravity(gravity);
+		removeGravity(new Vector(0, 0, gravity));
 	}
 	
 	/**
@@ -201,10 +191,7 @@ public class ParticleSystem {
 	 * @see #removeGravity(double)
 	 */
 	public void removeGravity(Vector gravity) {
-		for(Particle p : _lifeParticles) {
-			p.removeGravity(gravity);
-		}
-		_builder.removeGravity(gravity);
+		_gravity.subtractSelf(gravity);
 	}
 	
 	/**

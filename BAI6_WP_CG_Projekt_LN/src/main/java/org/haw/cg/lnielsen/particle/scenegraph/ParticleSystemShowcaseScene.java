@@ -13,8 +13,14 @@ import computergraphics.framework.scenegraph.nodes.primitives.MarchingCubesVisua
 
 @SuppressWarnings("serial")
 public class ParticleSystemShowcaseScene extends Scene {
+	private static final Vector WIND    = new Vector(0, 0, -1);
+	private static final Vector GRAVITY = new Vector(0, -1, 0);
+	
 	private MarchingCubesVisualizationNode _grid;
 	private ParticleSystemNode _particleSystemNode;
+	
+	private boolean _applyWind;
+	private boolean _applyGravity;
 	
 	public ParticleSystemShowcaseScene(ParticleSystem system, int fps) {
 		super((int)(1000./fps), Shader.ShaderMode.PHONG, RenderMode.REGULAR);
@@ -43,14 +49,17 @@ public class ParticleSystemShowcaseScene extends Scene {
 	@Override
 	public void keyPressed(int keyCode) {
 		switch (Character.toUpperCase(keyCode)) {
-			case 'G':
-				_grid.setDrawSubVolumes(!_grid.isDrawSubVolumes());
-				break;
-			case 'V':
-				_grid.setDrawVolume(!_grid.isDrawVolume());
-				break;
 			case '1':
 				ParticleSystem.DEBUG = !ParticleSystem.DEBUG;
+				break;
+			case '2':
+				_grid.setDrawSubVolumes(!_grid.isDrawSubVolumes());
+				break;
+			case 'W':
+				toggleWind();
+				break;
+			case 'G':
+				toggleGravity();
 				break;
 			case 'D':
 				_particleSystemNode.setDrawParticleSystem(!_particleSystemNode.isDrawParticleSystem());
@@ -59,6 +68,24 @@ public class ParticleSystemShowcaseScene extends Scene {
 				_particleSystemNode.setBackToFront(!_particleSystemNode.isBackToFront());
 				break;
 		}
+	}
+	
+	private void toggleWind() {
+		if(_applyWind) {
+			_particleSystemNode.getParticleSystem().applyForce(WIND);
+		} else {
+			_particleSystemNode.getParticleSystem().removeForce(WIND);
+		}
+		_applyWind = !_applyWind;
+	}
+	
+	private void toggleGravity() {
+		if(_applyGravity) {
+			_particleSystemNode.getParticleSystem().applyGravity(GRAVITY);
+		} else {
+			_particleSystemNode.getParticleSystem().removeGravity(GRAVITY);
+		}
+		_applyGravity = !_applyGravity;
 	}
 	
 	@Override
