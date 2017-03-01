@@ -66,7 +66,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 	@Override
 	public void init(GL2 gl) {
 		super.init(gl);
-		gl.glPointSize(5);
+		gl.glPointSize(1);
 		gl.glLineWidth(1);
 	}
 	
@@ -125,13 +125,13 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 	}
 	
 	private static enum ParticlePreset {
-		EXPLOSION(10000, 10000, true, new Particle.Builder()
+		EXPLOSION(10000, 20000, true, new Particle.Builder()
 				.withStartLife(TimeUnit.SECONDS.toMillis(2))
-				.withVelocity(new Vector(-1, -1, -1), new Vector(1, 1, 1))
-				.withAcceleration(new Vector(0, -0.5, 0))
+				.withVelocity(new Vector(-1, 0, -1), new Vector(1, 1, 1))
 				.withColorStart(new Vector(1, 0.1, 0))
 				.withColorEnd(new Vector(1, 0.9, 0))
-				.withFadeOut(true));
+				.withFadeOut(true)
+				.addGravity(new Vector(0, -0.5, 0)));
 		
 		private Particle.Builder _builder;
 		private int _maxParticles;

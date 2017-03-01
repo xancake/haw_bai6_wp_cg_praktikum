@@ -144,6 +144,70 @@ public class ParticleSystem {
 	}
 	
 	/**
+	 * Wendet die übergebene Schwerkraft auf alle lebendigen und zukünftigen Partikel dieses Partikelsystems an.
+	 * <p>Die Schwerkraft wird auf die Z-Achse übertragen. Soll die Schwerkraft in eine andere Achse gehen, so kann
+	 * {@link #applyGravity(Vector)} verwendet werden.
+	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #applyForce(Vector) Kräften}, als dass die
+	 * {@link Particle#getMass() Masse des Partikels} auf sie keinen Einfluss hat.
+	 * @param gravity Die Schwerkraft als Skalar
+	 * @see #applyGravity(Vector)
+	 */
+	public void applyGravity(double gravity) {
+		for(Particle p : _lifeParticles) {
+			p.applyGravity(gravity);
+		}
+		_builder.addGravity(gravity);
+	}
+	
+	/**
+	 * Wendet die übergebene Schwerkraft auf alle lebendigen und zukünftigen Partikel dieses Partikelsystems an.
+	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #applyForce(Vector) Kräften}, als dass die
+	 * {@link Particle#getMass() Masse des Partikels} auf sie keinen Einfluss hat.
+	 * @param gravity Die Schwerkraft als Vektor
+	 * @see #applyGravity(double)
+	 */
+	public void applyGravity(Vector gravity) {
+		for(Particle p : _lifeParticles) {
+			p.applyGravity(gravity);
+		}
+		_builder.addGravity(gravity);
+	}
+	
+	/**
+	 * Entfernt Einwirkung der übergebenen Schwerkraft auf alle lebendigen und zukünfigen Partikel dieses Partikelsystems.
+	 * <p>Die Schwerkraft wird auf die Z-Achse übertragen. Soll die Schwerkraft von einer anderen Achse entfernt werden,
+	 * so kann {@link #removeGravity(Vector)} verwendet werden.
+	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #removeForce(Vector) Kräften}, als dass die
+	 * {@link Particle#getMass() Masse des Partikels} auf sie keinen Einfluss hat.
+	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
+	 * entfernende Kraft vorher wirklich auf das Partikelsystem gewirkt hat.
+	 * @param force Die Kraft
+	 * @see #removeGravity(Vector)
+	 */
+	public void removeGravity(double gravity) {
+		for(Particle p : _lifeParticles) {
+			p.removeGravity(gravity);
+		}
+		_builder.removeGravity(gravity);
+	}
+	
+	/**
+	 * Entfernt Einwirkung der übergebenen Schwerkraft auf alle lebendigen und zukünfigen Partikel dieses Partikelsystems.
+	 * <p>Schwerkraft unterscheidet sich insofern von allgemeinen {@link #removeForce(Vector) Kräften}, als dass die
+	 * {@link Particle#getMass() Masse des Partikels} auf sie keinen Einfluss hat.
+	 * <p>Da intern ausschließlich Berechnungen stattfinden, sollte der Aufrufer selber sicherstellen, dass die zu
+	 * entfernende Kraft vorher wirklich auf das Partikelsystem gewirkt hat.
+	 * @param force Die Kraft
+	 * @see #removeGravity(double)
+	 */
+	public void removeGravity(Vector gravity) {
+		for(Particle p : _lifeParticles) {
+			p.removeGravity(gravity);
+		}
+		_builder.removeGravity(gravity);
+	}
+	
+	/**
 	 * Gibt eine unveränderliche Sammlung aller lebendigen, von diesem Partikelsystem verwalteten Partikel zurück.
 	 * @return Eine unveränderliche Sammlung der Partikel
 	 */
