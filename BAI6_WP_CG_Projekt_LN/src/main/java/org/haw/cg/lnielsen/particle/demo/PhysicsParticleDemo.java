@@ -29,17 +29,10 @@ public class PhysicsParticleDemo {
         		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
         		.withColor(new Vector(0, 1, 0))
         		.withMass(massFrom, massTo);
-		Particle.Builder attractorRepellerBuilder = new Particle.Builder()
-        		.withStartLife(TimeUnit.SECONDS.toMillis(2))
-        		.withLocation(new Vector(0, 0, -1))
-        		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(0, 1, 1))
-        		.withMass(massFrom, massTo);
 		
-		ParticleSystem gravitySystem = new ParticleSystem(gravityBuilder, 1000, 1000, false);
-		ParticleSystem forceSystem   = new ParticleSystem(forceBuilder,   1000, 1000, false);
-		ParticleSystem noForceSystem = new ParticleSystem(noForceBuilder, 1000, 1000, false);
-		ParticleSystem attractorRepellerSystem = new ParticleSystem(attractorRepellerBuilder, 1000, 1000, false);
+		ParticleSystem gravitySystem  = new ParticleSystem(gravityBuilder,  1000, 1000, false);
+		ParticleSystem forceSystem    = new ParticleSystem(forceBuilder,    1000, 1000, false);
+		ParticleSystem noForceSystem  = new ParticleSystem(noForceBuilder,  1000, 1000, false);
 		
 		Vector gravity = new Vector(0, -1, 0);
 		gravitySystem.applyGravity(gravity);
@@ -49,6 +42,5 @@ public class PhysicsParticleDemo {
 		scene.addParticleSystem(gravitySystem);
 		scene.addParticleSystem(forceSystem);
 		scene.addParticleSystem(noForceSystem);
-		scene.addParticleSystem(attractorRepellerSystem);
 	}
 }

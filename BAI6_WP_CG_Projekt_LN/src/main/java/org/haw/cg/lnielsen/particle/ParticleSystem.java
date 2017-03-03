@@ -4,8 +4,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.haw.cg.lnielsen.particle.physics.Repeller;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 
@@ -33,6 +36,7 @@ public class ParticleSystem {
 	
 	private Vector _gravity  = new Vector(0, 0, 0);
 	private Vector _netForce = new Vector(0, 0, 0);
+	private List<Repeller> _repellers;
 	
 	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond, boolean spawnCapped) {
 		_builder = Objects.requireNonNull(builder);
@@ -41,6 +45,7 @@ public class ParticleSystem {
         _lifeParticles = new HashSet<>(_maxParticles);
         _deadParticles = new HashSet<>(_maxParticles);
         _spawnCapped = spawnCapped;
+        _repellers = new LinkedList<>();
 	}
 	
 	/**
@@ -114,6 +119,7 @@ public class ParticleSystem {
 	private void updateParticles(long deltaMS) {
 		for(Iterator<Particle> life=_lifeParticles.iterator(); life.hasNext(); ) {
 			Particle p = life.next();
+			p.applyForce(calculateRepellForces(p));
 			p.applyForce(_netForce);
 			p.applyGravity(_gravity);
 			p.update(deltaMS);
@@ -122,6 +128,16 @@ public class ParticleSystem {
 				_deadParticles.add(p);
 			}
 		}
+	}
+	
+	private Vector calculateRepellForces(Particle p) {
+		Vector force = new Vector(0, 0, 0);
+		for(Repeller r : _repellers) {
+			if(r.isInRange(p)) {
+				force.addSelf(r.calculateRepellForce(p));
+			}
+		}
+		return force;
 	}
 	
 	/**
@@ -192,6 +208,16 @@ public class ParticleSystem {
 	 */
 	public void removeGravity(Vector gravity) {
 		_gravity.subtractSelf(gravity);
+	}
+	
+	
+	public void addRepeller(Repeller repeller) {
+		_repellers.add(repeller);
+	}
+	
+	
+	public void removeRepeller(Repeller repeller) {
+		_repellers.remove(repeller);
 	}
 	
 	/**

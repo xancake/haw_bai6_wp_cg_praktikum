@@ -33,7 +33,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 		_particleSystemManager = new ParticleSystemManager();
 		_particleSystemManager.addListener(new MyManagerListener());
 
-		getRoot().setLightPosition(new Vector(1, 1, 1));
+		getRoot().setLightPosition(new Vector(2, 2, 2));
 		getRoot().setAnimated(true);
 		
 		// MarchingCubes Zweckentfremden, um das Koordinatenkreuz um den Nullpunkt von -2³ bis 2³ zu zeichnen
