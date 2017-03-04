@@ -39,12 +39,11 @@ public class RepellerParticleDemo {
 		system2.addRepeller(new Repeller(new Vector(0, 0, 0), 1, 10));
 		
 		ParticleSystem system3 = new ParticleSystem(builder3, 5000, 5000, false);
-		system3.addRepeller(new Repeller(new Vector(2, 1, 0), Double.MAX_VALUE, -10));
+		system3.addRepeller(new Repeller(new Vector(2, 1, 0), 1, -10));
 		
 		ParticleSystemManagerShowcaseScene scene = new ParticleSystemManagerShowcaseScene(60);
 		scene.addParticleSystem(system1);
 		scene.addParticleSystem(system2);
 		scene.addParticleSystem(system3);
 	}
-	
 }

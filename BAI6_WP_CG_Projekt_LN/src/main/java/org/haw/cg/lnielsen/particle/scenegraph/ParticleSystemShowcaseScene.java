@@ -25,7 +25,7 @@ public class ParticleSystemShowcaseScene extends Scene {
 	public ParticleSystemShowcaseScene(ParticleSystem system, int fps) {
 		super((int)(1000./fps), Shader.ShaderMode.PHONG, RenderMode.REGULAR);
 
-		getRoot().setLightPosition(new Vector(1, 1, 1));
+		getRoot().setLightPosition(new Vector(2, 2, 2));
 		getRoot().setAnimated(true);
 		
 		_particleSystemNode = new ParticleSystemNode(system);

@@ -1,5 +1,8 @@
 package org.haw.cg.lnielsen.particle;
 
+import org.haw.cg.lnielsen.particle.color.ColorChangerBuilder;
+import org.haw.cg.lnielsen.particle.color.NullParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
@@ -15,9 +18,7 @@ public class Particle {
 	private double _mass;
 	
 	private Vector _color        = new Vector(0,0,0,1);
-	private Vector _colorStart   = new Vector(0,0,0,1);
-	private Vector _colorEnd     = new Vector(0,0,0,1);
-	private boolean _fadeOut;
+	private ParticleColorChanger _colorChanger = Builder.NO_COLOR_CHANGER;
 	
 	private long _startLife;
 	private long _life;
@@ -36,13 +37,7 @@ public class Particle {
 		_location.addSelf(_velocity.multiply(updateSeconds));
 		_acceleration.multiplySelf(0);
 		
-		double alifePercentage = (double)getLife() / getStartLife();
-		for(int i=0; i<_color.getDimension(); i++) {
-			_color.set(i, alifePercentage*_colorStart.get(i) + (1-alifePercentage)*_colorEnd.get(i));
-		}
-		if(_fadeOut) {
-			_color.set(3, alifePercentage);
-		}
+		_colorChanger.updateColor(this);
 	}
 	
 	/**
@@ -85,18 +80,6 @@ public class Particle {
 		return _color;
 	}
 	
-	public Vector getColorStart() {
-		return _colorStart;
-	}
-	
-	public Vector getColorEnd() {
-		return _colorEnd;
-	}
-	
-	public boolean isFadeOut() {
-		return _fadeOut;
-	}
-	
 	public long getStartLife() {
 		return _startLife;
 	}
@@ -129,18 +112,6 @@ public class Particle {
 		_color = CGUtils.checkColorVector(color);
 	}
 	
-	public void setColorStart(Vector color) {
-		_colorStart = CGUtils.checkColorVector(color);
-	}
-	
-	public void setColorEnd(Vector color) {
-		_colorEnd = CGUtils.checkColorVector(color);
-	}
-	
-	public void setFadeOut(boolean fadeOut) {
-		_fadeOut = fadeOut;
-	}
-	
 	public void setStartLife(long lifeMS) {
 		_startLife = Numbers.require(lifeMS).greaterThanOrEqual(0, "Die Lebenszeit eines Partikels muss positiv sein!");
 	}
@@ -162,6 +133,8 @@ public class Particle {
 	 * werden um ihn so weiterzuverwenden.
 	 */
 	public static class Builder {
+		private static final ParticleColorChanger NO_COLOR_CHANGER = new NullParticleColorChanger();
+		
 		private Vector _locationFrom     = new Vector(0,0,0);
 		private Vector _locationTo       = new Vector(0,0,0);
 		private Vector _velocityFrom     = new Vector(0,0,0);
@@ -172,11 +145,8 @@ public class Particle {
 		private double _massFrom         = 1;
 		private double _massTo           = 1;
 		
-		private Vector _colorStartFrom   = new Vector(0,0,0,1);
-		private Vector _colorStartTo     = new Vector(0,0,0,1);
-		private Vector _colorEndFrom     = new Vector(0,0,0,1);
-		private Vector _colorEndTo       = new Vector(0,0,0,1);
-		private boolean _fadeOut;
+		private Vector _color            = new Vector(0,0,0,1);
+		private ParticleColorChanger _colorChanger = NO_COLOR_CHANGER;
 		
 		private long _startLifeFrom;
 		private long _startLifeTo;
@@ -213,15 +183,19 @@ public class Particle {
 			return this;
 		}
 		
-		public Builder withColorStart(Vector colorFrom, Vector colorTo) {
-			_colorStartFrom = CGUtils.checkColorVector(colorFrom);
-			_colorStartTo   = CGUtils.checkColorVector(colorTo);
+		public Builder withColor(Vector color) {
+			_color = CGUtils.checkColorVector(color);
 			return this;
 		}
 		
-		public Builder withColorEnd(Vector colorFrom, Vector colorTo) {
-			_colorEndFrom = CGUtils.checkColorVector(colorFrom);
-			_colorEndTo   = CGUtils.checkColorVector(colorTo);
+		/**
+		 * Legt einen {@link ParticleColorChanger} fest, der die Farbe von Partikeln über ihren Lebenszyklus
+		 * kontrolliert. Über {@link ColorChangerBuilder} können gängige Builder benutzt werden.
+		 * @param colorChanger Der {@link ParticleColorChanger}
+		 * @return Der Builder selbst um weitere Konfigurationen anzuhängen
+		 */
+		public Builder withColorChanger(ParticleColorChanger colorChanger) {
+			_colorChanger = colorChanger==null ? NO_COLOR_CHANGER : colorChanger;
 			return this;
 		}
 		
@@ -243,23 +217,6 @@ public class Particle {
 		
 		public Builder withMass(double mass) {
 			return withMass(mass, mass);
-		}
-		
-		public Builder withColorStart(Vector color) {
-			return withColorStart(color, color);
-		}
-		
-		public Builder withColorEnd(Vector color) {
-			return withColorEnd(color, color);
-		}
-		
-		public Builder withColor(Vector color) {
-			return withColorStart(color).withColorEnd(color);
-		}
-		
-		public Builder withFadeOut(boolean fadeOut) {
-			_fadeOut = fadeOut;
-			return this;
 		}
 		
 		/**
@@ -285,9 +242,8 @@ public class Particle {
 			particle.setVelocity(Vector.random(_velocityFrom, _velocityTo));
 			particle.setAcceleration(Vector.random(_accelerationFrom, _accelerationTo));
 			particle.setMass(Math.random() * (_massTo - _massFrom) + _massTo);
-			particle.setColorStart(Vector.random(_colorStartFrom, _colorStartTo));
-			particle.setColorEnd(Vector.random(_colorEndFrom, _colorEndTo));
-			particle.setFadeOut(_fadeOut);
+			particle.setColor(_color);
+			particle._colorChanger = _colorChanger;
 		}
 	}
 }
