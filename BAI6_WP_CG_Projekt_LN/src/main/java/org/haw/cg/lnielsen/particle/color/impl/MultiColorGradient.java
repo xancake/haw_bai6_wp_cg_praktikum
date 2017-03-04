@@ -1,4 +1,4 @@
-package org.haw.cg.lnielsen.particle.color;
+package org.haw.cg.lnielsen.particle.color.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.haw.cg.lnielsen.particle.Particle;
+import org.haw.cg.lnielsen.particle.color.AbstractParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;

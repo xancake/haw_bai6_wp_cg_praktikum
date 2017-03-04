@@ -1,8 +1,8 @@
 package org.haw.cg.lnielsen.particle;
 
 import org.haw.cg.lnielsen.particle.color.ColorChangerBuilder;
-import org.haw.cg.lnielsen.particle.color.NullParticleColorChanger;
 import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.impl.NullParticleColorChanger;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;

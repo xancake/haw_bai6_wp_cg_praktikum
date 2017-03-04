@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.haw.cg.lnielsen.particle.Particle;
 import org.haw.cg.lnielsen.particle.ParticleSystem;
 import org.haw.cg.lnielsen.particle.color.ColorChangerBuilder;
-import org.haw.cg.lnielsen.particle.color.SpeedVisualizer;
+import org.haw.cg.lnielsen.particle.color.impl.SpeedVisualizer;
 import org.haw.cg.lnielsen.particle.physics.Repeller;
 import org.haw.cg.lnielsen.particle.scenegraph.ParticleSystemManagerShowcaseScene;
 import computergraphics.framework.math.Vector;

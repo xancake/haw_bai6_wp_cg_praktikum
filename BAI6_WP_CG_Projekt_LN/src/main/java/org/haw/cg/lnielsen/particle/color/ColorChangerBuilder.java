@@ -1,5 +1,9 @@
 package org.haw.cg.lnielsen.particle.color;
 
+import org.haw.cg.lnielsen.particle.color.impl.MultiColorGradient;
+import org.haw.cg.lnielsen.particle.color.impl.SpeedVisualizer;
+import org.haw.cg.lnielsen.particle.color.impl.TwoColorGradient;
+
 /**
  * Einstiegspunkt für unterschiedliche {@link ParticleColorChanger}-Builder.
  */
