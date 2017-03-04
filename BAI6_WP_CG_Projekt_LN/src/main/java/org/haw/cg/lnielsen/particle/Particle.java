@@ -46,7 +46,7 @@ public class Particle {
 	 * @param force Die Kraft
 	 */
 	public void applyForce(Vector force) {
-		_acceleration = _acceleration.add(force.multiply(1/_mass));
+		_acceleration.addSelf(force.multiply(1/_mass));
 	}
 	
 	/**
