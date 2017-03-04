@@ -1,5 +1,8 @@
 package org.haw.cg.lnielsen.particle.color;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.haw.cg.lnielsen.particle.Particle;
@@ -64,30 +67,63 @@ public class MultiColorGradient extends AbstractParticleColorChanger implements 
 		}
 	}
 	
-	/**
-	 * Dieser Builder verhält sich anders als übliche Builder. Während andere Builder die registrierten Eigenschaften
-	 * behalten, nachdem sie ein Objekt erzeugt haben, werden sie bei diesem Builder zurückgesetzt.
-	 */
-	public static class Builder {
-		private MultiColorGradient _gradient;
+	public static class ControlPointGradientBuilder {
+		private SortedMap<Double, Vector> _colorMap;
+		private boolean _fadeOut;
 		
-		public Builder() {
-			_gradient = new MultiColorGradient();
+		public ControlPointGradientBuilder() {
+			_colorMap = new TreeMap<>();
 		}
 		
-		public Builder withControlPoint(double lifetimePercentage, Vector color) {
-			_gradient.addControlPoint(lifetimePercentage, color);
+		public ControlPointGradientBuilder withControlPoint(double lifetimePercentage, Vector color) {
+			Numbers.require(lifetimePercentage).greaterThanOrEqual(0, "Der Lebenszeitwert mussim Wertebereich von 0 bis 1 liegen.");
+			Numbers.require(lifetimePercentage).lessThanOrEqual(1, "Der Lebenszeitwert mussim Wertebereich von 0 bis 1 liegen.");
+			_colorMap.put(lifetimePercentage, CGUtils.checkColorVector(color));
 			return this;
 		}
 		
-		public Builder withFadeOut(boolean fadeOut) {
-			_gradient.setFadeOut(fadeOut);
+		public ControlPointGradientBuilder withFadeOut(boolean fadeOut) {
+			_fadeOut = fadeOut;
 			return this;
 		}
 		
 		public MultiColorGradient build() {
-			MultiColorGradient gradient = _gradient;
-			_gradient = new MultiColorGradient();
+			MultiColorGradient gradient = new MultiColorGradient();
+			for(Entry<Double, Vector> e : _colorMap.entrySet()) {
+				gradient.addControlPoint(e.getKey(), e.getValue());
+			}
+			gradient.setFadeOut(_fadeOut);
+			return gradient;
+		}
+	}
+	
+	public static class UniformGradientBuilder {
+		private List<Vector> _colors;
+		private boolean _fadeOut;
+		
+		public UniformGradientBuilder() {
+			_colors = new LinkedList<>();
+		}
+		
+		public UniformGradientBuilder appendColor(Vector color) {
+			_colors.add(CGUtils.checkColorVector(color));
+			return this;
+		}
+		
+		public UniformGradientBuilder withFadeOut(boolean fadeOut) {
+			_fadeOut = fadeOut;
+			return this;
+		}
+		
+		public MultiColorGradient build() {
+			MultiColorGradient gradient = new MultiColorGradient();
+			for(int i=0; i<_colors.size(); i++) {
+				Vector color = _colors.get(i);
+				// 1- am Anfang um die Farbreihenfolge zu erhalten in der die Farben mit appendColor angegeben wurden.
+				// _colors.size()-1 da der letzte Eintrag bei 0 aufhören soll (i wird maximal _colors.size()-1) 
+				gradient.addControlPoint(1-(double)i/(_colors.size()-1), color);
+			}
+			gradient.setFadeOut(_fadeOut);
 			return gradient;
 		}
 	}

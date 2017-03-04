@@ -25,13 +25,13 @@ public class ColorChangerDemo {
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(0, 0, 0))
         		.withVelocity(new Vector(-0.1, -0.1, -0.1), new Vector(0.1, 0.1, 0.1))
-        		.withColorChanger(ColorChangerBuilder.multiColorGradient()
-        				.withControlPoint(1,   new Vector(1, 0, 0))
-        				.withControlPoint(0.8, new Vector(1, 1, 0))
-        				.withControlPoint(0.6, new Vector(0, 1, 0))
-        				.withControlPoint(0.4, new Vector(0, 1, 1))
-        				.withControlPoint(0.2, new Vector(0, 0, 1))
-        				.withControlPoint(0,   new Vector(1, 0, 1))
+        		.withColorChanger(ColorChangerBuilder.uniformMultiColorGradient()
+        				.appendColor(new Vector(1, 0, 0))
+        				.appendColor(new Vector(1, 1, 0))
+        				.appendColor(new Vector(0, 1, 0))
+        				.appendColor(new Vector(0, 1, 1))
+        				.appendColor(new Vector(0, 0, 1))
+        				.appendColor(new Vector(1, 0, 1))
         				.build());
 		
 		ParticleSystem system1 = new ParticleSystem(builder1, 5000, 5000, false);

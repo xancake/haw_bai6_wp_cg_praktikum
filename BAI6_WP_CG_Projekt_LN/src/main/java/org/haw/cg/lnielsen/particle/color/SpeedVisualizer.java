@@ -63,59 +63,76 @@ public class SpeedVisualizer extends AbstractParticleColorChanger implements Par
 		}
 	}
 	
-	public static class Builder {
+	public static class BoundedBuilder {
 		private double _speedMin;
 		private double _speedMax;
-		private double _speedBase;
-		private boolean _adaptive;
 		private Vector _colorMin = new Vector(0.25, 1, 0, 1);
 		private Vector _colorMax = new Vector(1, 0.25, 0, 1);
 		private boolean _fadeOut;
 		
-		public Builder withMinSpeed(double speed) {
+		public BoundedBuilder withMinSpeed(double speed) {
 			_speedMin = speed;
 			return this;
 		}
 		
-		public Builder withMaxSpeed(double speed) {
+		public BoundedBuilder withMaxSpeed(double speed) {
 			_speedMax = speed;
 			return this;
 		}
 		
-		public Builder withBaseSpeed(double speed) {
-			_speedBase = speed;
-			return this;
-		}
-		
-		/**
-		 * Wenn das zu erzeugende Objekt adaptiv sein soll, werden möglicherweise getätigte Angaben aus
-		 * {@link #withMinSpeed(double)} und {@link #withMaxSpeed(double)} nicht berücksichtigt.
-		 * Stattdessen wird der Wert der mit {@link #withBaseSpeed(double)} übergeben wurde verwendet.
-		 */
-		public Builder asAdaptive(boolean adaptive) {
-			_adaptive = adaptive;
-			return this;
-		}
-		
-		public Builder withMinColor(Vector color) {
+		public BoundedBuilder withMinColor(Vector color) {
 			_colorMin = CGUtils.checkColorVector(color);
 			return this;
 		}
 		
-		public Builder withMaxColor(Vector color) {
+		public BoundedBuilder withMaxColor(Vector color) {
 			_colorMax = CGUtils.checkColorVector(color);
 			return this;
 		}
 		
-		public Builder withFadeOut(boolean fadeOut) {
+		public BoundedBuilder withFadeOut(boolean fadeOut) {
 			_fadeOut = fadeOut;
 			return this;
 		}
 
 		public SpeedVisualizer build() {
-			SpeedVisualizer changer = _adaptive
-					? new SpeedVisualizer(_speedBase)
-					: new SpeedVisualizer(_speedMin, _speedMax);
+			SpeedVisualizer changer = new SpeedVisualizer(_speedMin, _speedMax);
+			changer._colorMin = _colorMin;
+			changer._colorMax = _colorMax;
+			changer.setFadeOut(_fadeOut);
+			return changer;
+		}
+	}
+	
+	public static class AdaptiveBuilder {
+		private double _speedBase;
+		private Vector _colorMin = new Vector(0.25, 1, 0, 1);
+		private Vector _colorMax = new Vector(1, 0.25, 0, 1);
+		private boolean _fadeOut;
+		
+		public AdaptiveBuilder withBaseSpeed(double speed) {
+			_speedBase = speed;
+			return this;
+		}
+		
+		
+		public AdaptiveBuilder withMinColor(Vector color) {
+			_colorMin = CGUtils.checkColorVector(color);
+			return this;
+		}
+		
+		public AdaptiveBuilder withMaxColor(Vector color) {
+			_colorMax = CGUtils.checkColorVector(color);
+			return this;
+		}
+		
+		public AdaptiveBuilder withFadeOut(boolean fadeOut) {
+			_fadeOut = fadeOut;
+			return this;
+		}
+
+		public SpeedVisualizer build() {
+			SpeedVisualizer changer = new SpeedVisualizer(_speedBase);
 			changer._colorMin = _colorMin;
 			changer._colorMax = _colorMax;
 			changer.setFadeOut(_fadeOut);
