@@ -40,7 +40,10 @@ public class MultiColorGradient extends AbstractParticleColorizer implements Par
 		double control1 = 0; // Muss 0 sein, da es sein kann, dass es keinen Kontrollpunkt für 0 gibt.
 		double control2 = 1; // Muss 1 sein, da es sein kann, dass es keinen Kontrollpunkt für 1 gibt.
 		for(Double controlPoint : _colorMap.keySet()) {
-			if(alifePercentage >= controlPoint) {
+			if(alifePercentage > controlPoint || controlPoint == 0) {
+				// Das "|| controlPoint == 0" sorgt dafür, dass ein möglicher Kontrollpunkt bei 0 IMMER als erster
+				// Kontrollpunkt in Betracht gezogen wird. Andernfalls kann es geschehen, dass er als zweiter
+				// Kontrollpunkt misinterpretiert wird was dazu führt, dass in der Berechnung der Anteile NaN entsteht.
 				control1 = controlPoint;
 			} else {
 				control2 = controlPoint;
