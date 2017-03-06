@@ -25,8 +25,8 @@ public class MultiColorGradient extends AbstractParticleColorChanger implements 
 	}
 	
 	public void addControlPoint(double lifetimePercentage, Vector color) {
-		Numbers.require(lifetimePercentage).greaterThanOrEqual(0, "Der Lebenszeitwert mussim Wertebereich von 0 bis 1 liegen.");
-		Numbers.require(lifetimePercentage).lessThanOrEqual(1, "Der Lebenszeitwert mussim Wertebereich von 0 bis 1 liegen.");
+		Numbers.require(lifetimePercentage).greaterThanOrEqual(0, "Der Lebenszeitwert muss im Wertebereich von 0 bis 1 liegen.");
+		Numbers.require(lifetimePercentage).lessThanOrEqual(1, "Der Lebenszeitwert muss im Wertebereich von 0 bis 1 liegen.");
 		_colorMap.put(lifetimePercentage, CGUtils.checkColorVector(color));
 	}
 	
@@ -78,8 +78,8 @@ public class MultiColorGradient extends AbstractParticleColorChanger implements 
 		}
 		
 		public ControlPointGradientBuilder withControlPoint(double lifetimePercentage, Vector color) {
-			Numbers.require(lifetimePercentage).greaterThanOrEqual(0, "Der Lebenszeitwert mussim Wertebereich von 0 bis 1 liegen.");
-			Numbers.require(lifetimePercentage).lessThanOrEqual(1, "Der Lebenszeitwert mussim Wertebereich von 0 bis 1 liegen.");
+			Numbers.require(lifetimePercentage).greaterThanOrEqual(0, "Der Lebenszeitwert muss im Wertebereich von 0 bis 1 liegen.");
+			Numbers.require(lifetimePercentage).lessThanOrEqual(1, "Der Lebenszeitwert muss im Wertebereich von 0 bis 1 liegen.");
 			_colorMap.put(lifetimePercentage, CGUtils.checkColorVector(color));
 			return this;
 		}
