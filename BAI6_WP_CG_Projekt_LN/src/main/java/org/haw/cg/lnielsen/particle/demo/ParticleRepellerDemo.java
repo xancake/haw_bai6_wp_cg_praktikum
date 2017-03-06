@@ -7,7 +7,7 @@ import org.haw.cg.lnielsen.particle.physics.Repeller;
 import org.haw.cg.lnielsen.particle.scenegraph.ParticleSystemManagerShowcaseScene;
 import computergraphics.framework.math.Vector;
 
-public class RepellerParticleDemo {
+public class ParticleRepellerDemo {
 	public static void main(String[] args) {
 		double massFrom = 0.5;
 		double massTo   = 2;

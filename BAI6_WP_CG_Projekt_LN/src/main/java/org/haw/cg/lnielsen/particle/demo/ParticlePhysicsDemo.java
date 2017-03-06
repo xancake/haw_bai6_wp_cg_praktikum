@@ -6,7 +6,7 @@ import org.haw.cg.lnielsen.particle.ParticleSystem;
 import org.haw.cg.lnielsen.particle.scenegraph.ParticleSystemManagerShowcaseScene;
 import computergraphics.framework.math.Vector;
 
-public class PhysicsParticleDemo {
+public class ParticlePhysicsDemo {
 	public static void main(String[] args) throws InterruptedException {
 		double massFrom = 0.5;
 		double massTo   = 2;
