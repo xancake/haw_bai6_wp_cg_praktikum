@@ -1,19 +1,16 @@
 \chapter{Zusammenfassung und Erkenntnisse} \label{summary}
 \textmd{In diesem Kapitel werden Erkenntnisse widergespiegelt, die während der Implementation des Partikelsystems in dem Projekt aufgetreten sind.}
 
-
-\textmd{
-\\ TODOs:
-\\
-\\ - 
-\\ - 
-\\ - 
-\\ - 
-}
-
 \section{Performance in der Update-Methode}
-\textmd{In den Update-Methoden sollte möglichst viel wiederverwendet werden. Insbesondere immutable Datentypen sind hier schädlich. Die Update-Methoden werden bei Echtzeitanwendungen mindestens 30 Mal pro Sekunde aufgerufen um einen flüssigen Ablauf zu garantieren. Das bietet großes Potential für ein Speicherleck. In der Update-Methode der Partikel z.B. wurden ursprünglich bei Änderung der Position und Geschwindigkeit ständig neue Vektoren erzeugt. Durch umstellen auf mutable Operationen konnte bei einem Partikelsystem mit 10.000 Partikeln der Speicherbedarf von 660MB auf 330MB reduziert werden.}
+\textmd{Die Update-Methoden von Partikeln und Partikelsystemen werden mindestens 30 mal pro Sekunde aufgerufen um einen flüssigen Bildlauf zu garantieren. Dazu kommt, dass es pro Partikelsystem tausende von Partikeln geben kann. Deshalb sollten in den Update-Methoden so wenig Objekte wie möglich erzeugt werden. Insbesondere immutable Operationen bzw. Datentypen sind hier schädlich, da sie neue Objekte erzeugen. Das bietet großes Potential für ein Speicherleck. In der Update-Methode der Partikel z.B. wurden ursprünglich bei Änderung der Position und Geschwindigkeit ständig neue Vektoren erzeugt. Durch umstellen auf mutable Operationen konnte bei einem Partikelsystem mit 10.000 Partikeln der Speicherbedarf von 660MB auf 330MB reduziert werden.}
+
+\section{Eigenschaften von Partikeln an Partikelsystemen ändern}
+\textmd{Sollen Eigenschaften von allen Partikeln eines Partikelsystems auf einmal geändert werden, wie das zum Beispiel beim Anwenden von Kräften der Fall ist, muss darauf Rücksicht genommen, dass die update-Methode ggf. von einem anderen Thread ausgeführt wird. Bei einer Implementation die z.B. in der applyForce-Methode den Partikeln direkt durch eine Schleife eine Kraft zuweisen möchte kann es passieren, dass sich die Sammlung der lebendigen Partikel konkurrierend ändert, was zu einer ConcurrentModificationException führt.}
+\textmd{\\Die in dieser Arbeit bevorzugte Implementation ist, die zu ändernden Eigenschaften an dem Partikelsystem zu modellieren und über Methoden zu ändern. Erst mit dem nächsten Aufruf der update-Methode werden die Änderungen anschließend auf alle lebendigen Partikel angewendet. Dieser Ansatz kann dann auch ohne Thread-Synchronisation auskommen und führt zu keiner ConcurrentModificationException. Sollte Thread-Synchronisation benötigt werden, ist der zu schützende, kritische Bereich mit diesem Ansatz bedeutend kleiner.}
 
 \section{Transparenz zwischen Partikelsystemen}
 \textmd{Die Darstellung von Transparenz wurde nur für die Partikel eines Partikelsystems untereinander umgesetzt. Die Partikel mehrerer Partikelsysteme untereinander werden nicht sortiert. Um bei mehreren Partikelsystemen alle Partikel mit Transparenz korrekt zeichnen zu können, müssten alle Partikel aller Partikelsysteme wie in Abschnitt \ref{transparency} unabhängig von ihrem Partikelsystem back-to-front sortiert werden.}
 \textmd{\\Technisch ist das in meinem Aufbau leider nicht so einfach möglich, da jedes Partikelsystem durch einen eigenen Szenengraphknoten eingebunden und gerendert wird. Der Szenengraphknoten funktioniert dabei autonom und weiß nicht von anderen Szenengraphknoten und ob sie überhaupt Partikelsysteme darstellen.}
+
+\section{ParticleColorChanger mit anderen Eigenschaften als Lebenszeit}
+\textmd{TODO}
