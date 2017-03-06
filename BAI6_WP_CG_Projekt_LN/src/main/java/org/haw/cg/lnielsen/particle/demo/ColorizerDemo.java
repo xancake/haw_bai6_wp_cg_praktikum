@@ -4,23 +4,28 @@ import java.util.concurrent.TimeUnit;
 import org.haw.cg.lnielsen.particle.Particle;
 import org.haw.cg.lnielsen.particle.ParticleSystem;
 import org.haw.cg.lnielsen.particle.color.ParticleColorizerBuilder;
+import org.haw.cg.lnielsen.particle.color.impl.GradientColorizer;
 import org.haw.cg.lnielsen.particle.color.impl.SpeedVisualizer;
 import org.haw.cg.lnielsen.particle.physics.Repeller;
 import org.haw.cg.lnielsen.particle.scenegraph.ParticleSystemManagerShowcaseScene;
 import computergraphics.framework.math.Vector;
 
-public class ColorChangerDemo {
+public class ColorizerDemo {
 	public static void main(String[] args) {
 		Particle.Builder builder1 = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(-1, 0, 0))
         		.withVelocity(new Vector(-0.1, 0, -0.1), new Vector(0.1, 0, 0.1))
-        		.withColorizer(new SpeedVisualizer(0));
+        		.withColorizer(new SpeedVisualizer(0, 1));
 		Particle.Builder builder2 = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(1, 0, 0))
         		.withVelocity(new Vector(-0.1, 0, -0.1), new Vector(0.1, 0, 0.1))
-        		.withColorizer(new SpeedVisualizer(0, 1));
+        		.withColorizer(new GradientColorizer.UniformGradientBuilder()
+						.withPercentageSupplier(new GradientColorizer.SpeedPercentageSupplier(0, 1))
+        				.appendColor(new Vector(0.25, 1, 0))
+        				.appendColor(new Vector(1, 0.25, 0))
+        				.build());
 		Particle.Builder builder3 = new Particle.Builder()
         		.withStartLife(TimeUnit.SECONDS.toMillis(2))
         		.withLocation(new Vector(0, 0, 0))
