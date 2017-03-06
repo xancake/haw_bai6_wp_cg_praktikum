@@ -1,17 +1,17 @@
 package org.haw.cg.lnielsen.particle.color.impl;
 
 import org.haw.cg.lnielsen.particle.Particle;
-import org.haw.cg.lnielsen.particle.color.AbstractParticleColorChanger;
-import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.AbstractParticleColorizer;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizer;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
 
 /**
- * Ein {@link ParticleColorChanger} der Partikel über ihre Lebenszeit entsprechend eines Farbverlaufs von einer Farbe
+ * Ein {@link ParticleColorizer} der Partikel über ihre Lebenszeit entsprechend eines Farbverlaufs von einer Farbe
  * zu einer anderen Farbe umsetzt. Die Farben können über Setter gesetzt werden. Standardmäßig sind beide Farben
  * schwarz.
  */
-public class TwoColorGradient extends AbstractParticleColorChanger implements ParticleColorChanger {
+public class TwoColorGradient extends AbstractParticleColorizer implements ParticleColorizer {
 	private Vector _colorStart   = new Vector(0,0,0,1);
 	private Vector _colorEnd     = new Vector(0,0,0,1);
 	

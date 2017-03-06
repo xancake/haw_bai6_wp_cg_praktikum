@@ -1,8 +1,8 @@
 package org.haw.cg.lnielsen.particle;
 
-import org.haw.cg.lnielsen.particle.color.ColorChangerBuilder;
-import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
-import org.haw.cg.lnielsen.particle.color.impl.NullParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizerBuilder;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizer;
+import org.haw.cg.lnielsen.particle.color.impl.NullParticleColorizer;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
@@ -18,7 +18,7 @@ public class Particle {
 	private double _mass;
 	
 	private Vector _color        = new Vector(0,0,0,1);
-	private ParticleColorChanger _colorChanger = Builder.NO_COLOR_CHANGER;
+	private ParticleColorizer _colorizer = Builder.NULL_COLORIZER;
 	
 	private long _startLife;
 	private long _life;
@@ -37,7 +37,7 @@ public class Particle {
 		_location.addSelf(_velocity.multiply(updateSeconds));
 		_acceleration.multiplySelf(0);
 		
-		_colorChanger.updateColor(this);
+		_colorizer.updateColor(this);
 	}
 	
 	/**
@@ -133,7 +133,7 @@ public class Particle {
 	 * werden um ihn so weiterzuverwenden.
 	 */
 	public static class Builder {
-		private static final ParticleColorChanger NO_COLOR_CHANGER = new NullParticleColorChanger();
+		private static final ParticleColorizer NULL_COLORIZER = new NullParticleColorizer();
 		
 		private Vector _locationFrom     = new Vector(0,0,0);
 		private Vector _locationTo       = new Vector(0,0,0);
@@ -146,7 +146,7 @@ public class Particle {
 		private double _massTo           = 1;
 		
 		private Vector _color            = new Vector(0,0,0,1);
-		private ParticleColorChanger _colorChanger = NO_COLOR_CHANGER;
+		private ParticleColorizer _colorizer = NULL_COLORIZER;
 		
 		private long _startLifeFrom;
 		private long _startLifeTo;
@@ -189,13 +189,13 @@ public class Particle {
 		}
 		
 		/**
-		 * Legt einen {@link ParticleColorChanger} fest, der die Farbe von Partikeln über ihren Lebenszyklus
-		 * kontrolliert. Über {@link ColorChangerBuilder} können gängige Builder benutzt werden.
-		 * @param colorChanger Der {@link ParticleColorChanger}
+		 * Legt einen {@link ParticleColorizer} fest, der die Farbe von Partikeln über ihren Lebenszyklus
+		 * kontrolliert. Über {@link ParticleColorizerBuilder} können gängige Builder benutzt werden.
+		 * @param colorizer Der {@link ParticleColorizer}
 		 * @return Der Builder selbst um weitere Konfigurationen anzuhängen
 		 */
-		public Builder withColorChanger(ParticleColorChanger colorChanger) {
-			_colorChanger = colorChanger==null ? NO_COLOR_CHANGER : colorChanger;
+		public Builder withColorizer(ParticleColorizer colorizer) {
+			_colorizer = colorizer==null ? NULL_COLORIZER : colorizer;
 			return this;
 		}
 		
@@ -243,7 +243,7 @@ public class Particle {
 			particle.setAcceleration(Vector.random(_accelerationFrom, _accelerationTo));
 			particle.setMass(Math.random() * (_massTo - _massFrom) + _massTo);
 			particle.setColor(_color);
-			particle._colorChanger = _colorChanger;
+			particle._colorizer = _colorizer;
 		}
 	}
 }

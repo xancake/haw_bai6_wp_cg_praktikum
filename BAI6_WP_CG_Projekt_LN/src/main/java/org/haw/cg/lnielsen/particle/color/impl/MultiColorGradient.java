@@ -6,18 +6,18 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.haw.cg.lnielsen.particle.Particle;
-import org.haw.cg.lnielsen.particle.color.AbstractParticleColorChanger;
-import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.AbstractParticleColorizer;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizer;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
 
 /**
- * Ein {@link ParticleColorChanger} der es ermöglicht Kontrollpunkte auf der Lebensleiste eines Partikels zu setzen und
- * mit einer Farbe zu assoziieren. Dieser {@link ParticleColorChanger} interpoliert die Farbe zwischen den
+ * Ein {@link ParticleColorizer} der es ermöglicht Kontrollpunkte auf der Lebensleiste eines Partikels zu setzen und
+ * mit einer Farbe zu assoziieren. Dieser {@link ParticleColorizer} interpoliert die Farbe zwischen den
  * Kontrollpunkten, sodass ein Farbverlauf entsteht.
  */
-public class MultiColorGradient extends AbstractParticleColorChanger implements ParticleColorChanger {
+public class MultiColorGradient extends AbstractParticleColorizer implements ParticleColorizer {
 	private SortedMap<Double, Vector> _colorMap;
 	
 	public MultiColorGradient() {

@@ -5,9 +5,9 @@ import org.haw.cg.lnielsen.particle.color.impl.SpeedVisualizer;
 import org.haw.cg.lnielsen.particle.color.impl.TwoColorGradient;
 
 /**
- * Einstiegspunkt für unterschiedliche {@link ParticleColorChanger}-Builder.
+ * Einstiegspunkt für unterschiedliche {@link ParticleColorizer}-Builder.
  */
-public final class ColorChangerBuilder {
+public final class ParticleColorizerBuilder {
 	/**
 	 * Liefert einen Builder für einen {@link TwoColorGradient} zurück. Es können eine Start- und Endfarbe definiert
 	 * werden, zwischen denen über den Lebenszyklus von Partikeln interpoliert werden soll.

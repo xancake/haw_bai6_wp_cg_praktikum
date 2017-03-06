@@ -1,18 +1,18 @@
 package org.haw.cg.lnielsen.particle.color.impl;
 
 import org.haw.cg.lnielsen.particle.Particle;
-import org.haw.cg.lnielsen.particle.color.AbstractParticleColorChanger;
-import org.haw.cg.lnielsen.particle.color.ParticleColorChanger;
+import org.haw.cg.lnielsen.particle.color.AbstractParticleColorizer;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizer;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
 
 /**
- * Ein {@link ParticleColorChanger} der Partikel abhängig ihrer Geschwindigkeit einfärbt. Diese Klasse arbeitet mit
+ * Ein {@link ParticleColorizer} der Partikel abhängig ihrer Geschwindigkeit einfärbt. Diese Klasse arbeitet mit
  * minimal und maximal Geschwindigkeiten, zu denen die Partikel mit entsprechenden Farben eingefärbt werden. Sie kann
  * adaptiv genutzt werden, wodurch die Grenzwerte sich anpassen wenn extremere Werte auftreten.
  */
-public class SpeedVisualizer extends AbstractParticleColorChanger implements ParticleColorChanger {
+public class SpeedVisualizer extends AbstractParticleColorizer implements ParticleColorizer {
 	private double _speedMin;
 	private double _speedMax;
 	private boolean _adaptive;

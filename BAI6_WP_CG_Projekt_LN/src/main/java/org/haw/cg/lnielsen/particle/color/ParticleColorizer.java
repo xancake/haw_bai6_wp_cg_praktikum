@@ -5,7 +5,7 @@ import org.haw.cg.lnielsen.particle.Particle;
 /**
  * Schnittstelle für austauschbare Farbeffekte von Partikelsystemen.
  */
-public interface ParticleColorChanger {
+public interface ParticleColorizer {
 	/**
 	 * Aktualisiert die Farbe des übergebenen Partikels.
 	 * <p>Implementationen dieser Methode sind dazu angehalten das Farb-Objekt des Partikels {@link Particle#getColor()}

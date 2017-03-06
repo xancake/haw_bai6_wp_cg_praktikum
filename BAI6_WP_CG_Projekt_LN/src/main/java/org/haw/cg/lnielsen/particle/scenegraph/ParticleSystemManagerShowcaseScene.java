@@ -8,7 +8,7 @@ import org.haw.cg.lnielsen.particle.Particle;
 import org.haw.cg.lnielsen.particle.ParticleSystem;
 import org.haw.cg.lnielsen.particle.ParticleSystemManager;
 import org.haw.cg.lnielsen.particle.ParticleSystemManager.ParticleSystemManagerListener;
-import org.haw.cg.lnielsen.particle.color.ColorChangerBuilder;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizerBuilder;
 import org.haw.cg.lnielsen.particle.scenegraph.nodes.primitives.ParticleSystemNode;
 import com.jogamp.opengl.GL2;
 import computergraphics.framework.algorithm.marching.cubes.SingleThreadedMarchingCubes;
@@ -128,7 +128,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 		EXPLOSION(10000, 20000, true, new Particle.Builder()
 				.withStartLife(TimeUnit.SECONDS.toMillis(2))
 				.withVelocity(new Vector(-1, 0, -1), new Vector(1, 1, 1))
-				.withColorChanger(ColorChangerBuilder.twoColorGradient()
+				.withColorizer(ParticleColorizerBuilder.twoColorGradient()
 						.withStartColor(new Vector(1, 0.1, 0))
 						.withEndColor(new Vector(1, 0.9, 0))
 						.withFadeOut(true)

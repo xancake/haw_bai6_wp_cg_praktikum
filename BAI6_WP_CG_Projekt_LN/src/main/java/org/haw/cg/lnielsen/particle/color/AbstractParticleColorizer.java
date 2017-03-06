@@ -3,7 +3,7 @@ package org.haw.cg.lnielsen.particle.color;
 import org.haw.cg.lnielsen.particle.Particle;
 import computergraphics.framework.math.Vector;
 
-public abstract class AbstractParticleColorChanger implements ParticleColorChanger {
+public abstract class AbstractParticleColorizer implements ParticleColorizer {
 	private boolean _fadeOut;
 	
 	public void setFadeOut(boolean fadeOut) {
