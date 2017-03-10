@@ -93,15 +93,15 @@ public class Particle {
 	}
 	
 	public void setLocation(Vector location) {
-		_location = Vector.checkDimension(location, 3);
+		_location.copy(Vector.checkDimension(location, 3));
 	}
 	
 	public void setVelocity(Vector velocity) {
-		_velocity = Vector.checkDimension(velocity, 3);
+		_velocity.copy(Vector.checkDimension(velocity, 3));
 	}
 	
 	public void setAcceleration(Vector acceleration) {
-		_acceleration = Vector.checkDimension(acceleration, 3);
+		_acceleration.copy(Vector.checkDimension(acceleration, 3));
 	}
 	
 	public void setMass(double mass) {
@@ -109,7 +109,7 @@ public class Particle {
 	}
 	
 	public void setColor(Vector color) {
-		_color = CGUtils.checkColorVector(color);
+		_color.copy(CGUtils.checkColorVector(color));
 	}
 	
 	public void setStartLife(long lifeMS) {
