@@ -12,23 +12,23 @@ public class ParticlePhysicsDemo {
 		double massTo   = 2;
 		
 		Particle.Builder gravityBuilder = new Particle.Builder()
-        		.withStartLife(TimeUnit.SECONDS.toMillis(2))
-        		.withLocation(new Vector(-1, 0, 0))
-        		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(1, 0, 0))
-        		.withMass(massFrom, massTo);
+				.withStartLife(TimeUnit.SECONDS.toMillis(2))
+				.withLocation(new Vector(-1, 0, 0))
+				.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
+				.withColor(new Vector(1, 0, 0))
+				.withMass(massFrom, massTo);
 		Particle.Builder forceBuilder = new Particle.Builder()
-        		.withStartLife(TimeUnit.SECONDS.toMillis(2))
-        		.withLocation(new Vector(0, 0, 0))
-        		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(1, 1, 0))
-        		.withMass(massFrom, massTo);
+				.withStartLife(TimeUnit.SECONDS.toMillis(2))
+				.withLocation(new Vector(0, 0, 0))
+				.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
+				.withColor(new Vector(1, 1, 0))
+				.withMass(massFrom, massTo);
 		Particle.Builder noForceBuilder = new Particle.Builder()
-        		.withStartLife(TimeUnit.SECONDS.toMillis(2))
-        		.withLocation(new Vector(1, 0, 0))
-        		.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
-        		.withColor(new Vector(0, 1, 0))
-        		.withMass(massFrom, massTo);
+				.withStartLife(TimeUnit.SECONDS.toMillis(2))
+				.withLocation(new Vector(1, 0, 0))
+				.withVelocity(new Vector(-0.1, 1, -0.1), new Vector(0.1, 1, 0.1))
+				.withColor(new Vector(0, 1, 0))
+				.withMass(massFrom, massTo);
 		
 		ParticleSystem gravitySystem  = new ParticleSystem(gravityBuilder,  1000, 1000, false);
 		ParticleSystem forceSystem    = new ParticleSystem(forceBuilder,    1000, 1000, false);
