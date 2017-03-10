@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.haw.cg.lnielsen.particle.Particle;
 import org.haw.cg.lnielsen.particle.ParticleSystem;
 import org.haw.cg.lnielsen.particle.color.ParticleColorizerBuilder;
+import org.haw.cg.lnielsen.particle.physics.Repeller;
 import org.haw.cg.lnielsen.particle.scenegraph.ParticleSystemShowcaseScene;
 import computergraphics.framework.math.Vector;
 
@@ -22,6 +23,7 @@ public class ParticleDemo {
 		ParticleSystem system = new ParticleSystem(builder, 10000, 5000, false);
 		
 		ParticleSystem.DEBUG = true;
-		new ParticleSystemShowcaseScene(system, 60);
+		ParticleSystemShowcaseScene scene = new ParticleSystemShowcaseScene(system, 60);
+		scene.setRepeller(new Repeller(new Vector(-1, 0, -1), 1, 10));
 	}
 }

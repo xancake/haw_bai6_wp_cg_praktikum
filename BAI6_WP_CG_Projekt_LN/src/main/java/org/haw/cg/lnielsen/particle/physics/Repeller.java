@@ -10,9 +10,9 @@ public class Repeller {
 	private double _power;
 	
 	public Repeller(Vector location, double range, double power) {
-		_location = Vector.checkDimension(location, 3);
-		_range = Numbers.require(range).greaterThanOrEqual(0, "Die Reichweite darf nicht negativ sein!");
-		_power = power;
+		setLocation(location);
+		setRange(range);
+		setPower(power);
 	}
 	
 	public boolean isInRange(Particle p) {
@@ -45,5 +45,17 @@ public class Repeller {
 	
 	public double getPower() {
 		return _power;
+	}
+	
+	public void setLocation(Vector location) {
+		_location = Vector.checkDimension(location, 3);
+	}
+	
+	public void setRange(double range) {
+		_range = Numbers.require(range).greaterThanOrEqual(0, "Die Reichweite eines Repellers muss positiv sein!");
+	}
+	
+	public void setPower(double power) {
+		_power = power;
 	}
 }

@@ -21,7 +21,7 @@ public class ParticleSystemNode extends LeafNode {
 	
 	private VertexBufferObject _particleSystemVBO;
 	private boolean _drawBackToFront;
-	private Vector _viewpoint;
+	private Vector _viewpoint = new Vector(0,0,0);
 	private boolean _drawParticleSystem;
 	
 	/**
@@ -33,7 +33,6 @@ public class ParticleSystemNode extends LeafNode {
 	public ParticleSystemNode(ParticleSystem system) {
 		setParticleSystem(system);
 		setDrawParticleSystem(true);
-		setViewpoint(new Vector(0,0,0));
 	}
 	
 	@Override
@@ -143,6 +142,6 @@ public class ParticleSystemNode extends LeafNode {
 	 * @see #isBackToFront()
 	 */
 	public void setViewpoint(Vector viewpoint) {
-		_viewpoint = Vector.checkDimension(viewpoint, 3);
+		_viewpoint.copy(Vector.checkDimension(viewpoint, 3));
 	}
 }
