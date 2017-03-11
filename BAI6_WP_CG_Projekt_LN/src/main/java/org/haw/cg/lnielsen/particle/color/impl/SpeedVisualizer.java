@@ -50,8 +50,8 @@ public class SpeedVisualizer extends AbstractParticleColorizer implements Partic
 	@Override
 	protected void calculateColor(Particle p, Vector color, double alifePercentage) {
 		double speed = p.getVelocity().getNorm();
-		double speedConstrained = Math.min(Math.max(speed, _speedMin), _speedMax);
-		double speedPercentage = speedConstrained/(_speedMax-_speedMin);
+		double speedConstrained = Math.min(speed, _speedMax);
+		double speedPercentage = (speedConstrained-_speedMin)/(_speedMax-_speedMin);
 		for(int i=0; i<color.getDimension(); i++) {
 			color.set(i, speedPercentage*_colorMax.get(i) + (1-speedPercentage)*_colorMin.get(i));
 		}

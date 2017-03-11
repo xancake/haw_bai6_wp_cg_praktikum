@@ -13,16 +13,16 @@ import computergraphics.framework.math.Vector;
 import computergraphics.framework.rendering.CGUtils;
 
 public class GradientColorizer implements ParticleColorizer {
-	private GradientPercentageSupplier _supplier;
+	private GradientPercentageFunction _function;
 	private SortedMap<Double, Vector> _colorMap;
 	private boolean _fadeOut;
 	
 	public GradientColorizer() {
-		this(new LifePercentageSupplier());
+		this(new LifeFunction());
 	}
 	
-	public GradientColorizer(GradientPercentageSupplier supplier) {
-		_supplier = Objects.requireNonNull(supplier);
+	public GradientColorizer(GradientPercentageFunction function) {
+		_function = Objects.requireNonNull(function);
 		_colorMap = new TreeMap<>();
 	}
 	
@@ -42,7 +42,7 @@ public class GradientColorizer implements ParticleColorizer {
 	
 	@Override
 	public void updateColor(Particle p) {
-		double percentage = _supplier.supplyPercentage(p);
+		double percentage = Math.min(Math.max(_function.supplyPercentage(p), 0), 1);
 		
 		Vector color = p.getColor();
 		calculateColor(p, color, percentage);
@@ -93,31 +93,31 @@ public class GradientColorizer implements ParticleColorizer {
 		}
 	}
 	
-	public static interface GradientPercentageSupplier {
+	public static interface GradientPercentageFunction {
 		double supplyPercentage(Particle p);
 	}
 	
-	public static class LifePercentageSupplier implements GradientPercentageSupplier {
+	public static class LifeFunction implements GradientPercentageFunction {
 		@Override
 		public double supplyPercentage(Particle p) {
 			return (double)p.getLife() / p.getStartLife();
 		}
 	}
 	
-	public static class SpeedPercentageSupplier implements GradientPercentageSupplier {
+	public static class SpeedFunction implements GradientPercentageFunction {
 		private double _min;
 		private double _max;
 		private boolean _adaptive;
 		
-		public SpeedPercentageSupplier(double base) {
+		public SpeedFunction(double base) {
 			this(base, base, true);
 		}
 		
-		public SpeedPercentageSupplier(double min, double max) {
+		public SpeedFunction(double min, double max) {
 			this(min, max, false);
 		}
 		
-		private SpeedPercentageSupplier(double min, double max, boolean adaptive) {
+		private SpeedFunction(double min, double max, boolean adaptive) {
 			_min = min;
 			_max = max;
 			_adaptive = adaptive;
@@ -126,8 +126,8 @@ public class GradientColorizer implements ParticleColorizer {
 		@Override
 		public double supplyPercentage(Particle p) {
 			double speed = p.getVelocity().getNorm();
-			double speedConstrained = Math.min(Math.max(speed, _min), _max);
-			double speedPercentage = speedConstrained/(_max-_min);
+			double speedConstrained = Math.min(speed, _max);
+			double speedPercentage = (speedConstrained-_min)/(_max-_min);
 			if(_adaptive) {
 				if(_min > speed) {
 					_min = speed;
@@ -140,17 +140,59 @@ public class GradientColorizer implements ParticleColorizer {
 		}
 	}
 	
+	public static class GradientPropertyFunction implements GradientPercentageFunction {
+		private PropertyFunction _minFunction;
+		private PropertyFunction _maxFunction;
+		private PropertyFunction _valueFunction;
+		
+		public GradientPropertyFunction(PropertyFunction maxFunction, PropertyFunction valueFunction) {
+			this(p -> 0, maxFunction, valueFunction);
+		}
+		
+		public GradientPropertyFunction(PropertyFunction minFunction, PropertyFunction maxFunction, PropertyFunction valueFunction) {
+			_minFunction = Objects.requireNonNull(minFunction);
+			_maxFunction = Objects.requireNonNull(maxFunction);
+			_valueFunction = Objects.requireNonNull(valueFunction);
+		}
+		
+		@Override
+		public double supplyPercentage(Particle p) {
+			double min   = _minFunction.getProperty(p);
+			double max   = _maxFunction.getProperty(p);
+			double value = _valueFunction.getProperty(p);
+			double constrainedValue = Math.min(value, max);
+			double percentage = (constrainedValue-min)/(max-min);
+			return 1-percentage;
+		}
+		
+		public static interface PropertyFunction {
+			double getProperty(Particle p);
+		}
+	}
+	
+	public static class LifeFunction2 extends GradientPropertyFunction {
+		public LifeFunction2() {
+			super(p -> p.getStartLife(), p -> p.getLife());
+		}
+	}
+	
+	public static class SpeedFunction2 extends GradientPropertyFunction {
+		public SpeedFunction2(double min, double max) {
+			super(p -> min, p -> max, p -> p.getVelocity().getNorm());
+		}
+	}
+	
 	public static class ControlPointGradientBuilder {
-		private GradientPercentageSupplier _supplier;
+		private GradientPercentageFunction _supplier;
 		private SortedMap<Double, Vector> _colorMap;
 		private boolean _fadeOut;
 		
 		public ControlPointGradientBuilder() {
-			_supplier = new LifePercentageSupplier();
+			_supplier = new LifeFunction();
 			_colorMap = new TreeMap<>();
 		}
 		
-		public ControlPointGradientBuilder withPercentageSupplier(GradientPercentageSupplier supplier) {
+		public ControlPointGradientBuilder withPercentageSupplier(GradientPercentageFunction supplier) {
 			_supplier = Objects.requireNonNull(supplier);
 			return this;
 		}
@@ -178,16 +220,16 @@ public class GradientColorizer implements ParticleColorizer {
 	}
 	
 	public static class UniformGradientBuilder {
-		private GradientPercentageSupplier _supplier;
+		private GradientPercentageFunction _supplier;
 		private List<Vector> _colors;
 		private boolean _fadeOut;
 		
 		public UniformGradientBuilder() {
-			_supplier = new LifePercentageSupplier();
+			_supplier = new LifeFunction();
 			_colors = new LinkedList<>();
 		}
 		
-		public UniformGradientBuilder withPercentageSupplier(GradientPercentageSupplier supplier) {
+		public UniformGradientBuilder withFunction(GradientPercentageFunction supplier) {
 			_supplier = Objects.requireNonNull(supplier);
 			return this;
 		}

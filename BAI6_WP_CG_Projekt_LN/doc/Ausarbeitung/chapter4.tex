@@ -12,5 +12,16 @@
 \textmd{Die Darstellung von Transparenz wurde nur für die Partikel eines Partikelsystems untereinander umgesetzt. Die Partikel mehrerer Partikelsysteme untereinander werden nicht sortiert. Um bei mehreren Partikelsystemen alle Partikel mit Transparenz korrekt zeichnen zu können, müssten alle Partikel aller Partikelsysteme wie in Abschnitt \ref{transparency} unabhängig von ihrem Partikelsystem back-to-front sortiert werden.}
 \textmd{\\Technisch ist das in meinem Aufbau leider nicht so einfach möglich, da jedes Partikelsystem durch einen eigenen Szenengraphknoten eingebunden und gerendert wird. Der Szenengraphknoten funktioniert dabei autonom und weiß nicht von anderen Szenengraphknoten und ob sie überhaupt Partikelsysteme darstellen.}
 
-\section{ParticleColorChanger mit anderen Eigenschaften als Lebenszeit}
-\textmd{TODO}
+\section{ParticleColorizer mit anderen Eigenschaften als Lebenszeit}
+\textmd{Mit SpeedVisualizer und Two- bzw. MultiColorGradient gibt es Implementationen für ParticleColorizer die fest verdrahtet auf Eigenschaften von Partikeln (in den Fällen auf Geschwindigkeit bzw. Lebenszeit) zugreifen um abhängig von dem konkreten Wert den Partikel einzufärben. Wünschenswert wäre eine Implementation bei der austauschbar ist, welche Eigenschaft farblich hervorgehoben werden soll. So könnte es eine komplexe Implementation geben die viele Möglichkeiten bietet und so unkompliziert auf andere Eigenschaften oder Einfärbemuster angewendet werden kann.}
+\textmd{\\Mit GradientColorizer wurde dieser Ansatz ausprobiert. Er ist eine verbesserte Version des MultiColorGradients und kann mit einer Funktion ausgestattet werden, die angibt welcher Farbwert für einen Partikel gerade gültig ist. Durch die Schnittstelle sind unterschiedliche Implementationen möglich die zum Beispiel die Lebenszeit oder Geschwindigkeit als Ausgangswert nutzen. Abbildung \ref{gradientcolorizer_builder} zeigt die beispielhafte Konfiguration eines GradientColorizers für verschiedene Eigenschaften.}
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width=38em]{img/gradientcolorizer_builder.png}
+		\caption{GradientColorizer in einem Particle.Builder mit unterschiedlichen Funktionen (in Wirklichkeit kann immer nur eine Funktion eingesetzt werden).}
+		\label{gradientcolorizer_builder}
+	\end{center}
+\end{figure}
+
+\section{Konzept des ParticleColorizers für andere Eigenschaften}
+\textmd{Das Konzept des ParticleColorizers könnte auch auf andere Eigenschaften als die Farbe übertragen werden. Während die Bewegung von Partikeln derzeit nur durch Einwirkung äußerer Kräfte umgesetzt wird, könnte dieses Konzept neue Bewegungsmuster ermöglichen. Vorstellbar wären zum Beispiel Staubpartikel die zufällig ihre Richtung wechseln, oder Partikel die über die Zeit an Masse verlieren. Dieses Konzept ermöglicht also das Verändern von Eigenschaften von Partikeln über ihren Lebenszyklus hinweg.}
