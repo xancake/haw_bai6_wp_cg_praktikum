@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.haw.cg.lnielsen.particle.color.ParticleColorizer;
+import org.haw.cg.lnielsen.particle.color.impl.NullParticleColorizer;
 import org.haw.cg.lnielsen.particle.physics.Repeller;
 import org.haw.cg.lnielsen.util.Numbers;
 import computergraphics.framework.math.Vector;
@@ -38,14 +40,17 @@ public class ParticleSystem {
 	private Vector _netForce = new Vector(0, 0, 0);
 	private List<Repeller> _repellers;
 	
+	private ParticleColorizer _colorizer;
+	
 	public ParticleSystem(Particle.Builder builder, int maxParticles, int spawnPerSecond, boolean spawnCapped) {
 		_builder = Objects.requireNonNull(builder);
 		_spawnPerSecond = Numbers.require(spawnPerSecond).greaterThanOrEqual(0, "Die Anzahl der pro Sekunde zu spawnenden Partikel muss positiv sein!");
-        _maxParticles = Numbers.require(maxParticles).greaterThanOrEqual(0, "Die maximale Anzahl der Partikel muss positiv sein!");
-        _lifeParticles = new HashSet<>(_maxParticles);
-        _deadParticles = new HashSet<>(_maxParticles);
-        _spawnCapped = spawnCapped;
-        _repellers = new LinkedList<>();
+		_maxParticles = Numbers.require(maxParticles).greaterThanOrEqual(0, "Die maximale Anzahl der Partikel muss positiv sein!");
+		_lifeParticles = new HashSet<>(_maxParticles);
+		_deadParticles = new HashSet<>(_maxParticles);
+		_spawnCapped = spawnCapped;
+		_repellers = new LinkedList<>();
+		_colorizer = new NullParticleColorizer();
 	}
 	
 	/**
@@ -88,25 +93,25 @@ public class ParticleSystem {
 	 */
 	private void spawnParticles(long deltaMS) {
 		if(!_spawnCapped || _spawnCount < _maxParticles) {
-    		Iterator<Particle> dead = _deadParticles.iterator();
-    		// TODO: Spawnmechanismus überarbeiten, sodass nicht mehr als _spawnPerSecond Partikel pro Sekunde gespawnt werden können
-    		double particlesToSpawn = deltaMS/1000.0 * _spawnPerSecond;
-    		for(int i=0; i<particlesToSpawn; i++) {
-    			if(dead.hasNext()) {
-    				// Wenn wir noch Partikel haben, die wir wiederverwenden können, dann tun wir das
-    				Particle p = dead.next();
-    				_builder.initialize(p);
-    				dead.remove();
-    				_lifeParticles.add(p);
-    			} else if(_lifeParticles.size() + _deadParticles.size() < _maxParticles) {
-    				// Wenn die Maximalzahl an Partikeln noch nicht erreich ist, erzeugen wir neue Partikel
-    				_lifeParticles.add(_builder.build());
-    			} else {
-    				// Ansonsten erzeugen wir keine weiteren Partikel mehr
-    				break;
-    			}
-    			_spawnCount++;
-    		}
+			Iterator<Particle> dead = _deadParticles.iterator();
+			// TODO: Spawnmechanismus überarbeiten, sodass nicht mehr als _spawnPerSecond Partikel pro Sekunde gespawnt werden können
+			double particlesToSpawn = deltaMS/1000.0 * _spawnPerSecond;
+			for(int i=0; i<particlesToSpawn; i++) {
+				if(dead.hasNext()) {
+					// Wenn wir noch Partikel haben, die wir wiederverwenden können, dann tun wir das
+					Particle p = dead.next();
+					_builder.initialize(p);
+					dead.remove();
+					_lifeParticles.add(p);
+				} else if(_lifeParticles.size() + _deadParticles.size() < _maxParticles) {
+					// Wenn die Maximalzahl an Partikeln noch nicht erreich ist, erzeugen wir neue Partikel
+					_lifeParticles.add(_builder.build());
+				} else {
+					// Ansonsten erzeugen wir keine weiteren Partikel mehr
+					break;
+				}
+				_spawnCount++;
+			}
 		}
 	}
 	
@@ -123,6 +128,7 @@ public class ParticleSystem {
 			p.applyForce(_netForce);
 			p.applyGravity(_gravity);
 			p.update(deltaMS);
+			_colorizer.updateColor(p);
 			if(p.isDead()) {
 				life.remove();
 				_deadParticles.add(p);
@@ -218,6 +224,10 @@ public class ParticleSystem {
 	
 	public void removeRepeller(Repeller repeller) {
 		_repellers.remove(repeller);
+	}
+	
+	public void setParticleColorizer(ParticleColorizer colorizer) {
+		_colorizer = Objects.requireNonNull(colorizer);
 	}
 	
 	/**

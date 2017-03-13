@@ -48,9 +48,9 @@ public class ParticleSystemNode extends LeafNode {
 			if(isDoUpdates()) {
 				_particleSystem.update();
 			}
-    		_particleSystemVBO = isBackToFront()
-    				? _factory.createBackToFrontSortedParticleSystemVBO(_viewpoint)
-    				: _factory.createParticleSystemVBO();
+			_particleSystemVBO = isBackToFront()
+					? _factory.createBackToFrontSortedParticleSystemVBO(_viewpoint)
+					: _factory.createParticleSystemVBO();
 		}
 	}
 	

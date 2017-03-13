@@ -26,10 +26,10 @@ public class Repeller {
 		double distance = direction.getNorm();
 		if(distance <= _range) {
 			distance = Math.max(1, Math.min(distance, 100));
-    		direction.normalize();
-    		double force = -1 * _power / (distance * distance);
-    		direction.multiplySelf(force);
-    		return direction;
+			direction.normalize();
+			double force = -1 * _power / (distance * distance);
+			direction.multiplySelf(force);
+			return direction;
 		} else {
 			return new Vector(0, 0, 0);
 		}

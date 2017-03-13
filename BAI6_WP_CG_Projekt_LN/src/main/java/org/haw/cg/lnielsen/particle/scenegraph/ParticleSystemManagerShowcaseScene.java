@@ -127,12 +127,7 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 	private static enum ParticlePreset {
 		EXPLOSION(10000, 20000, true, new Particle.Builder()
 				.withStartLife(TimeUnit.SECONDS.toMillis(2))
-				.withVelocity(new Vector(-1, 0, -1), new Vector(1, 1, 1))
-				.withColorizer(ParticleColorizerBuilder.twoColorGradient()
-						.withStartColor(new Vector(1, 0.1, 0))
-						.withEndColor(new Vector(1, 0.9, 0))
-						.withFadeOut(true)
-						.build()));
+				.withVelocity(new Vector(-1, 0, -1), new Vector(1, 1, 1)));
 		
 		private Particle.Builder _builder;
 		private int _maxParticles;
@@ -149,6 +144,11 @@ public class ParticleSystemManagerShowcaseScene extends Scene {
 		public ParticleSystem create() {
 			ParticleSystem system = new ParticleSystem(_builder, _maxParticles, _spawnPerSecond, _spawnCapped);
 			system.applyGravity(GRAVITY);
+			system.setParticleColorizer(ParticleColorizerBuilder.twoColorGradient()
+						.withStartColor(new Vector(1, 0.1, 0))
+						.withEndColor(new Vector(1, 0.9, 0))
+						.withFadeOut(true)
+						.build());
 			return system;
 		}
 		

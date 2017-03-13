@@ -96,7 +96,7 @@ public class SpeedVisualizer extends AbstractParticleColorizer implements Partic
 			_fadeOut = fadeOut;
 			return this;
 		}
-
+		
 		public SpeedVisualizer build() {
 			SpeedVisualizer changer = new SpeedVisualizer(_speedMin, _speedMax);
 			changer._colorMin = _colorMin;
