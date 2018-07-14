@@ -62,7 +62,7 @@ public class Camera {
 		aspectRatio = 1;
 		fovy = 45.0f;
 		zNear = 0.1;
-		zFar = 10.0;
+		zFar = 20.0;
 		viewMatrix = makeLookUpMatrix();
 	}
 

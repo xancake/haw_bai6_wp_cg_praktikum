@@ -1,13 +1,12 @@
 package computergraphics.framework.scenegraph.nodes;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-
 import com.jogamp.opengl.GL2;
-
 import computergraphics.framework.math.Matrix;
 
-public class InnerNode extends INode {
+public class InnerNode extends INode implements Iterable<INode> {
 	private List<INode> children = new ArrayList<INode>();
 
 	@Override
@@ -42,5 +41,10 @@ public class InnerNode extends INode {
 			child.setParentNode(null);
 			children.remove(index);
 		}
+	}
+
+	@Override
+	public Iterator<INode> iterator() {
+		return children.iterator();
 	}
 }

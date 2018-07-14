@@ -21,10 +21,10 @@ public class CarNode extends InnerNode {
 		TranslationNode reifen2Translation = new TranslationNode(new Vector(-SIZE, SIZE*2, -SIZE/2));
 		TranslationNode reifen3Translation = new TranslationNode(new Vector(SIZE, -SIZE*2, -SIZE/2));
 		TranslationNode reifen4Translation = new TranslationNode(new Vector(-SIZE, -SIZE*2, -SIZE/2));
-		AnimatedRotationNode reifen1Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 5);
-		AnimatedRotationNode reifen2Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 5);
-		AnimatedRotationNode reifen3Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 5);
-		AnimatedRotationNode reifen4Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 5);
+		AnimatedRotationNode reifen1Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 2);
+		AnimatedRotationNode reifen2Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 2);
+		AnimatedRotationNode reifen3Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 2);
+		AnimatedRotationNode reifen4Animation = new AnimatedRotationNode(new Vector(1, 0, 0), 2);
 		reifen1Animation.addChild(new SphereNode(SIZE/4, 20));
 		reifen2Animation.addChild(new SphereNode(SIZE/4, 20));
 		reifen3Animation.addChild(new SphereNode(SIZE/4, 20));

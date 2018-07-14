@@ -19,7 +19,7 @@ public class Excercise_1_2 extends Scene {
 	private static final double FLOOR_SIZE = 4;
 
 	public Excercise_1_2() {
-		super(100, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
+		super(16, Shader.ShaderMode.PHONG, RenderMode.REGULAR);
 
 		getRoot().setLightPosition(new Vector(1, 1, 5));
 		getRoot().setAnimated(true);
@@ -32,13 +32,13 @@ public class Excercise_1_2 extends Scene {
 //		getRoot().addChild(skyscrapers);
 		
 		MenschDistributorNode tanzendeMenschen = new MenschDistributorNode(FLOOR_SIZE * 0.9, 20);
-		AnimatedRotationNode tanzAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 5);
+		AnimatedRotationNode tanzAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 1);
 		tanzAnimation.addChild(tanzendeMenschen);
 		getRoot().addChild(tanzAnimation);
 		
 		MenschDistributorNode springendeMenschen = new MenschDistributorNode(FLOOR_SIZE * 0.9, 20);
 		TranslationNode springendeMenschenTranslation = new TranslationNode(new Vector(0, 0, 0.05));
-		AnimatedTranslationNode springAnimation = new AnimatedTranslationNode(new Vector(0, 0, 0.05), new Vector(0, 0, 0.05));
+		AnimatedTranslationNode springAnimation = new AnimatedTranslationNode(new Vector(0, 0, 0.0125), new Vector(0, 0, 0.05));
 		springendeMenschenTranslation.addChild(springendeMenschen);
 		springAnimation.addChild(springendeMenschenTranslation);
 		getRoot().addChild(springAnimation);
@@ -54,7 +54,7 @@ public class Excercise_1_2 extends Scene {
 		SphereNode discoBall = new SphereNode(0.3, 100);
 		discoBall.setColor(new Vector(0.9, 0.9, 0.9, 1));
 		TranslationNode discoBallTranslation = new TranslationNode(new Vector(0, 0, 2));
-		AnimatedRotationNode discoBallAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 5);
+		AnimatedRotationNode discoBallAnimation = new AnimatedRotationNode(new Vector(0, 0, 1), 1);
 		discoBallAnimation.addChild(discoBall);
 		discoBallTranslation.addChild(discoBallAnimation);
 		getRoot().addChild(discoBallTranslation);
