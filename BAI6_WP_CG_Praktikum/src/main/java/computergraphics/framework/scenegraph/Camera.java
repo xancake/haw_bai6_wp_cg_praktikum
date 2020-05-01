@@ -74,10 +74,17 @@ public class Camera {
 		Vector z = eye.subtract(ref).getNormalized();
 		Vector x = y.cross(z).getNormalized();
 		y = z.cross(x).getNormalized();
-		Matrix R = new Matrix(x.x(), y.x(), z.x(), 0, x.y(), y.y(), z.y(), 0,
-				x.z(), y.z(), z.z(), 0, 0, 0, 0, 1);
-		Matrix T = new Matrix(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -eye.x(),
-				-eye.y(), -eye.z(), 1);
+		Matrix R = new Matrix(
+				x.x(), y.x(), z.x(), 0,
+				x.y(), y.y(), z.y(), 0,
+				x.z(), y.z(), z.z(), 0,
+				0, 0, 0, 1);
+		Matrix T = new Matrix(
+				1, 0, 0, 0,
+				0, 1, 0, 0,
+				0, 0, 1, 0,
+				-eye.x(), -eye.y(), -eye.z(), 1
+		);
 		return T.multiply(R);
 	}
 

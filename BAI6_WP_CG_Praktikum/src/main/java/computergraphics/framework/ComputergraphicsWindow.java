@@ -107,14 +107,14 @@ public class ComputergraphicsWindow extends GLJPanel implements
 	@Override
 	public void mouseDragged(MouseEvent event) {
 		if (currentButton == MouseEvent.BUTTON1) {
-			if ((lastMouseCoordinates.get(0) > 0) && (lastMouseCoordinates.get(1) > 0)) {
-				double deltaX = (float) (event.getX() - lastMouseCoordinates.get(0)) / 200.0f;
-				double deltaY = (float) (event.getY() - lastMouseCoordinates.get(1)) / 200.0f;
+			if ((lastMouseCoordinates.x() > 0) && (lastMouseCoordinates.y() > 0)) {
+				double deltaX = (float) (event.getX() - lastMouseCoordinates.x()) / 200.0f;
+				double deltaY = (float) (event.getY() - lastMouseCoordinates.y()) / 200.0f;
 				scene.rotateCamera(-deltaX, -deltaY);
 			}
 		} else if (currentButton == MouseEvent.BUTTON3) {
-			if ((lastMouseCoordinates.get(0) > 0) && (lastMouseCoordinates.get(1) > 0)) {
-				int deltaY = (int) (event.getY() - lastMouseCoordinates.get(1));
+			if ((lastMouseCoordinates.x() > 0) && (lastMouseCoordinates.y() > 0)) {
+				int deltaY = (int) (event.getY() - lastMouseCoordinates.y());
 				scene.zoom(deltaY);
 			}
 		}
