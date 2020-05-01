@@ -49,13 +49,16 @@ public class ObjReader {
     directory = new File(AssetPath.getPathToAsset(filename)).getParent() + "/";
 
     String strLine = "";
-    InputStream is = new FileInputStream(AssetPath.getPathToAsset(filename));
-    DataInputStream in = new DataInputStream(is);
-    BufferedReader br = new BufferedReader(new InputStreamReader(in));
-    while ((strLine = br.readLine()) != null) {
-      parseLine(strLine, directory, mesh);
+    
+    try (
+        InputStream is = new FileInputStream(AssetPath.getPathToAsset(filename));
+        DataInputStream in = new DataInputStream(is);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in))
+    ) {
+        while ((strLine = br.readLine()) != null) {
+          parseLine(strLine, directory, mesh);
+        }
     }
-    in.close();
     mesh.computeNormals();
     System.out.println("OBJ file " + filename + " with "
         + mesh.getNumberOfVertices() + " vertices and "
@@ -128,12 +131,12 @@ public class ObjReader {
    * Offnen einer Materialdatei und Suchen nach Texturinformation.
    */
   private String readTextureFilenameFromMaterialFile(String materialFilename) {
-    InputStream is;
     String textureFilename = null;
-    try {
-      is = new FileInputStream(materialFilename);
+    try (
+      InputStream is = new FileInputStream(materialFilename);
       DataInputStream in = new DataInputStream(is);
-      BufferedReader br = new BufferedReader(new InputStreamReader(in));
+      BufferedReader br = new BufferedReader(new InputStreamReader(in))
+    ) {
       String strLine;
       while ((strLine = br.readLine()) != null) {
         String line = strLine.trim();
