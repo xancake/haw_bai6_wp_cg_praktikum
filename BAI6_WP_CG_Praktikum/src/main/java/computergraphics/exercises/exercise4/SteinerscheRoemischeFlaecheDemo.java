@@ -8,7 +8,7 @@ import computergraphics.framework.math.implicit_functions.SteinerscheRoemischeFl
 
 public class SteinerscheRoemischeFlaecheDemo {
 	public static void main(String[] args) {
-		MarchingCubes mc = new MultiThreadedMarchingCubes(new Cuboid(-2, 2), 25);
+		MarchingCubes mc = new MultiThreadedMarchingCubes(new Cuboid(-1, 1), 75);
 		ImplicitFunction function = new SteinerscheRoemischeFlaecheFunction();
 		new MarchingCubesShowcaseScene(mc, function);
 	}

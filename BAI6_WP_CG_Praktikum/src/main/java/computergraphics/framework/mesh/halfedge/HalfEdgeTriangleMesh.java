@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-
 import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.math.HessescheEbene;
 import computergraphics.framework.math.Triangles;
@@ -84,8 +83,8 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	@Override
 	public List<Pair<Vertex, Vertex>> getWireframeVertices() {
 		List<Pair<Vertex, Vertex>> wireframe = new ArrayList<>();
-		for(HalfEdge edge : _halfEdges) {
-			wireframe.add(new Pair<Vertex, Vertex>(edge.getStartVertex(), edge.getNext().getStartVertex()));
+		for (HalfEdge edge : _halfEdges) {
+			wireframe.add(new Pair<>(edge.getStartVertex(), edge.getNext().getStartVertex()));
 		}
 		return wireframe;
 	}
@@ -98,8 +97,8 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	@Override
 	public List<Pair<Vertex, Vertex>> getBorderVertices() {
 		List<Pair<Vertex, Vertex>> border = new ArrayList<>();
-		for(HalfEdge edge : _oppositeHalfEdges.values()) {
-			border.add(new Pair<Vertex, Vertex>(edge.getStartVertex(), edge.getNext().getStartVertex()));
+		for (HalfEdge edge : _oppositeHalfEdges.values()) {
+			border.add(new Pair<>(edge.getStartVertex(), edge.getNext().getStartVertex()));
 		}
 		return border;
 	}
@@ -118,21 +117,34 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	}
 	
 	@Override
-	public void addTriangle( 
-			int vertexIndex1,
-			int vertexIndex2,
-			int vertexIndex3,
-			int texCoordIndex1,
-			int texCoordIndex2,
-			int texCoordIndex3) {
+	public void addTriangle(
+		int vertexIndex1,
+		int vertexIndex2,
+		int vertexIndex3,
+		int texCoordIndex1,
+		int texCoordIndex2,
+		int texCoordIndex3
+	)
+	{
 		
-		HalfEdgeTriangle halfEdgeTriangle = new HalfEdgeTriangle(vertexIndex1, vertexIndex2, vertexIndex3, 
-			texCoordIndex1, texCoordIndex2, texCoordIndex3);
+		HalfEdgeTriangle halfEdgeTriangle = new HalfEdgeTriangle(
+			vertexIndex1,
+			vertexIndex2,
+			vertexIndex3,
+			texCoordIndex1,
+			texCoordIndex2,
+			texCoordIndex3
+		);
 		generateHalfEdges(vertexIndex1, vertexIndex2, vertexIndex3, halfEdgeTriangle);
 	}
-
-	private void generateHalfEdges(int vertexIndex1, int vertexIndex2, int vertexIndex3,
-			HalfEdgeTriangle halfEdgeTriangle) {
+	
+	private void generateHalfEdges(
+		int vertexIndex1,
+		int vertexIndex2,
+		int vertexIndex3,
+		HalfEdgeTriangle halfEdgeTriangle
+	)
+	{
 		
 		HalfEdge edge1 = initHalfEdge(halfEdgeTriangle, vertexIndex1, vertexIndex2);
 		HalfEdge edge2 = initHalfEdge(halfEdgeTriangle, vertexIndex2, vertexIndex3);
@@ -155,7 +167,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		newHalfEdge.setStartVertex(startVertex);
 		
 		MultiKey key = new MultiKey(startVertexIndex, endVertexIndex);
-		if(_oppositeHalfEdges.containsKey(key)) {
+		if (_oppositeHalfEdges.containsKey(key)) {
 			HalfEdge oppositeHalfEdge = _oppositeHalfEdges.get(key);
 			oppositeHalfEdge.setOpposite(newHalfEdge);
 			newHalfEdge.setOpposite(oppositeHalfEdge);
@@ -164,8 +176,9 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			_oppositeHalfEdges.put(key, newHalfEdge);
 		}
 		
-		if(startVertex.getHalfEdge() == null)
+		if (startVertex.getHalfEdge() == null) {
 			startVertex.setHalfEgde(newHalfEdge);
+		}
 		
 		_halfEdges.add(newHalfEdge);
 		return newHalfEdge;
@@ -189,7 +202,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	
 	@Override
 	public void computeNormals() {
-		for(HalfEdgeTriangle t : _halfEdgeTriangles) {
+		for (HalfEdgeTriangle t : _halfEdgeTriangles) {
 			HalfEdgeVertex v0 = getHalfEdgeVertex(t.getVertexIndex(0));
 			HalfEdgeVertex v1 = getHalfEdgeVertex(t.getVertexIndex(1));
 			HalfEdgeVertex v2 = getHalfEdgeVertex(t.getVertexIndex(2));
@@ -203,18 +216,18 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 			do {
 				Triangle currentFacette = currentEdge.getFacet();
 				vertexNormal = vertexNormal.add(currentFacette.getNormal());
-				if(currentEdge.getOpposite() == null) {
+				if (currentEdge.getOpposite() == null) {
 					currentEdge = null;
 				} else {
 					currentEdge = currentEdge.getOpposite().getNext();
 				}
-			} while(currentEdge != null && !currentEdge.equals(halfEdgeVertex.getHalfEdge()));
+			} while (currentEdge != null && !currentEdge.equals(halfEdgeVertex.getHalfEdge()));
 			
 			//Bei Rand werden die Kanten auch in die andere Richtung durchlaufen
-			if(currentEdge == null) {
+			if (currentEdge == null) {
 				currentEdge = halfEdgeVertex.getHalfEdge().getNext().getNext().getOpposite();
 				
-				while(currentEdge != null) {
+				while (currentEdge != null) {
 					Triangle currentFacette = currentEdge.getFacet();
 					vertexNormal = vertexNormal.add(currentFacette.getNormal());
 					currentEdge = currentEdge.getNext().getNext().getOpposite();
@@ -231,20 +244,20 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		List<Pair<Vertex, Vertex>> silhouette = new ArrayList<>();
 		
 		Set<HalfEdge> closedSet = new HashSet<>();
-		for(HalfEdge edge : _halfEdges) {
-			if(!closedSet.contains(edge)) {
+		for (HalfEdge edge : _halfEdges) {
+			if (!closedSet.contains(edge)) {
 				double lambda = lambda(edge, viewpoint);
 				
 				HalfEdge opposite = edge.getOpposite();
-				if(opposite != null) {
+				if (opposite != null) {
 					// Wenn es eine Opposite-Kante gibt, heißt das, dass wir für zwei Dreiecke
 					// prüfen müssen, ob nur eins von beiden der Lichtquelle zugewandt ist und
 					// das andere eben nicht.
 					double oppositeLambda = lambda(opposite, viewpoint);
-					if(lambda > 0 && oppositeLambda <= 0) {
+					if (lambda > 0 && oppositeLambda <= 0) {
 						silhouette.add(new Pair<>(edge.getStartVertex(), opposite.getStartVertex()));
 					}
-					if(lambda <= 0 && oppositeLambda > 0) {
+					if (lambda <= 0 && oppositeLambda > 0) {
 						silhouette.add(new Pair<>(opposite.getStartVertex(), edge.getStartVertex()));
 					}
 					closedSet.add(opposite);
@@ -252,7 +265,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 					// Wenn es keine Opposite-Kante gibt, bedeutet das, dass wir uns am Rand des
 					// Meshes befinden und die Kante somit automatisch zu Silhouette gehört, wenn
 					// das Dreieck der Lichtquelle zugewandt ist.
-					if(lambda > 0) {
+					if (lambda > 0) {
 						silhouette.add(new Pair<>(edge.getStartVertex(), edge.getNext().getStartVertex()));
 					}
 				}
@@ -264,11 +277,13 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 	}
 	
 	/**
-	 * Berechnet das Lambda für den Schnitt eines Strahls ausgehend vom übergebenen Viewpoint
-	 * durch das zur übergebenen Kante gehörenden Dreieck.
-	 * @param edge Die Kante
+	 * Berechnet das Lambda für den Schnitt eines Strahls ausgehend vom übergebenen Viewpoint durch das zur übergebenen
+	 * Kante gehörenden Dreieck.
+	 * 
+	 * @param edge      Die Kante
 	 * @param viewpoint Der Viewpoint
-	 * @return Das Lambda oder {@link Double#NaN}, wenn der Strahl parallel zum Dreieck verläuft, es also nicht schneidet
+	 * @return Das Lambda oder {@link Double#NaN}, wenn der Strahl parallel zum Dreieck verläuft, es also nicht
+	 *         schneidet
 	 */
 	private double lambda(HalfEdge edge, Vector viewpoint) {
 		HalfEdgeTriangle facette = edge.getFacet();
@@ -281,7 +296,7 @@ public class HalfEdgeTriangleMesh implements ITriangleMesh {
 		shadowPolygonMesh.clear();
 		
 		List<Pair<Vertex, Vertex>> silhouette = getSilhouetteVertices(lightPosition);
-		for(Pair<Vertex, Vertex> edge : silhouette) {
+		for (Pair<Vertex, Vertex> edge : silhouette) {
 			Vector v1 = edge.getKey().getPosition();
 			Vector v2 = edge.getValue().getPosition();
 			Vector ray1 = v1.subtract(lightPosition).getNormalized();

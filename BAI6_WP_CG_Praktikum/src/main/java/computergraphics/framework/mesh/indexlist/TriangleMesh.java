@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+
 import computergraphics.framework.datastructures.Pair;
 import computergraphics.framework.math.Triangles;
 import computergraphics.framework.math.Vector;
@@ -92,13 +93,16 @@ public class TriangleMesh implements ITriangleMesh {
 	
 	@Override
 	public void addTriangle(
-			int vertexIndex1,
-			int vertexIndex2,
-			int vertexIndex3,
-			int texCoordIndex1,
-			int texCoordIndex2,
-			int texCoordIndex3) {
-		_triangles.add(new Triangle(vertexIndex1, vertexIndex2, vertexIndex3, texCoordIndex1, texCoordIndex2, texCoordIndex3));
+		int vertexIndex1,
+		int vertexIndex2,
+		int vertexIndex3,
+		int texCoordIndex1,
+		int texCoordIndex2,
+		int texCoordIndex3
+	)
+	{
+		_triangles
+			.add(new Triangle(vertexIndex1, vertexIndex2, vertexIndex3, texCoordIndex1, texCoordIndex2, texCoordIndex3));
 	}
 	
 	@Override
@@ -119,7 +123,7 @@ public class TriangleMesh implements ITriangleMesh {
 	
 	@Override
 	public void computeNormals() {
-		for(Triangle t : _triangles) {
+		for (Triangle t : _triangles) {
 			Vertex v0 = getVertex(t.getVertexIndex(0));
 			Vertex v1 = getVertex(t.getVertexIndex(1));
 			Vertex v2 = getVertex(t.getVertexIndex(2));
